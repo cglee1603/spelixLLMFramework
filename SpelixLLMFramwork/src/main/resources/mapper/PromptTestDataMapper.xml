@@ -2,40 +2,50 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.spelix.dao.PromptTestDataDAO">
 
-    <resultMap id="PromptTestDataResultMap" type="com.spelix.domain.PromptTestData">
-        <id property="promptId" column="promptid"/>
-        <result property="promptVersion" column="PRMT_VER"/>
-        <result property="numericValue" column="NUM"/>
-        <result property="body" column="BODY"/>
-        <result property="correctAnswer" column="ANSWER"/>
-        <result property="insertUser" column="INSERT_USER"/>
-        <result property="insertDate" column="INSERT_DATE"/>
-        <result property="updateUser" column="UPDATE_USER"/>
-        <result property="updateDate" column="UPDATE_DATE"/>
-    </resultMap>
+	<resultMap id="PromptTestDataResultMap"
+		type="com.spelix.domain.PromptTestData">
+		<id property="promptId" column="promptid" />
+		<result property="promptVersion" column="PRMT_VER" />
+		<result property="numericValue" column="NUM" />
+		<result property="body" column="BODY" />
+		<result property="correctAnswer" column="ANSWER" />
+		<result property="insertUser" column="INSERT_USER" />
+		<result property="insertDate" column="INSERT_DATE" />
+		<result property="updateUser" column="UPDATE_USER" />
+		<result property="updateDate" column="UPDATE_DATE" />
+	</resultMap>
 
-    <select id="getPromptTestDataById" resultMap="PromptTestDataResultMap">
-        SELECT * FROM SPX_PRMT_TEST_DATA WHERE PRMT_ID = #{promptId}
-    </select>
+	<select id="getPromptTestDataById"
+		resultMap="PromptTestDataResultMap">
+		SELECT * FROM SPX_PRMT_TEST_DATA WHERE PRMT_ID = #{promptId}
+	</select>
 
-    <select id="getAllPromptTestData" resultMap="PromptTestDataResultMap">
-        SELECT * FROM SPX_PRMT_TEST_DATA
-    </select>
+	<select id="getAllPromptTestData"
+		resultMap="PromptTestDataResultMap">
+		SELECT * FROM SPX_PRMT_TEST_DATA
+	</select>
 
-    <insert id="savePromptTestData" parameterType="com.spelix.domain.PromptTestData">
-        INSERT INTO SPX_PRMT_TEST_DATA (PRMT_ID, PRMT_VER, NUM, BODY, ANSWER, INSERT_USER, INSERT_DATE, UPDATE_USER, UPDATE_DATE)
-        VALUES (#{promptId}, #{promptVersion}, #{numericValue}, #{body}, #{correctAnswer}, #{insertUser}, #{insertDate}, #{updateUser}, #{updateDate})
-    </insert>
+	<insert id="savePromptTestData"
+		parameterType="com.spelix.domain.PromptTestData">
+		INSERT INTO SPX_PRMT_TEST_DATA (PRMT_ID, PRMT_VER, NUM, BODY, ANSWER,
+		INSERT_USER, INSERT_DATE, UPDATE_USER, UPDATE_DATE)
+		VALUES (#{promptId}, #{promptVersion}, #{numericValue}, #{body},
+		#{correctAnswer}, #{insertUser}, #{insertDate}, #{updateUser},
+		#{updateDate})
+	</insert>
 
-    <update id="updatePromptTestData" parameterType="com.spelix.domain.PromptTestData">
-        UPDATE SPX_PRMT_TEST_DATA
-        SET PRMT_VER = #{promptVersion}, NUM = #{numericValue}, BODY = #{body}, ANSWER = #{correctAnswer},
-            INSERT_USER = #{insertUser}, INSERT_DATE = #{insertDate}, UPDATE_USER = #{updateUser}, UPDATE_DATE = #{updateDate}
-        WHERE PRMT_ID = #{promptId}
-    </update>
+	<update id="updatePromptTestData"
+		parameterType="com.spelix.domain.PromptTestData">
+		UPDATE SPX_PRMT_TEST_DATA
+		SET PRMT_VER = #{promptVersion}, NUM = #{numericValue}, BODY = #{body},
+		ANSWER = #{correctAnswer},
+		INSERT_USER = #{insertUser}, INSERT_DATE = #{insertDate}, UPDATE_USER =
+		#{updateUser}, UPDATE_DATE = #{updateDate}
+		WHERE PRMT_ID = #{promptId}
+	</update>
 
-    <delete id="deletePromptTestData" parameterType="String">
-        DELETE FROM SPX_PRMT_TEST_DATA WHERE PRMT_ID = #{promptId}
-    </delete>
+	<delete id="deletePromptTestData" parameterType="String">
+		DELETE FROM SPX_PRMT_TEST_DATA WHERE PRMT_ID = #{promptId}
+	</delete>
 
 </mapper>

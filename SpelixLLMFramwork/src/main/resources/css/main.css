@@ -1,0 +1,90 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+
+
+/* 헤더 스타일링 */
+header {
+    background-color: #333;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+	height: 50px; /* 헤더 높이 설정 */
+    position: fixed; /* 헤더를 상단에 고정 */
+    width: 100%; /* 전체 너비를 차지하도록 설정 */
+    top: 0; /* 상단에 위치 */
+    z-index: 1000; /* 다른 요소들 위에 표시 */
+}
+
+header nav ul {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    padding: 0;
+}
+
+header nav ul li {
+    margin: 0 10px;
+}
+
+header nav ul li a {
+    color: white;
+    text-decoration: none;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+header nav ul li a:hover {
+    background-color: #555;
+}
+
+/* 추가 스타일링 */
+
+.wrapper {
+    display: flex;
+    height: calc(100vh - 50px);
+	margin-top: 50px; /* 헤더 아래로 wrapper 시작 */
+}
+
+.sidebar {
+    width: 20%;
+    background-color: #f3f3f3;
+    padding: 20px;
+    height: calc(100vh - 50px);  /* 화면 높이에 맞춤 */
+    box-shadow: 2px 0px 5px rgba(0,0,0,0.1); /* 사이드바에 그림자 추가 */
+    display: flex;
+    flex-direction: column;
+}
+
+.menu {
+    margin-top: 50px;
+
+}
+
+.menu-item {
+    margin-bottom: 15px;
+    padding: 10px;
+    font-weight: bold;
+	font-family: var(--font-family-noto_sans);
+    cursor: pointer;
+}
+
+.menu-item:hover {
+    background-color: #e9e9e9;
+}
+
+.maincontent {
+    flex-grow: 1;
+    background-color: #fff;
+	height: calc(100vh - 50px); 
+}
+
+.maincontent iframe{
+        width: 100%;
+       height: calc(100vh - 50px); 
+		
+}
+
