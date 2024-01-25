@@ -100,18 +100,6 @@
 							<div class="subtitle">프롬프트 선택</div>
 							<div class="promptlist">
 								<select class="form-control" id="promptlist" multiple="multiple">
-									<option value="1">llama</option>
-									<option value="2">gpt</option>
-									<option value="3">llama</option>
-									<option value="4">gpt</option>
-									<option value="5">llama</option>
-									<option value="6">gpt</option>
-									<option value="7">llama</option>
-									<option value="8">gpt</option>
-									<option value="9">llama</option>
-									<option value="10">gpt</option>
-									<option value="11">llama</option>
-									<option value="12">gpt</option>
 								</select>
 							</div>
 

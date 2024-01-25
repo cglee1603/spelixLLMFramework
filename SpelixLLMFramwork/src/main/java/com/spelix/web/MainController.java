@@ -46,7 +46,6 @@ public class MainController {
 		return "home";
 	}
 
-	// FIXME
 	@RequestMapping(value = "/main", method = RequestMethod.GET)
 	public String main(Locale locale, Model model) {
 		model.addAttribute("serverTime", "");
@@ -54,7 +53,6 @@ public class MainController {
 		return "main";
 	}
 
-	// FIXME
 	@RequestMapping(value = "/playground", method = RequestMethod.GET)
 	public String playground(Locale locale, Model model) {
 		model.addAttribute("serverTime", "");
@@ -62,6 +60,7 @@ public class MainController {
 		return "playground";
 	}
 
+	// FIXME
 	@RequestMapping(value = "getLLMChatbot.do")
 	@ResponseBody
 	public HashMap<String, Object> getLLMChatbot(LLMSimilarInfoCondDTO conditionDTO) {
@@ -149,6 +148,17 @@ public class MainController {
 		log.debug("selectPromptSample: " + promptBaseDTOList);
 
 		return promptBaseDTOList;
+	}
+
+	@RequestMapping(value = "/getPromptSystemNameList.do", method = RequestMethod.POST)
+	@ResponseBody
+	public List<String> getPromptSystemNameList() {
+
+		List<String> promptSystemNameList = playgroundService.getAllPromptSystemNameList();
+
+		log.debug("getPromptSystemNameList: " + promptSystemNameList);
+
+		return promptSystemNameList;
 	}
 
 }

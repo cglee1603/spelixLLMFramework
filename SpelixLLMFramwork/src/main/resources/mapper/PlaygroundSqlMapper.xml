@@ -2,6 +2,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.spelix.dao.PlaygroundDAO">
 
+	<!-- 프롬프트 베이스 탬플릿 -->
 	<resultMap id="PromptBaseResultMap"
 		type="com.spelix.domain.PromptBaseDTO">
 		<id property="basePromptId" column="base_prmt_id" />
@@ -17,6 +18,28 @@
 	<select id="getAllPromptBase" resultMap="PromptBaseResultMap">
 		select * from
 		spx_prmt_base
+	</select>
+
+
+
+	<!-- 시스템 프롬프트 -->
+	<resultMap id="PromptSystemResultMap"
+		type="com.spelix.domain.PromptSystemDTO">
+		<id property="systemPromptId" column="sys_prmt_id" />
+		<id property="systemPromptVer" column="sys_prmt_ver" />
+		<result property="systemPromptName" column="sys_prmt_name" />
+		<result property="systemPrompt" column="sys_prmt" />
+		<result property="constUser" column="const_user" />
+		<result property="insertUser" column="insert_user" />
+		<result property="insertDate" column="insert_date" />
+		<result property="updateUser" column="update_user" />
+		<result property="updateDate" column="update_date" />
+	</resultMap>
+
+	<select id="getAllPromptSystemNameList" resultType="String">
+		select
+		sys_prmt_name from
+		spx_prmt_sys
 	</select>
 
 </mapper>

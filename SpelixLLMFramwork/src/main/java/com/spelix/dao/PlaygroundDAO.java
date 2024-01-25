@@ -8,4 +8,6 @@ public interface PlaygroundDAO {
 
 	List<PromptBaseDTO> getAllPromptBase();
 
+	List<String> getAllPromptSystemNameList();
+
 }

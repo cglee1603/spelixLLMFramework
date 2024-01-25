@@ -62,15 +62,44 @@
  popup.style.display = "none";
  }
  }
+
+// 시스템 프롬프트 선택
+ $(document).ready(function () {
+	    $('.promptlist').select2({
+	        ajax: {
+	            type: "POST",
+	            url: "getPromptSystemNameList.do",
+	            processResults: function (data) {
+	            	console.log(data);
+	                return {
+	                    results: $.map(data, function (value) {
+//	                    	console.log(value);
+	                        return { id: value, text: value };
+	                    })
+	                };
+	            },
+	            error: function (error) {
+	                alert("시스템 프롬프트를 가져오는 데 실패했습니다.")
+	            }
+	        },
+	        placeholder: '프롬프트를 선택해 주세요',
+	        multiple: true
+	    }).on('change', function (e) {
+	        var selectedValues = $(this).val();
+	        console.log(selectedValues); // 선택된 값들을 콘솔에 출력
+
+	        // 선택된 값을 어떤 HTML 엘리먼트에 표시하고자 하는 경우
+	        $('#selectedValuesDisplay').text(selectedValues.join(', '));
+	    });
+
+	});
+
  
  
- /*
-	 * select2 부분
-	 */
  
- $('#promptlist').select2({ 
- placeholder: '프롬프트를 선택해 주세요'
- });
+ 
+ 
+ 
  
   /*
 	 * modal 부분

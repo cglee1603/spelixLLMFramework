@@ -19,4 +19,7 @@ public class PlaygroundServiceImpl implements PlaygroundService {
 		return playgroundDAO.getAllPromptBase();
 	}
 
+	public List<String> getAllPromptSystemNameList() {
+		return playgroundDAO.getAllPromptSystemNameList();
+	}
 }

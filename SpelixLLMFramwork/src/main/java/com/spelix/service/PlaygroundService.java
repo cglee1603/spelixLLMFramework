@@ -7,4 +7,6 @@ import com.spelix.domain.PromptBaseDTO;
 public interface PlaygroundService {
 
 	List<PromptBaseDTO> getAllPromptBase();
+
+	List<String> getAllPromptSystemNameList();
 }
