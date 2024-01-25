@@ -7,8 +7,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Azure AI Studio Interface</title>
 
-<!--here   type 추가, 경로 설정-->
-
 <link rel="stylesheet" type="text/css"
 	href="<%=application.getContextPath()%>/resources/css/global.css">
 <link rel="stylesheet" type="text/css"
@@ -27,6 +25,8 @@
 			<div class="contentstable">
 				<div class="allsetting">
 					<div class="overlap-group">
+
+						<!--　모델　선택　-->
 						<div class="model">
 							<div class="titlelabel">모델</div>
 							<select id="selectmodel" name="selectmodel" class="selectmodel">
@@ -35,8 +35,9 @@
 								<option value="2">gpt</option>
 							</select>
 						</div>
+
+						<!--　상단　메뉴　-->
 						<div class="settingmenu">
-							<!--here   경로  수정-->
 							<img
 								src="<%=application.getContextPath()%>/resources/img/save.svg"
 								class="settingicon">
@@ -65,19 +66,21 @@
 								src="<%=application.getContextPath()%>/resources/img/prompt.png"
 								class="settingicon">
 							<div class="titlelabel">
-								<span class="sample">프롬프트 샘플</span>>
+								<span class="prompt-sample">프롬프트 샘플</span>
 							</div>
 						</div>
 					</div>
+
 					<!-- 팝업 창 -->
-					<div id="popup" class="popup-container">
+					<div id="prompt-sample-popup" class="popup-container">
 						<div class="popup-content">
 							<span class="close-button">&times;</span>
-							<h2>팝업 제목</h2>
-							<p>여기에 팝업 내용을 추가하세요.</p>
+							<h2>프롬프트 샘플 선택</h2>
+							<p class=base-prompt-all></p>
 						</div>
 					</div>
 
+					<!--　모드　선택　-->
 					<div class="mode">
 						<div class="titlelabel">모드</div>
 						<select id="changemode" name="changemode" class="changemode">
@@ -87,7 +90,10 @@
 						</select>
 					</div>
 				</div>
+
 				<div class="maincontents">
+
+					<!--　시스템　프롬프트　-->
 					<div class="setting">
 						<div class="maintitle">시스템 프롬프트</div>
 						<div class="systemprompt">
@@ -108,6 +114,7 @@
 									<option value="12">gpt</option>
 								</select>
 							</div>
+
 							<div class="prompttext">
 								<div class="subtitle">프롬프트 입력</div>
 								<textarea
@@ -115,16 +122,19 @@
 									id="promptarea"></textarea>
 							</div>
 						</div>
+
+						<!--　변수 추가　-->
 						<div class="variable">
 							<div class="line-with-text">
 								<hr class="line" />
 								<div class="subtitle">변수</div>
 								<hr class="line" />
-
 							</div>
+
 							<div class="addvariable">
 								<div class="variableltitle">{x} 변수 추가</div>
 							</div>
+
 							<div id="variablesContainer"></div>
 							<!-- 여기에 변수가 표시됩니다 -->
 						</div>
@@ -141,9 +151,9 @@
 								<!-- 입력 버튼 추가 -->
 							</div>
 						</div>
-
-
 					</div>
+
+					<!-- 챗봇　-->
 					<div class="chatbot">
 						<div class="chat-container"></div>
 						<div class="chattext">
@@ -156,6 +166,8 @@
 							</div>
 						</div>
 					</div>
+
+					<!-- 파라미터　값　설정　-->
 					<div class="parameter">
 						<div class="maintitle">Parameters</div>
 						<div class="paramall">

@@ -1,34 +1,80 @@
 
+
+//function selectPromptSample(promptId, promptName, promptDesc){
+//	var postData = {
+//			"promptId": promptId,
+//			"promptName": promptName,
+//			"promptDesc": promptDesc
+//	};
+//	$.ajax({
+//		url: "selectPromptSample.do",
+//		type: "POST",
+//		data: postData,
+//		success: function(response){
+//			alert("프롬프트 선택을 완료했습니다.");
+//			opener.location.reload();
+//			window.close();
+//		},
+//		error: function(error){
+//			alert("프롬프트를 불러오는 데 실패했습니다.");
+//		}
+//	})
+//}
+
+
+
+
+
+
 // 프롬프트 샘플 팝업 창 열기 및 닫기 스크립트
-        var popup = document.getElementById("popup");
-        var sample = document.querySelector(".sample");
-        var closeButton = document.getElementsByClassName("close-button")[0];
+ var popup = document.getElementById("prompt-sample-popup");
+ var promptSample = document.querySelector(".prompt-sample");
+ var closeButton = document.getElementsByClassName("close-button")[0];
 
-        sample.onclick = function() {
-            popup.style.display = "block";
-        }
-
-        closeButton.onclick = function() {
-            popup.style.display = "none";
-        }
-
-        window.onclick = function(event) {
-            if (event.target == popup) {
-                popup.style.display = "none";
-            }
-        } 
+// 프롬프트 샘플 팝업 열기
+ promptSample.onclick = function() {
+ popup.style.display = "block"; 
+ $.ajax({
+	 type: "POST",
+	 url: "selectPromptSample.do",
+	 success: function(data){
+		 // FIXME
+		 $.each(data, function(index, value){
+			 $(".base-prompt-all").append(value.basePromptId+"\t");
+			 $(".base-prompt-all").append(value.basePromptName+"\t");
+			 $(".base-prompt-all").append(value.basePromptDesc+"<br>");
+		 });
+	 },
+	 error: function(error){
+		 alert("프롬프트 샘플을 가져오는 데 실패했습니다.")
+ }
+ })
+ 
+ 
+ }
+// 프롬프트 샘플 팝업 닫기
+ closeButton.onclick = function() {
+ popup.style.display = "none";
+ }
+// FIXME 무슨 기능?
+ window.onclick = function(event) {
+ if (event.target == popup) {
+ popup.style.display = "none";
+ }
+ }
+ 
  
  /*
- * select2 부분
- */
+	 * select2 부분
+	 */
  
  $('#promptlist').select2({ 
  placeholder: '프롬프트를 선택해 주세요'
  });
  
   /*
- *modal 부분
- */
+	 * modal 부분
+	 */
  
 document.addEventListener('DOMContentLoaded', function() {
     var modal = document.getElementById("variableModal");
@@ -97,7 +143,7 @@ var tempChatbotAnswer = "";
  */
 const getChatResponse = async (incomingChatDiv) => {
 	const pElement = document.createElement("p");
-//	document.getElementById("metaData").textContent = "";
+// document.getElementById("metaData").textContent = "";
 	var searchObj = {
 		"sp_body": userText,
 		"sp_previous_message": tempChatbotAnswer

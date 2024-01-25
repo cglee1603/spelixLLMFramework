@@ -6,29 +6,40 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.spelix.domain.LLMSimilarInfoCondDTO;
-import com.spelix.service.PromptTestDataService;
+import com.spelix.domain.PromptBaseDTO;
+import com.spelix.service.PlaygroundService;
 
 @Controller
 public class MainController {
+
+	private static final Logger log = LoggerFactory.getLogger(MainController.class);
 
 	// FIXME
 	private static String HOST_IP = "127.0.0.1";
 	private static String HOST_MURDER_PORT = "5000";
 
+	private final PlaygroundService playgroundService;
+
 	@Autowired
-	public PromptTestDataService promptTestDataService;
+	public MainController(PlaygroundService playgroundService) {
+		this.playgroundService = playgroundService;
+	}
 
 	@RequestMapping("/home")
 	public String home() {
@@ -37,7 +48,7 @@ public class MainController {
 
 	// FIXME
 	@RequestMapping(value = "/main", method = RequestMethod.GET)
-	public String daewooPromptHome(Locale locale, Model model) {
+	public String main(Locale locale, Model model) {
 		model.addAttribute("serverTime", "");
 
 		return "main";
@@ -45,7 +56,7 @@ public class MainController {
 
 	// FIXME
 	@RequestMapping(value = "/playground", method = RequestMethod.GET)
-	public String daewooPrompt(Locale locale, Model model) {
+	public String playground(Locale locale, Model model) {
 		model.addAttribute("serverTime", "");
 
 		return "playground";
@@ -127,6 +138,17 @@ public class MainController {
 			ex.printStackTrace();
 		}
 		return jsonStr;
+	}
+
+	@RequestMapping(value = "/selectPromptSample.do", method = RequestMethod.POST)
+	@ResponseBody
+	public List<PromptBaseDTO> selectPromptSample() {
+
+		List<PromptBaseDTO> promptBaseDTOList = playgroundService.getAllPromptBase();
+
+		log.debug("selectPromptSample: " + promptBaseDTOList);
+
+		return promptBaseDTOList;
 	}
 
 }

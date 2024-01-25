@@ -1,0 +1,22 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.spelix.dao.PlaygroundDAO">
+
+	<resultMap id="PromptBaseResultMap"
+		type="com.spelix.domain.PromptBaseDTO">
+		<id property="basePromptId" column="base_prmt_id" />
+		<result property="basePromptName" column="base_prmt_name" />
+		<result property="basePromptDesc" column="base_prmt_desc" />
+		<result property="basePromptVer" column="base_prmt_ver" />
+		<result property="insertUser" column="INSERT_USER" />
+		<result property="insertDate" column="INSERT_DATE" />
+		<result property="updateUser" column="UPDATE_USER" />
+		<result property="updateDate" column="UPDATE_DATE" />
+	</resultMap>
+
+	<select id="getAllPromptBase" resultMap="PromptBaseResultMap">
+		select * from
+		spx_prmt_base
+	</select>
+
+</mapper>
