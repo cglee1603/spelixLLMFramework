@@ -21,9 +21,26 @@
 //	})
 //}
 
+// 불러오기 팝업 창 열기 및 닫기 스크립트
+ var importpopup = document.getElementById("import-prompt-popup");
+ var importprompt = document.querySelector(".import-prompt");
+ var closeButton = document.getElementsByClassName("import-close-button")[0];
 
+// 프롬프트 샘플 팝업 열기
+ importprompt.onclick = function() {
+ importpopup.style.display = "block"; 
 
-
+ }
+// 프롬프트 샘플 팝업 닫기
+ closeButton.onclick = function() {
+ importpopup.style.display = "none";
+ }
+// FIXME 무슨 기능?
+ window.onclick = function(event) {
+ if (event.target == importpopup) {
+ importpopup.style.display = "none";
+ }
+ }
 
 
 // 프롬프트 샘플 팝업 창 열기 및 닫기 스크립트
@@ -38,19 +55,28 @@
 	 type: "POST",
 	 url: "selectPromptSample.do",
 	 success: function(data){
-		 // FIXME
-		 $.each(data, function(index, value){
-			 $(".base-prompt-all").append(value.basePromptId+"\t");
-			 $(".base-prompt-all").append(value.basePromptName+"\t");
-			 $(".base-prompt-all").append(value.basePromptDesc+"<br>");
-		 });
-	 },
+		  $(".base-prompt-all").empty(); // 이전 데이터를 비웁니다.
+            $.each(data, function(index, value){
+                // 각 프롬프트 샘플에 대한 요소를 생성합니다.
+                var promptSampleDiv = $('<div class="base-prompt-sample"></div>');
+                promptSampleDiv.append('<div class="base-prompt-title">' + value.basePromptName + '</div>');
+                promptSampleDiv.append('<div class="base-prompt-desc">' + value.basePromptDesc + '</div>');
+
+                // 생성된 요소를 base-prompt-all 클래스를 가진 요소에 추가합니다.
+                $(".base-prompt-all").append(promptSampleDiv);
+         // 클릭 이벤트 핸들러를 추가합니다.
+                promptSampleDiv.click(function() {
+                    // chat-input 필드에 프롬프트 설명을 삽입합니다.
+                    $('#chat-input').val(value.basePromptDesc);
+                    // 팝업을 닫습니다.
+                    popup.style.display = "none";
+                });
+            });
+        },
 	 error: function(error){
 		 alert("프롬프트 샘플을 가져오는 데 실패했습니다.")
  }
- })
- 
- 
+ }) 
  }
 // 프롬프트 샘플 팝업 닫기
  closeButton.onclick = function() {
