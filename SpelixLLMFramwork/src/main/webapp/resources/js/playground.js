@@ -63,7 +63,7 @@
  }
  }
 
-// 시스템 프롬프트 선택
+/*// 시스템 프롬프트 선택
  $(document).ready(function () {
 	    $('.promptlist').select2({
 	        ajax: {
@@ -92,14 +92,52 @@
 	        $('#selectedValuesDisplay').text(selectedValues.join(', '));
 	    });
 
-	});
+	});*/
+	
+$(document).ready(function () {
+    var $promptList = $('.promptlist');
 
- 
- 
- 
- 
- 
- 
+    // AJAX 요청으로 데이터를 불러오는 함수
+    function loadPromptData() {
+        $.ajax({
+            type: "POST",
+            url: "getPromptSystemNameList.do",
+            success: function (data) {
+                // 데이터를 <option> 태그로 변환하고 select 요소에 추가
+                data.forEach(function (item) {
+                    var option = new Option(item, item);
+                    $promptList.append($(option));
+                });
+
+                // Select2 적용
+                $promptList.select2({
+                    placeholder: '프롬프트를 선택해 주세요',
+                    multiple: true
+                });
+            },
+            error: function (error) {
+                alert("시스템 프롬프트를 가져오는 데 실패했습니다.");
+            }
+        });
+    }
+
+    // 이벤트 핸들러
+$promptList.on('change', function () {
+    var selectedValues = $(this).val();
+    
+    // selectedValues가 배열이 아닌 경우 배열로 변환
+    if (!Array.isArray(selectedValues)) {
+        selectedValues = [selectedValues];
+    }
+
+    console.log(selectedValues);
+    $('#selectedValuesDisplay').text(selectedValues.join(', '));
+});
+
+    // 데이터 로드 및 Select2 초기화
+    loadPromptData();
+});
+
  
   /*
 	 * modal 부분
