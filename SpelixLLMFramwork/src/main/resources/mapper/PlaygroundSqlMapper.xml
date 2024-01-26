@@ -42,4 +42,35 @@
 		spx_prmt_sys
 	</select>
 
+
+
+	<!-- 시스템 프롬프트 -->
+	<resultMap id="PromptMasterResultMap"
+		type="com.spelix.domain.PromptMasterDTO">
+		<id property="promptId" column="prmt_id" />
+		<id property="promptVer" column="prmt_ver" />
+		<result property="model" column="model" />
+		<result property="promptDesc" column="prmt_desc" />
+		<result property="promptType" column="prmt_type" />
+		<result property="llmCustomIds" column="llm_cust_ids" />
+		<result property="prompt" column="prmt" />
+		<result property="promptRate" column="prmt_rate" />
+		<result property="basePrompId" column="base_prmt_id" />
+		<result property="sysPromptIds" column="sys_prmt_ids" />
+		<result property="constUser" column="const_user" />
+		<result property="useYN" column="use_yn" />
+		<result property="parmJson" column="parm_json" />
+		<result property="insertUser" column="insert_user" />
+		<result property="insertDate" column="insert_date" />
+		<result property="updateUser" column="update_user" />
+		<result property="updateDate" column="update_date" />
+	</resultMap>
+
+	<select id="getAllPromptMaster"
+		resultMap="PromptMasterResultMap">
+		select
+		* from
+		spx_prmt_mst
+	</select>
+
 </mapper>
