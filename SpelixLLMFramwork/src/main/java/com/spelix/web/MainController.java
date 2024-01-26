@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.spelix.domain.LLMSimilarInfoCondDTO;
 import com.spelix.domain.PromptBaseDTO;
+import com.spelix.domain.PromptMasterDTO;
 import com.spelix.service.PlaygroundService;
 
 @Controller
@@ -159,6 +160,17 @@ public class MainController {
 		log.debug("getPromptSystemNameList: " + promptSystemNameList);
 
 		return promptSystemNameList;
+	}
+
+	@RequestMapping(value = "/getPromptMaster.do", method = RequestMethod.POST)
+	@ResponseBody
+	public List<PromptMasterDTO> getPromptMaster() {
+
+		List<PromptMasterDTO> promptMasterDTOList = playgroundService.getAllPromptMaster();
+
+		log.debug("getPromptMaster: " + promptMasterDTOList);
+
+		return promptMasterDTOList;
 	}
 
 }

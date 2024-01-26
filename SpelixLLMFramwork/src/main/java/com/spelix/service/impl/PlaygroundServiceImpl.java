@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.spelix.dao.PlaygroundDAO;
 import com.spelix.domain.PromptBaseDTO;
+import com.spelix.domain.PromptMasterDTO;
 import com.spelix.service.PlaygroundService;
 
 @Service
@@ -22,4 +23,9 @@ public class PlaygroundServiceImpl implements PlaygroundService {
 	public List<String> getAllPromptSystemNameList() {
 		return playgroundDAO.getAllPromptSystemNameList();
 	}
+
+	public List<PromptMasterDTO> getAllPromptMaster() {
+		return playgroundDAO.getAllPromptMaster();
+	}
+
 }
