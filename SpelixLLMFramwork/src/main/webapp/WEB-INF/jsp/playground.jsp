@@ -34,12 +34,9 @@
 					<div class="overlap-group">
 
 						<!--　모델　선택　-->
-						<div class="model">
+						<div class="selectmodel">
 							<div class="titlelabel">모델</div>
-							<select id="selectmodel" name="selectmodel" class="selectmodel">
-								<option disabled selected>적용모델을 선택하세요</option>
-								<option value="1">llama</option>
-								<option value="2">gpt</option>
+							<select id="selectmodel" name="selectmodel" class="form-control">
 							</select>
 						</div>
 
@@ -55,7 +52,7 @@
 								src="<%=application.getContextPath()%>/resources/img/import2.svg"
 								class="settingicon">
 							<div class="titlelabel">
-							<span class="import-prompt">불러오기</span>
+								<span class="import-prompt">불러오기</span>
 							</div>
 						</div>
 
@@ -65,36 +62,37 @@
 								<span class="import-close-button">&times;</span>
 								<h2>불러오기 리스트</h2>
 								<div class=import-prompt-all>
-								<table class="js-dynamitable table  table-bordered" id="inputtable">
-						<!-- table heading -->
-						<thead>
-							<tr>
-								<th class="check"><input type="checkbox" id="all"
-									onclick="toggleAll(this)"></th>
-								<th><input type="checkbox" id="part"><label
-									class="tablelabel">No</label></th>
-								<th><input type="checkbox" id="part"><label
-									class="tablelabel">담당부서</label></th>
-								<th><input type="checkbox" id="action"><label
-									class="tablelabel">장애내용</label></th>
-								<th><input type="checkbox" id="error"><label
-									class="tablelabel">조치내용</label></th>
-							</tr>
-							<tr>
-								<th class="check">input filter</th>
-								<th><input class="js-filter  form-control" type="text"
-									value=""></th>
-								<th><input class="js-filter  form-control" type="text"
-									value=""></th>
-								<th><input class="js-filter  form-control" type="text"
-									value=""></th>
-								<th><input class="js-filter  form-control" type="text"
-									value=""></th>
-							</tr>
-						</thead>
-						<tbody>
-						</tbody>
-					</table>
+									<table class="js-dynamitable table  table-bordered"
+										id="inputtable">
+										<!-- table heading -->
+										<thead>
+											<tr>
+												<th class="check"><input type="checkbox" id="all"
+													onclick="toggleAll(this)"></th>
+												<th><input type="checkbox" id="part"><label
+													class="tablelabel">No</label></th>
+												<th><input type="checkbox" id="part"><label
+													class="tablelabel">담당부서</label></th>
+												<th><input type="checkbox" id="action"><label
+													class="tablelabel">장애내용</label></th>
+												<th><input type="checkbox" id="error"><label
+													class="tablelabel">조치내용</label></th>
+											</tr>
+											<tr>
+												<th class="check">input filter</th>
+												<th><input class="js-filter  form-control" type="text"
+													value=""></th>
+												<th><input class="js-filter  form-control" type="text"
+													value=""></th>
+												<th><input class="js-filter  form-control" type="text"
+													value=""></th>
+												<th><input class="js-filter  form-control" type="text"
+													value=""></th>
+											</tr>
+										</thead>
+										<tbody>
+										</tbody>
+									</table>
 								</div>
 							</div>
 						</div>
@@ -128,15 +126,15 @@
 							<div class=base-prompt-all></div>
 						</div>
 					</div>
-						<!--　모드　선택　-->
+					<!--　모드　선택　-->
 					<div class="mode">
-					<div class="titlelabel">모드</div>
-					<select id="changemode" name="changemode" class="changemode">
+						<div class="titlelabel">모드</div>
+						<select id="changemode" name="changemode" class="changemode">
 
-						<option value="chat" selected>채팅</option>
-						<option value="prompt">프롬프트</option>
-					</select>
-				</div>
+							<option value="chat" selected>채팅</option>
+							<option value="prompt">프롬프트</option>
+						</select>
+					</div>
 				</div>
 
 			</div>
@@ -212,12 +210,13 @@
 						<div class="param"></div>
 					</div>
 				</div>
+
 			</div>
 		</div>
 	</div>
 
 
-	
+
 	<!-- jQuery -->
 	<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 	<!-- select2 javascript cdn -->
@@ -228,7 +227,7 @@
 	<script
 		src="<%=application.getContextPath()%>/resources/js/playground.js"></script>
 
-	
+
 </body>
 
 </html>

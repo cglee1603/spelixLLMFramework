@@ -73,4 +73,19 @@
 		spx_prmt_mst
 	</select>
 
+	<select id="getAllPromptModelList" resultType="String">
+		select
+		model from
+		spx_prmt_mst
+	</select>
+
+	<select id="getModelParamJsonStr" resultType="String">
+		select
+		parm_json
+		from
+		spx_prmt_mst
+		where model = #{model}
+	</select>
+
+
 </mapper>

@@ -10,7 +10,11 @@ public interface PlaygroundDAO {
 	List<PromptBaseDTO> getAllPromptBase();
 
 	List<String> getAllPromptSystemNameList();
-	
+
 	List<PromptMasterDTO> getAllPromptMaster();
+
+	List<String> getAllPromptModelList();
+
+	String getModelParamJsonStr(String selectedModel);
 
 }

@@ -28,4 +28,11 @@ public class PlaygroundServiceImpl implements PlaygroundService {
 		return playgroundDAO.getAllPromptMaster();
 	}
 
+	public List<String> getAllPromptModelList() {
+		return playgroundDAO.getAllPromptModelList();
+	}
+
+	public String getModelParamJsonStr(String selectedModel) {
+		return playgroundDAO.getModelParamJsonStr(selectedModel);
+	}
 }

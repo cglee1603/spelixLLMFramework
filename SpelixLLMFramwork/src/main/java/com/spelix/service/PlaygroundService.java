@@ -12,5 +12,9 @@ public interface PlaygroundService {
 	List<String> getAllPromptSystemNameList();
 
 	List<PromptMasterDTO> getAllPromptMaster();
+	
+	List<String> getAllPromptModelList();
+	
+	String getModelParamJsonStr(String selectedModel);
 
 }

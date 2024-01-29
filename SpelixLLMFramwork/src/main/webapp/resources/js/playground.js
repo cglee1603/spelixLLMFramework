@@ -1,25 +1,97 @@
 
 
-//function selectPromptSample(promptId, promptName, promptDesc){
-//	var postData = {
-//			"promptId": promptId,
-//			"promptName": promptName,
-//			"promptDesc": promptDesc
-//	};
-//	$.ajax({
-//		url: "selectPromptSample.do",
-//		type: "POST",
-//		data: postData,
-//		success: function(response){
-//			alert("프롬프트 선택을 완료했습니다.");
-//			opener.location.reload();
-//			window.close();
-//		},
-//		error: function(error){
-//			alert("프롬프트를 불러오는 데 실패했습니다.");
-//		}
-//	})
-//}
+/* 
+ * 모델 선택 
+ */
+$(document).ready(function () {
+    var $modelList = $('.selectmodel');
+
+    // AJAX 요청으로 데이터를 불러오는 함수
+    function loadPromptModelList() {
+        $.ajax({
+            type: "POST",
+            url: "getAllPromptModelList.do",
+            success: function (data) {
+                // 데이터를 <option> 태그로 변환하고 select 요소에 추가
+                data.forEach(function (item) {
+                    var option = new Option(item, item);
+                    $modelList.append($(option));
+                });
+
+                // Select2 적용
+                $modelList.select2({
+                    placeholder: '모델을 선택해 주세요'
+                });
+            },
+            error: function (error) {
+                alert("모델을 가져오는 데 실패했습니다.");
+            }
+        });
+
+    }
+
+    
+    // 데이터 로드 및 Select2 초기화
+    loadPromptModelList();
+
+});
+
+
+
+/*
+ * 모델 선택 후 파라미터 동적 생성
+ */
+$('.selectmodel').on('select2:select', function (e) {
+    var selectedModel = e.params.data.text; // 사용자가 선택한 옵션의 텍스트 값
+    var paramJson;    
+    var paramJsonKeys;
+
+    $.ajax({
+        type: "POST",
+        data: { selectedModel: selectedModel },
+        url: "getModelParamJsonStr.do",
+        success: function (data) {
+            paramJson = JSON.parse(data);
+            
+            // 기존 param 요소들을 제거 (새로운 모델의 파라미터로 대체)
+            var paramContainer = document.querySelector('.paramall');
+            paramContainer.innerHTML = '';
+
+            for (var key in paramJson) {
+                var valueJson = paramJson[key];
+                var newParamDiv = document.createElement('div');
+                newParamDiv.classList.add('param');
+                newParamDiv.innerHTML = `
+                    <div class="param-1">
+                        <div class="paramtitle">${key}</div>
+                        <div class="prograss">
+                            <input type="range" class="parambar" id="parambar" value="${valueJson.value}"
+                                min="${valueJson.min}" max="${valueJson.max}">
+                            <input type="text" class="paramInput" id="paramInput" value="${valueJson.value}">
+                        </div>
+                    </div>`;
+                paramContainer.appendChild(newParamDiv);
+                
+                var progressBar = newParamDiv.querySelector('.parambar');
+                let textInput = newParamDiv.querySelector('.paramInput');
+                console.log(textInput);
+                progressBar.addEventListener('input', function() {
+                    textInput.value = this.value;
+                });
+            }       
+        },
+        error: function (error) {
+            alert("모델 파라미터를 가져오는 데 실패했습니다.");
+        }
+    });
+});
+
+
+
+
+
+
+
 
 // 불러오기 팝업 창 열기 및 닫기 스크립트
  var importpopup = document.getElementById("import-prompt-popup");
@@ -89,37 +161,8 @@
  }
  }
 
-/*// 시스템 프롬프트 선택
- $(document).ready(function () {
-	    $('.promptlist').select2({
-	        ajax: {
-	            type: "POST",
-	            url: "getPromptSystemNameList.do",
-	            processResults: function (data) {
-	            	console.log(data);
-	                return {
-	                    results: $.map(data, function (value) {
-//	                    	console.log(value);
-	                        return { id: value, text: value };
-	                    })
-	                };
-	            },
-	            error: function (error) {
-	                alert("시스템 프롬프트를 가져오는 데 실패했습니다.")
-	            }
-	        },
-	        placeholder: '프롬프트를 선택해 주세요',
-	        multiple: true
-	    }).on('change', function (e) {
-	        var selectedValues = $(this).val();
-	        console.log(selectedValues); // 선택된 값들을 콘솔에 출력
-
-	        // 선택된 값을 어떤 HTML 엘리먼트에 표시하고자 하는 경우
-	        $('#selectedValuesDisplay').text(selectedValues.join(', '));
-	    });
-
-	});*/
-	
+ 
+// 시스템 프롬프트 선택
 $(document).ready(function () {
     var $promptList = $('.promptlist');
 
@@ -367,48 +410,4 @@ chatInput.addEventListener("keydown", (e) => {
 loadDataFromLocalstorage();
 sendButton.addEventListener("click", handleOutgoingChat);
 
-/* 파라미터 동적 생성 */
 
-document.getElementById('selectmodel').addEventListener('change', function() {
-  var selectedModel = this.value;
-  var parameters;
- 
- // 모델에 따른 파라미터 설정 (실제로는 서버에서 데이터를 가져올 수 있습니다 - parameters를 db 혹은 다른데서 조회)
-if (selectedModel === '1') {
-parameters = [
-{ title: 'Max response for Llama', value: 1, min: 1, max: 100 },
-// 추가 파라미터
-];
-} else if (selectedModel === '2') {
-parameters = [
-{ title: 'Max response for GPT', value: 1, min: 1, max: 200 },
-// 추가 파라미터
-];
-}
-
- // 기존 param 요소들을 제거
- var paramContainer = document.querySelector('.paramall');
- paramContainer.innerHTML = '';
-
- // 새로운 param 요소들을 생성 및 추가
- parameters.forEach(param => {
-   var newParamDiv = document.createElement('div');
-   newParamDiv.classList.add('param');
-   newParamDiv.innerHTML = `
-     <div class="param-1">
-       <div class="paramtitle">${param.title}</div>
-       <div class="prograss">
-         <input type="range" class="parambar" id="parambar" value="${param.value}" min="${param.min}" max="${param.max}">
-         <input type="text" class="paramInput" id="paramInput" value="${param.value}">
-       </div>
-     </div>`;
-   paramContainer.appendChild(newParamDiv);
-   
-var progressBar = newParamDiv.querySelector('.parambar');
-var textInput = newParamDiv.querySelector('.paramInput');
-    console.log(textInput);
-    progressBar.addEventListener('input', function() {
-      textInput.value = this.value;
-	   });
- });
-});
