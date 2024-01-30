@@ -1,0 +1,91 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.spelix.dao.PlaygroundDAO">
+
+	<!-- 프롬프트 베이스 탬플릿 -->
+	<resultMap id="PromptBaseResultMap"
+		type="com.spelix.domain.PromptBaseDTO">
+		<id property="basePromptId" column="base_prmt_id" />
+		<result property="basePromptName" column="base_prmt_name" />
+		<result property="basePromptDesc" column="base_prmt_desc" />
+		<result property="basePromptVer" column="base_prmt_ver" />
+		<result property="insertUser" column="INSERT_USER" />
+		<result property="insertDate" column="INSERT_DATE" />
+		<result property="updateUser" column="UPDATE_USER" />
+		<result property="updateDate" column="UPDATE_DATE" />
+	</resultMap>
+
+	<select id="getAllPromptBase" resultMap="PromptBaseResultMap">
+		select * from
+		spx_prmt_base
+	</select>
+
+
+
+	<!-- 시스템 프롬프트 -->
+	<resultMap id="PromptSystemResultMap"
+		type="com.spelix.domain.PromptSystemDTO">
+		<id property="systemPromptId" column="sys_prmt_id" />
+		<id property="systemPromptVer" column="sys_prmt_ver" />
+		<result property="systemPromptName" column="sys_prmt_name" />
+		<result property="systemPrompt" column="sys_prmt" />
+		<result property="constUser" column="const_user" />
+		<result property="insertUser" column="insert_user" />
+		<result property="insertDate" column="insert_date" />
+		<result property="updateUser" column="update_user" />
+		<result property="updateDate" column="update_date" />
+	</resultMap>
+
+	<select id="getAllPromptSystemNameList" resultType="String">
+		select
+		sys_prmt_name from
+		spx_prmt_sys
+	</select>
+
+
+
+	<!-- 시스템 프롬프트 -->
+	<resultMap id="PromptMasterResultMap"
+		type="com.spelix.domain.PromptMasterDTO">
+		<id property="promptId" column="prmt_id" />
+		<id property="promptVer" column="prmt_ver" />
+		<result property="model" column="model" />
+		<result property="promptDesc" column="prmt_desc" />
+		<result property="promptType" column="prmt_type" />
+		<result property="llmCustomIds" column="llm_cust_ids" />
+		<result property="prompt" column="prmt" />
+		<result property="promptRate" column="prmt_rate" />
+		<result property="basePrompId" column="base_prmt_id" />
+		<result property="sysPromptIds" column="sys_prmt_ids" />
+		<result property="constUser" column="const_user" />
+		<result property="useYN" column="use_yn" />
+		<result property="parmJson" column="parm_json" />
+		<result property="insertUser" column="insert_user" />
+		<result property="insertDate" column="insert_date" />
+		<result property="updateUser" column="update_user" />
+		<result property="updateDate" column="update_date" />
+	</resultMap>
+
+	<select id="getAllPromptMaster"
+		resultMap="PromptMasterResultMap">
+		select
+		* from
+		spx_prmt_mst
+	</select>
+
+	<select id="getAllPromptModelList" resultType="String">
+		select
+		model from
+		spx_prmt_mst
+	</select>
+
+	<select id="getModelParamJsonStr" resultType="String">
+		select
+		parm_json
+		from
+		spx_prmt_mst
+		where model = #{model}
+	</select>
+
+
+</mapper>
