@@ -29,9 +29,9 @@
  */
 $('.save-prompt').on('click', function () {
 	
-	var model = $("#selectmodel option:checked").text();
+// var model = $("#selectmodel option:checked").text();
 	
-	console.log("model: "+model);
+	console.log("model: "+selectedModel);
 	
 	var dataObj = {
 			
@@ -93,7 +93,6 @@ $(document).ready(function () {
         });
 
     }
-
     
     // 데이터 로드 및 Select2 초기화
     loadPromptModelList();
@@ -105,8 +104,8 @@ $(document).ready(function () {
 /*
  * 모델 선택 후 파라미터 동적 생성
  */
-
 var selectedModel = "";
+var currentParamValueJson = {};
 
 $('.selectmodel').on('select2:select', function (e) {
     selectedModel = e.params.data.text; // 사용자가 선택한 옵션의 텍스트 값
@@ -141,10 +140,16 @@ $('.selectmodel').on('select2:select', function (e) {
                 
                 var progressBar = newParamDiv.querySelector('.parambar');
                 let textInput = newParamDiv.querySelector('.paramInput');
-                console.log(textInput);
+                
+                currentParamValueJson[key] = textInput.value; 
+
+                // 파라미터 값 변동
                 progressBar.addEventListener('input', function() {
                     textInput.value = this.value;
+
+                    currentParamValueJson[key] = textInput.value; 
                 });
+                
             }       
         },
         error: function (error) {
@@ -152,10 +157,6 @@ $('.selectmodel').on('select2:select', function (e) {
         }
     });
 });
-
-
-
-
 
 
 
@@ -229,27 +230,44 @@ $('.selectmodel').on('select2:select', function (e) {
  }
 
  
-// 시스템 프롬프트 선택
+ 
+/*
+ * 시스템 프롬프트 선택
+ */
+var selectedSystemPrompt;
+ 
 $(document).ready(function () {
+	// 시스템 프롬프트 선택 localStorage 초기화
+	localStorage.removeItem("selectSystemPrompt");
+
     var $promptList = $('.promptlist');
 
     // AJAX 요청으로 데이터를 불러오는 함수
     function loadPromptData() {
         $.ajax({
             type: "POST",
-            url: "getPromptSystemNameList.do",
+            url: "getPromptSystemInfo.do",
             success: function (data) {
+            	var systemPromptInfoJson = {};
+            	
                 // 데이터를 <option> 태그로 변환하고 select 요소에 추가
                 data.forEach(function (item) {
-                    var option = new Option(item, item);
+                	var systemPromptName = item.systemPromptName;
+                	systemPromptInfoJson[systemPromptName] = item;
+                	
+                    var option = new Option(systemPromptName, systemPromptName);
                     $promptList.append($(option));
                 });
+                
+            	localStorage.setItem("selectSystemPrompt", JSON.stringify(systemPromptInfoJson));
+// console.log(localStorage.getItem("selectSystemPrompt"));
 
                 // Select2 적용
                 $promptList.select2({
                     placeholder: '프롬프트를 선택해 주세요',
                     multiple: true
                 });
+ 
             },
             error: function (error) {
                 alert("시스템 프롬프트를 가져오는 데 실패했습니다.");
@@ -257,24 +275,25 @@ $(document).ready(function () {
         });
     }
 
-    // 이벤트 핸들러
-$promptList.on('change', function () {
-    var selectedValues = $(this).val();
-    
-    // selectedValues가 배열이 아닌 경우 배열로 변환
-    if (!Array.isArray(selectedValues)) {
-        selectedValues = [selectedValues];
-    }
-
-    console.log(selectedValues);
-    $('#selectedValuesDisplay').text(selectedValues.join(', '));
-});
-
     // 데이터 로드 및 Select2 초기화
     loadPromptData();
+
+
+    
 });
 
- 
+// 선택한 시스템 프롬프트 옵션을 배열에 저장
+$('.promptlist').on('change', function (e) {      
+    // 선택된 옵션들의 텍스트 배열을 가져오기
+    selectedSystemPrompt = $(this).find('option:selected').map(function () {
+        return $(this).text();
+    }).get();
+
+    // 배열 출력
+    console.log("selectedSystemPrompt: ", selectedSystemPrompt);
+
+});
+
 
 
 /*
@@ -355,13 +374,40 @@ const getChatResponse = async (incomingChatDiv) => {
 	
 	console.log("selectedModel: "+ selectedModel);
 	
-//	if (selectedModel.length == 0) {
-//		alert("모델을 선택하세요.");
-//	}
-	
-	
+	// chat history + current chat
 	var promptInputStr = "# History #\n" + chatHistoryText + "\nUSER: " + userText;
+
+	// 직접 입력한 시스템 프롬프트
+	var systempPromptInputStr = JSON.stringify(document.getElementById("promptarea").value);
 	
+	if (systempPromptInputStr.charAt(systempPromptInputStr.length - 1) !== ".") {
+		systempPromptInputStr += ".";
+	}
+	
+	console.log("systempPromptInputStr: " + systempPromptInputStr);
+	
+	// 선택한 시스템 프롬프트
+	var selectedSystemPromptStr = "";
+
+	for (var key in JSON.parse(localStorage.getItem("selectSystemPrompt"))) {
+		var temp = JSON.parse(localStorage.getItem("selectSystemPrompt"))[key];
+		
+		if (selectedSystemPromptStr.length != 0) {
+			selectedSystemPromptStr += " ";
+		}
+		
+		selectedSystemPromptStr += temp.systemPrompt;
+		
+		if (selectedSystemPromptStr.charAt(selectedSystemPromptStr.length - 1) !== ".") {
+			selectedSystemPromptStr += ".";
+		}
+		
+		console.log("selectedSystemPromptStr: ",selectedSystemPromptStr);
+			
+	}
+	
+	console.log("최종 system_prompt: ", selectedSystemPromptStr + " " + systempPromptInputStr);
+
 
 	
 	// FIXME
@@ -369,15 +415,11 @@ const getChatResponse = async (incomingChatDiv) => {
 			"prompt_id" : "test",
 			"model" : selectedModel,
 			"prompt" : promptInputStr,
-			"system_prompt" : "",
+			"system_prompt" : selectedSystemPromptStr + " " + systempPromptInputStr,
+			"properties" : currentParamValueJson,
 			"file_path_list" : "",
-			"additional_work" : "",
-			"temperature" : 0.5, // FIXME
-			"top_p" : 0.5,
-			"max_token" : 4096
+			"additional_work" : ""
 			};
-	
-	console.log(JSON.stringify(requestParam));
 
 	if (localStorage.getItem(JSON.stringify(requestParam)) != null) {
 		console.log("local storage is not null");

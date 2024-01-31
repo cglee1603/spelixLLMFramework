@@ -28,6 +28,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spelix.domain.PromptBaseDTO;
 import com.spelix.domain.PromptMasterDTO;
+import com.spelix.domain.PromptSystemDTO;
 import com.spelix.service.PlaygroundService;
 
 @Controller
@@ -147,15 +148,15 @@ public class MainController {
 		return promptBaseDTOList;
 	}
 
-	@RequestMapping(value = "/getPromptSystemNameList.do", method = RequestMethod.POST)
+	@RequestMapping(value = "/getPromptSystemInfo.do", method = RequestMethod.POST)
 	@ResponseBody
-	public List<String> getPromptSystemNameList() {
+	public List<PromptSystemDTO> getPromptSystemInfo() {
 
-		List<String> promptSystemNameList = playgroundService.getAllPromptSystemNameList();
+		List<PromptSystemDTO> promptSystemInfo = playgroundService.getPromptSystemInfo();
 
-		log.debug("getPromptSystemNameList: " + promptSystemNameList);
+		log.debug("promptSystemInfo: " + promptSystemInfo);
 
-		return promptSystemNameList;
+		return promptSystemInfo;
 	}
 
 	@RequestMapping(value = "/getPromptMaster.do", method = RequestMethod.POST)
