@@ -26,6 +26,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.spelix.domain.ModelMasterDTO;
+import com.spelix.domain.ParameterMasterDTO;
 import com.spelix.domain.PromptBaseDTO;
 import com.spelix.domain.PromptMasterDTO;
 import com.spelix.domain.PromptSystemDTO;
@@ -172,25 +174,26 @@ public class MainController {
 
 	@RequestMapping(value = "/getAllPromptModelList.do", method = RequestMethod.POST)
 	@ResponseBody
-	public List<String> getAllPromptModelList() {
+	public List<ModelMasterDTO> getAllPromptModelList() {
 
-		List<String> promptModelList = playgroundService.getAllPromptModelList();
+		List<ModelMasterDTO> promptModelList = playgroundService.getAllPromptModelList();
 
 		log.debug("getPromptModel: " + promptModelList);
 
 		return promptModelList;
 	}
 
-	@RequestMapping(value = "/getModelParamJsonStr.do", method = RequestMethod.POST)
+	@RequestMapping(value = "/getParamMasterByParamId.do", method = RequestMethod.POST)
 	@ResponseBody
-	public String getModelParamJsonStr(@RequestParam("selectedModel") String selectedModel) {
+	public List<ParameterMasterDTO> getParamMasterByParamId(
+			@RequestParam("selectedModelTypeName") String selectedModelTypeName) {
 
-		String modelParamJsonStr = playgroundService.getModelParamJsonStr(selectedModel);
+		List<ParameterMasterDTO> paramMasterByParamId = playgroundService
+				.getParamMasterByParamId(selectedModelTypeName);
 
-		log.debug("modelParamJsonStr selectedModel: " + selectedModel);
-		log.debug("modelParamJsonStr: " + modelParamJsonStr);
+		log.debug("getParamMasterByParamId: " + paramMasterByParamId);
 
-		return modelParamJsonStr;
+		return paramMasterByParamId;
 	}
 
 	@RequestMapping(value = "/savePrompt.do", method = RequestMethod.POST)

@@ -67,6 +67,8 @@ $('.save-prompt').on('click', function () {
 /*
  * 모델 선택
  */
+var modelNameTypeJson = {};
+
 $(document).ready(function () {
     var $modelList = $('.selectmodel');
 
@@ -77,9 +79,11 @@ $(document).ready(function () {
             url: "getAllPromptModelList.do",
             success: function (data) {
                 // 데이터를 <option> 태그로 변환하고 select 요소에 추가
-                data.forEach(function (item) {
-                    var option = new Option(item, item);
+            	$.each(data, function(index, value){
+                    var option = new Option(value.modelName, value.modelName);
                     $modelList.append($(option));
+                    
+                    modelNameTypeJson[value.modelName] = value.modelType; 
                 });
 
                 // Select2 적용
@@ -91,14 +95,11 @@ $(document).ready(function () {
                 alert("모델을 가져오는 데 실패했습니다.");
             }
         });
-
     }
     
     // 데이터 로드 및 Select2 초기화
     loadPromptModelList();
-
 });
-
 
 
 /*
@@ -109,31 +110,27 @@ var currentParamValueJson = {};
 
 $('.selectmodel').on('select2:select', function (e) {
     selectedModel = e.params.data.text; // 사용자가 선택한 옵션의 텍스트 값
-    var paramJson;    
-    var paramJsonKeys;
+
+    // 기존 파라미터를 표시하는 영역을 초기화
+    var paramContainer = document.querySelector('.paramall');
+    paramContainer.innerHTML = '';
+    currentParamValueJson = {};  // 현재 파라미터 값을 저장하는 객체 초기화
 
     $.ajax({
         type: "POST",
-        data: { selectedModel: selectedModel },
-        url: "getModelParamJsonStr.do",
+        data: { selectedModelTypeName: modelNameTypeJson[selectedModel] },
+        url: "getParamMasterByParamId.do",
         success: function (data) {
-            paramJson = JSON.parse(data);
-            
-            // 기존 param 요소들을 제거 (새로운 모델의 파라미터로 대체)
-            var paramContainer = document.querySelector('.paramall');
-            paramContainer.innerHTML = '';
-
-            for (var key in paramJson) {
-                var valueJson = paramJson[key];
+            $.each(data, function(index, value){
                 var newParamDiv = document.createElement('div');
                 newParamDiv.classList.add('param');
                 newParamDiv.innerHTML = `
                     <div class="param-1">
-                        <div class="paramtitle">${key}</div>
+                        <div class="paramtitle">${value.parameterName}</div>
                         <div class="prograss">
-                            <input type="range" class="parambar" id="parambar" value="${valueJson.value}"
-                                min="${valueJson.min}" max="${valueJson.max}">
-                            <input type="text" class="paramInput" id="paramInput" value="${valueJson.value}">
+                            <input type="range" class="parambar" id="parambar" value="${value.defaultValue}"
+                                min="${value.minValue}" max="${value.maxValue}">
+                            <input type="text" class="paramInput" id="paramInput" value="${value.defaultValue}">
                         </div>
                     </div>`;
                 paramContainer.appendChild(newParamDiv);
@@ -141,22 +138,22 @@ $('.selectmodel').on('select2:select', function (e) {
                 var progressBar = newParamDiv.querySelector('.parambar');
                 let textInput = newParamDiv.querySelector('.paramInput');
                 
-                currentParamValueJson[key] = textInput.value; 
+                currentParamValueJson[value.parameterName] = textInput.value; 
 
                 // 파라미터 값 변동
                 progressBar.addEventListener('input', function() {
                     textInput.value = this.value;
 
-                    currentParamValueJson[key] = textInput.value; 
+                    currentParamValueJson[value.parameterName] = textInput.value; 
                 });
-                
-            }       
+            });
         },
         error: function (error) {
             alert("모델 파라미터를 가져오는 데 실패했습니다.");
         }
     });
 });
+
 
 
 
@@ -378,9 +375,9 @@ const getChatResponse = async (incomingChatDiv) => {
 	var promptInputStr = "# History #\n" + chatHistoryText + "\nUSER: " + userText;
 
 	// 직접 입력한 시스템 프롬프트
-	var systempPromptInputStr = JSON.stringify(document.getElementById("promptarea").value);
-	
-	if (systempPromptInputStr.charAt(systempPromptInputStr.length - 1) !== ".") {
+	var systempPromptInputStr = document.getElementById("promptarea").value;
+
+	if (systempPromptInputStr.length !== 0 && systempPromptInputStr.charAt(systempPromptInputStr.length - 1) !== ".") {
 		systempPromptInputStr += ".";
 	}
 	
@@ -388,10 +385,15 @@ const getChatResponse = async (incomingChatDiv) => {
 	
 	// 선택한 시스템 프롬프트
 	var selectedSystemPromptStr = "";
+	var selectSystemPromptKeys = Object.keys(JSON.parse(localStorage.getItem("selectSystemPrompt")));
 
-	for (var key in JSON.parse(localStorage.getItem("selectSystemPrompt"))) {
-		var temp = JSON.parse(localStorage.getItem("selectSystemPrompt"))[key];
+	for (var selected of selectedSystemPrompt) {
+		if (!selectSystemPromptKeys.includes(selected)) {
+			continue;
+		}
 		
+		var temp = JSON.parse(localStorage.getItem("selectSystemPrompt"))[selected];
+
 		if (selectedSystemPromptStr.length != 0) {
 			selectedSystemPromptStr += " ";
 		}
@@ -403,8 +405,9 @@ const getChatResponse = async (incomingChatDiv) => {
 		}
 		
 		console.log("selectedSystemPromptStr: ",selectedSystemPromptStr);
-			
+
 	}
+	
 	
 	console.log("최종 system_prompt: ", selectedSystemPromptStr + " " + systempPromptInputStr);
 
