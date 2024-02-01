@@ -69,24 +69,85 @@
 
 	<select id="getAllPromptMaster"
 		resultMap="PromptMasterResultMap">
-		select
-		* from
-		spx_prmt_mst
+		select *
+		from spx_prmt_mst
 	</select>
 
-	<select id="getAllPromptModelList" resultType="String">
-		select
-		model from
-		spx_prmt_mst
+
+
+	<!-- 모델 마스터 -->
+	<resultMap id="ModelMasterResultMap"
+		type="com.spelix.domain.ModelMasterDTO">
+		<id property="modelId" column="model_id" />
+		<result property="modelType" column="model_type" />
+		<result property="modelName" column="model_name" />
+		<result property="useYN" column="use_yn" />
+		<result property="insertUser" column="insert_user" />
+		<result property="insertDate" column="insert_date" />
+		<result property="updateUser" column="update_user" />
+		<result property="updateDate" column="update_date" />
+	</resultMap>
+
+	<select id="getAllPromptModelList"
+		resultMap="ModelMasterResultMap">
+		select model_type, model_name
+		from spx_model_mst
+		where use_yn
+		='Y'
 	</select>
 
-	<select id="getModelParamJsonStr" resultType="String">
-		select
-		parm_json
+
+
+	<!-- 모델 타입 마스터 -->
+	<resultMap id="ModelTypeMasterResultMap"
+		type="com.spelix.domain.ModelTypeMasterDTO">
+		<id property="modelTypeId" column="model_type_id" />
+		<result property="modelTypeName" column="model_type_name" />
+		<result property="modelTypeParameters"
+			column="model_type_parms" />
+		<result property="insertUser" column="insert_user" />
+		<result property="insertDate" column="insert_date" />
+		<result property="updateUser" column="update_user" />
+		<result property="updateDate" column="update_date" />
+	</resultMap>
+
+	<select id="getModelTypeMaster"
+		resultMap="ModelTypeMasterResultMap">
+		select model_type_parms
+		from spx_model_typ_mst
+		where
+		model_type_name = #{selectedModelTypeName}
+	</select>
+
+
+
+	<!-- 파라미터 마스터 -->
+	<resultMap id="ParameterMasterResultMap"
+		type="com.spelix.domain.ParameterMasterDTO">
+		<id property="parameterId" column="parm_id" />
+		<result property="parameterName" column="parm_name" />
+		<result property="valueType" column="val_type" />
+		<result property="minValue" column="min_val" />
+		<result property="maxValue" column="max_val" />
+		<result property="valueOffset" column="val_offset" />
+		<result property="defaultValue" column="default_val" />
+		<result property="insertUser" column="insert_user" />
+		<result property="insertDate" column="insert_date" />
+		<result property="updateUser" column="update_user" />
+		<result property="updateDate" column="update_date" />
+	</resultMap>
+
+	<select id="getParamMasterByParamId"
+		resultMap="ParameterMasterResultMap">
+		select parm_name, val_type, min_val, max_val, default_val
 		from
-		spx_prmt_mst
-		where model = #{model}
-	</select>
+		spx_parm_mst
+		where parm_id in
+		<foreach collection="array" item="paramIdsArray" open="("
+			close=")" separator=",">
+			#{paramIdsArray}
+		</foreach>
 
+	</select>
 
 </mapper>
