@@ -378,9 +378,9 @@ const getChatResponse = async (incomingChatDiv) => {
 	var promptInputStr = "# History #\n" + chatHistoryText + "\nUSER: " + userText;
 
 	// 직접 입력한 시스템 프롬프트
-	var systempPromptInputStr = JSON.stringify(document.getElementById("promptarea").value);
-	
-	if (systempPromptInputStr.charAt(systempPromptInputStr.length - 1) !== ".") {
+	var systempPromptInputStr = document.getElementById("promptarea").value;
+
+	if (systempPromptInputStr.length !== 0 && systempPromptInputStr.charAt(systempPromptInputStr.length - 1) !== ".") {
 		systempPromptInputStr += ".";
 	}
 	
@@ -388,10 +388,15 @@ const getChatResponse = async (incomingChatDiv) => {
 	
 	// 선택한 시스템 프롬프트
 	var selectedSystemPromptStr = "";
+	var selectSystemPromptKeys = Object.keys(JSON.parse(localStorage.getItem("selectSystemPrompt")));
 
-	for (var key in JSON.parse(localStorage.getItem("selectSystemPrompt"))) {
-		var temp = JSON.parse(localStorage.getItem("selectSystemPrompt"))[key];
+	for (var selected of selectedSystemPrompt) {
+		if (!selectSystemPromptKeys.includes(selected)) {
+			continue;
+		}
 		
+		var temp = JSON.parse(localStorage.getItem("selectSystemPrompt"))[selected];
+
 		if (selectedSystemPromptStr.length != 0) {
 			selectedSystemPromptStr += " ";
 		}
@@ -403,8 +408,9 @@ const getChatResponse = async (incomingChatDiv) => {
 		}
 		
 		console.log("selectedSystemPromptStr: ",selectedSystemPromptStr);
-			
+
 	}
+	
 	
 	console.log("최종 system_prompt: ", selectedSystemPromptStr + " " + systempPromptInputStr);
 
