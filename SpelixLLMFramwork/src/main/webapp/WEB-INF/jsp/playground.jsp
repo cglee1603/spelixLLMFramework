@@ -35,9 +35,7 @@
 
 						<!--　모델　선택　-->
 						<div class="selectmodel">
-							<div class="titlelabel">모델</div>
-							<select id="selectmodel" name="selectmodel" class="form-control">
-							</select>
+							
 						</div>
 
 						<!--　상단　메뉴　-->
@@ -131,65 +129,15 @@
 						<div class="titlelabel">모드</div>
 						<select id="changemode" name="changemode" class="changemode">
 
-							<option value="chat" selected>채팅</option>
-							<option value="prompt">프롬프트</option>
+							<option value="playgroundchat" selected>채팅</option>
+							<option value="playgroundprompt">프롬프트</option>
 						</select>
 					</div>
 				</div>
 
 			</div>
 
-			<div class="maincontents">
-
-				<!--　시스템　프롬프트　-->
-				<div class="setting">
-					<div class="maintitle">시스템 프롬프트</div>
-					<div class="systemprompt">
-						<div class="subtitle">프롬프트 선택</div>
-						<div class="promptlist">
-							<select class="form-control" id="promptlist" multiple="multiple">
-							</select>
-						</div>
-
-						<div class="prompttext">
-							<div class="subtitle">프롬프트 입력</div>
-							<textarea
-								placeholder="You are an AI assistant that helps people find information."
-								id="promptarea"></textarea>
-						</div>
-					</div>
-
-					<!--　변수 추가　-->
-					<div class="variable">
-						<div class="line-with-text">
-							<hr class="line" />
-							<div class="subtitle">변수</div>
-							<hr class="line" />
-						</div>
-
-						<div class="addvariable">
-							<div class="variableltitle">{x} 변수 추가</div>
-						</div>
-
-						<div id="variablesContainer"></div>
-						<!-- 여기에 변수가 표시됩니다 -->
-					</div>
-
-					<!-- 모달 구조 -->
-					<div id="variableModal" class="modal">
-						<div class="modal-content">
-							<span class="modal-close">&times;</span>
-							<!-- 닫기 버튼 -->
-							<div class="subtitle">변수 입력</div>
-							<input type="text" id="variableInput" class="variableInput"
-								placeholder="변수를 입력하세요">
-							<button id="addVariableButton" class="addVariableButton">완료</button>
-							<!-- 입력 버튼 추가 -->
-						</div>
-					</div>
-				</div>
-
-			</div>
+			<div class="maincontents" id="maincontents"></div>
 		</div>
 	</div>
 

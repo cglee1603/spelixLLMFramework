@@ -46,7 +46,7 @@
 }
 
 .selectmodel {
-  width: 300px;
+  width: 300px !important;
     height: 40px;
   margin-right: 10px; /* 필요에 따라 조정 */
     display: flex; /* Flexbox 레이아웃 사용 */
@@ -212,10 +212,6 @@ margin-right:10px;
 
 .maincontents {
   align-items: flex-start;
-  display: grid;
-  gap: 5px;
-  padding: 10px;
-  grid-template-columns: 1fr 2fr 1fr;
   height:80vh;
 }
 

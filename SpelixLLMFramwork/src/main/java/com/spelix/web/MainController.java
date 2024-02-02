@@ -68,6 +68,20 @@ public class MainController {
 		return "playground";
 	}
 
+	@RequestMapping(value = "/playgroundprompt", method = RequestMethod.GET)
+	public String playgroundprompt(Locale locale, Model model) {
+		model.addAttribute("serverTime", "");
+
+		return "playgroundprompt";
+	}
+
+	@RequestMapping(value = "/playgroundchat", method = RequestMethod.GET)
+	public String playgroundchat(Locale locale, Model model) {
+		model.addAttribute("serverTime", "");
+
+		return "playgroundchat";
+	}
+
 	// FIXME
 	@RequestMapping(value = "getChatbotResponse.do")
 	@ResponseBody

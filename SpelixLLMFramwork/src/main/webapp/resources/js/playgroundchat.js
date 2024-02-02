@@ -1,25 +1,37 @@
 
-// 시스템 프롬프트 선택
+/*
+ * 시스템 프롬프트 선택
+ */
+var selectedSystemPrompt;
+ 
 $(document).ready(function () {
+	localStorage.removeItem("selectSystemPrompt");
+
     var $promptList = $('.promptlist');
 
-    // AJAX 요청으로 데이터를 불러오는 함수
     function loadPromptData() {
         $.ajax({
             type: "POST",
-            url: "getPromptSystemNameList.do",
+            url: "getPromptSystemInfo.do",
             success: function (data) {
+            	var systemPromptInfoJson = {};
+            	
                 // 데이터를 <option> 태그로 변환하고 select 요소에 추가
                 data.forEach(function (item) {
-                    var option = new Option(item, item);
+                	var systemPromptName = item.systemPromptName;
+                	systemPromptInfoJson[systemPromptName] = item;
+                	
+                    var option = new Option(systemPromptName, systemPromptName);
                     $promptList.append($(option));
                 });
+                
+            	localStorage.setItem("selectSystemPrompt", JSON.stringify(systemPromptInfoJson));
 
-                // Select2 적용
                 $promptList.select2({
                     placeholder: '프롬프트를 선택해 주세요',
                     multiple: true
                 });
+ 
             },
             error: function (error) {
                 alert("시스템 프롬프트를 가져오는 데 실패했습니다.");
@@ -27,16 +39,27 @@ $(document).ready(function () {
         });
     }
 
-
-    // 데이터 로드 및 Select2 초기화
     loadPromptData();
+
 });
 
- 
-  /*
-	 * modal 부분
-	 */
- 
+
+$('.promptlist').on('change', function (e) {      
+    // 선택된 옵션들의 텍스트 배열을 가져오기
+    selectedSystemPrompt = $(this).find('option:selected').map(function () {
+        return $(this).text();
+    }).get();
+
+    console.log("selectedSystemPrompt: ", selectedSystemPrompt);
+
+});
+
+
+
+
+/*
+ * 변수 추가
+ */
 document.addEventListener('DOMContentLoaded', function() {
     var modal = document.getElementById("variableModal");
     var btn = document.querySelector(".variableltitle");
@@ -74,7 +97,7 @@ document.addEventListener('DOMContentLoaded', function() {
         container.appendChild(newVariable);
 
         modal.style.display = "none";
-        document.getElementById("variableInput").value = ""; // 입력 필드 초기화
+        document.getElementById("variableInput").value = "";
     }
 
     window.onclick = function(event) {
@@ -84,9 +107,17 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
+
+
+
+/*
+ * 챗봇
+ */
 const chatInput = document.querySelector("#chat-input");
 const sendButton = document.querySelector("#send-btn");
 const chatContainer = document.querySelector(".chat-container");
+let userText = null;
+var chatHistoryText = "";
 
 const createChatElement = (content, className) => {
 	// Create new div and apply chat, specified class and set html content of
@@ -97,42 +128,101 @@ const createChatElement = (content, className) => {
 	return chatDiv; // Return the created chat div
 }
 
-var tempChatbotAnswer = "";
 
-/*
- * Chatbot 응답 주는 function ajax로 처리.
- */
+// Chatbot 응답 주는 function ajax로 처리.
 const getChatResponse = async (incomingChatDiv) => {
 	const pElement = document.createElement("p");
-// document.getElementById("metaData").textContent = "";
-	var searchObj = {
-		"sp_body": userText,
-		"sp_previous_message": tempChatbotAnswer
-	};
-	console.log(searchObj);
-	if (localStorage.getItem(JSON.stringify(searchObj)) != null) {
-		console.log("temp data");
-		var tempRtnData = JSON.parse(localStorage.getItem(JSON.stringify(searchObj)));
+	
+	console.log("selectedModel: "+ selectedModel);
+	
+	// chat history + current chat
+	var promptInputStr = "# History #\n" + chatHistoryText + "\nUSER: " + userText;
+
+	// 직접 입력한 시스템 프롬프트
+	var systempPromptInputStr = document.getElementById("promptarea").value;
+
+	if (systempPromptInputStr.length !== 0 && systempPromptInputStr.charAt(systempPromptInputStr.length - 1) !== ".") {
+		systempPromptInputStr += ".";
+	}
+	
+	console.log("systempPromptInputStr: " + systempPromptInputStr);
+	
+	// 선택한 시스템 프롬프트
+	var selectedSystemPromptStr = "";
+	var selectSystemPromptKeys = Object.keys(JSON.parse(localStorage.getItem("selectSystemPrompt")));
+
+	
+	if (selectedSystemPrompt != null) {
+		for (var selected of selectedSystemPrompt) {
+			if (!selectSystemPromptKeys.includes(selected)) {
+				continue;
+			}
+			
+			var temp = JSON.parse(localStorage.getItem("selectSystemPrompt"))[selected];
+	
+			if (selectedSystemPromptStr.length != 0) {
+				selectedSystemPromptStr += " ";
+			}
+			
+			selectedSystemPromptStr += temp.systemPrompt;
+			
+			if (selectedSystemPromptStr.charAt(selectedSystemPromptStr.length - 1) !== ".") {
+				selectedSystemPromptStr += ".";
+			}
+			
+			console.log("selectedSystemPromptStr: ",selectedSystemPromptStr);
+
+		}
+	}
+
+	console.log("최종 system_prompt: ", selectedSystemPromptStr + " " + systempPromptInputStr);
+
+	
+	// FIXME
+	var requestParam = {
+			"prompt_id" : "test",
+			"model" : selectedModel,
+			"prompt" : promptInputStr,
+			"system_prompt" : selectedSystemPromptStr + " " + systempPromptInputStr,
+			"properties" : currentParamValueJson,
+			"file_path_list" : "",
+			"additional_work" : ""
+			};
+
+	if (localStorage.getItem(JSON.stringify(requestParam)) != null) {
+		console.log("local storage is not null");
+		
+		var tempReturnData = JSON.parse(localStorage.getItem(JSON.stringify(requestParam)));
+
 		setTimeout(function() {
-			setResultVal(tempRtnData, pElement);
+			pElement.textContent = tempReturnData.prompt_result;
 			chatTypeingEnd(incomingChatDiv, pElement);
 		}, 1000);
-	}
-	else {
+		
+	} else {		
 		$.ajax({
 			type: "POST",
-			url: "getLLMChatbot.do",  // 요청을 보낼 URL
-			data: searchObj,          // 요청 데이터
-			async: true,             // 요청을 동기적으로 보내기 위해 async 옵션을 false로 설정
-			success: function(rtnData, status) {
-				// 성공적으로 요청을 완료한 경우
+			url: "getChatbotResponse.do",
+			data: { requestParam : JSON.stringify(requestParam) },
+			dataType: "json",
+			async: true, // 요청을 동기적으로 보내기 위해 async 옵션을 false로 설정
+			success: function(data, status) {				
+				pElement.textContent = data.prompt_result;
 
-				localStorage.setItem(JSON.stringify(searchObj), JSON.stringify(rtnData));
-				setResultVal(rtnData, pElement);
+				localStorage.setItem(JSON.stringify(requestParam), JSON.stringify(data));
 				chatTypeingEnd(incomingChatDiv, pElement);
+
+				// chat history
+				if (chatHistoryText.length != 0){
+					chatHistoryText = chatHistoryText + "\n";
+				}
+				
+				chatHistoryText = chatHistoryText + "USER: " + userText + "\nBOT: " + pElement.textContent;
+				console.log(chatHistoryText);
+
+				
 			},
 			error: function(xhr, status, error) {
-				// 요청 중에 에러가 발생한 경우
 				pElement.classList.add("error");
 				pElement.textContent = "죄송합니다. 답변을 드릴 수 없습니다. 잠시후 다시 시도해 주세요.";
 
@@ -165,7 +255,7 @@ const copyResponse = (copyBtn) => {
 	setTimeout(() => copyBtn.textContent = "content_copy", 1000);
 }
 
-const showTypingAnimation = () => {
+const showTypingAnimation = () => {	
 	// Display the typing animation and call the getChatResponse function
 	// FIXME 절대 경로 설정
 	const html = `<div class="chat-content">
@@ -182,14 +272,13 @@ const showTypingAnimation = () => {
 	// Create an incoming chat div with typing animation and append it to chat
 	// container
 	const incomingChatDiv = createChatElement(html, "incoming");
+
 	chatContainer.appendChild(incomingChatDiv);
 	chatContainer.scrollTo(0, chatContainer.scrollHeight);
 	getChatResponse(incomingChatDiv);
 }
 
 const handleOutgoingChat = () => {
-	// console.log("전송버튼")
-
 	userText = chatInput.value.trim(); // Get chatInput value and remove extra
 										// spaces
 	if (!userText) return; // If chatInput is empty return from here
@@ -234,5 +323,4 @@ chatInput.addEventListener("keydown", (e) => {
 
 loadDataFromLocalstorage();
 sendButton.addEventListener("click", handleOutgoingChat);
-
 
