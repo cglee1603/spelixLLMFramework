@@ -189,29 +189,6 @@
 					</div>
 				</div>
 
-				<!-- 챗봇　-->
-				<div class="chatbot">
-					<div class="chat-container"></div>
-					<div class="chattext">
-						<div class="textarea-container">
-							<textarea id="chat-input" spellcheck="false"
-								placeholder="Enter a prompt here" required></textarea>
-							<span id="send-btn" class="material-symbols-rounded"><img
-								src="<%=application.getContextPath()%>/resources/img/send.svg"
-								class="sendbutton"></span>
-						</div>
-					</div>
-				</div>
-
-				<!-- 파라미터　값　설정　-->
-				<div class="parameter">
-					<div class="maintitle">Parameters</div>
-					<div class="paramall">
-						<div class="param"></div>
-					</div>
-				</div>
-
-			</div>
 		</div>
 	</div>
 
