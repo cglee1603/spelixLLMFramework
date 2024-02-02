@@ -387,30 +387,31 @@ const getChatResponse = async (incomingChatDiv) => {
 	var selectedSystemPromptStr = "";
 	var selectSystemPromptKeys = Object.keys(JSON.parse(localStorage.getItem("selectSystemPrompt")));
 
-	for (var selected of selectedSystemPrompt) {
-		if (!selectSystemPromptKeys.includes(selected)) {
-			continue;
-		}
-		
-		var temp = JSON.parse(localStorage.getItem("selectSystemPrompt"))[selected];
+	
+	if (selectedSystemPrompt != null) {
+		for (var selected of selectedSystemPrompt) {
+			if (!selectSystemPromptKeys.includes(selected)) {
+				continue;
+			}
+			
+			var temp = JSON.parse(localStorage.getItem("selectSystemPrompt"))[selected];
+	
+			if (selectedSystemPromptStr.length != 0) {
+				selectedSystemPromptStr += " ";
+			}
+			
+			selectedSystemPromptStr += temp.systemPrompt;
+			
+			if (selectedSystemPromptStr.charAt(selectedSystemPromptStr.length - 1) !== ".") {
+				selectedSystemPromptStr += ".";
+			}
+			
+			console.log("selectedSystemPromptStr: ",selectedSystemPromptStr);
 
-		if (selectedSystemPromptStr.length != 0) {
-			selectedSystemPromptStr += " ";
 		}
-		
-		selectedSystemPromptStr += temp.systemPrompt;
-		
-		if (selectedSystemPromptStr.charAt(selectedSystemPromptStr.length - 1) !== ".") {
-			selectedSystemPromptStr += ".";
-		}
-		
-		console.log("selectedSystemPromptStr: ",selectedSystemPromptStr);
-
 	}
-	
-	
-	console.log("최종 system_prompt: ", selectedSystemPromptStr + " " + systempPromptInputStr);
 
+	console.log("최종 system_prompt: ", selectedSystemPromptStr + " " + systempPromptInputStr);
 
 	
 	// FIXME
