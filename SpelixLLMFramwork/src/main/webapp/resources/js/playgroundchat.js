@@ -2,12 +2,12 @@
 /*
  * 시스템 프롬프트 선택
  */
-var selectedSystemPrompt;
- 
-$(document).ready(function () {
-	localStorage.removeItem("selectSystemPrompt");
+var $promptList = $('.promptlist');
 
-    var $promptList = $('.promptlist');
+$(document).ready(function () {
+	localStorage.removeItem("systemPromptSelectOption");
+	localStorage.removeItem("systemPromptSelectedValue");
+	localStorage.removeItem("systemPromptInputValue");
 
     function loadPromptData() {
         $.ajax({
@@ -25,7 +25,7 @@ $(document).ready(function () {
                     $promptList.append($(option));
                 });
                 
-            	localStorage.setItem("selectSystemPrompt", JSON.stringify(systemPromptInfoJson));
+            	localStorage.setItem("systemPromptSelectOption", JSON.stringify(systemPromptInfoJson));
 
                 $promptList.select2({
                     placeholder: '프롬프트를 선택해 주세요',
@@ -44,16 +44,50 @@ $(document).ready(function () {
 });
 
 
-$('.promptlist').on('change', function (e) {      
+$promptList.on('change', function (e) {      
     // 선택된 옵션들의 텍스트 배열을 가져오기
-    selectedSystemPrompt = $(this).find('option:selected').map(function () {
+    var selectedSystemPrompt = $(this).find('option:selected').map(function () {
         return $(this).text();
     }).get();
 
-    console.log("selectedSystemPrompt: ", selectedSystemPrompt);
+	var selectedSystemPromptStr = "";
 
+    for (var selectedValue of selectedSystemPrompt) {
+    	if (selectedSystemPromptStr.length != 0) {
+			selectedSystemPromptStr += " ";
+		}
+    
+    	selectedSystemPromptStr += JSON.parse(localStorage.getItem("systemPromptSelectOption"))[selectedValue].systemPrompt;
+    	
+    	if (selectedSystemPromptStr.charAt(selectedSystemPromptStr.length - 1) !== ".") {
+			selectedSystemPromptStr += ".";
+		}
+    	
+    }
+
+    localStorage.setItem("systemPromptSelectedValue", selectedSystemPromptStr);
+    
 });
 
+
+
+
+/*
+ * 시스템 프롬프트 입력
+ */
+var promptArea = document.getElementById('promptarea');
+
+promptArea.addEventListener('input', function() {
+    var currentPromptValue = promptArea.value;
+    
+    if (currentPromptValue.length !== 0 && currentPromptValue.charAt(currentPromptValue.length - 1) !== ".") {
+    	currentPromptValue += ".";
+    	localStorage.setItem("systemPromptInputValue", currentPromptValue);
+        
+    	console.log('현재 입력한 시스템 프롬프트:', currentPromptValue);
+    }
+
+});
 
 
 
@@ -118,6 +152,7 @@ const sendButton = document.querySelector("#send-btn");
 const chatContainer = document.querySelector(".chat-container");
 let userText = null;
 var chatHistoryText = "";
+var systemPromptConcat = "";
 
 const createChatElement = (content, className) => {
 	// Create new div and apply chat, specified class and set html content of
@@ -129,7 +164,6 @@ const createChatElement = (content, className) => {
 }
 
 
-// Chatbot 응답 주는 function ajax로 처리.
 const getChatResponse = async (incomingChatDiv) => {
 	const pElement = document.createElement("p");
 	
@@ -137,58 +171,25 @@ const getChatResponse = async (incomingChatDiv) => {
 	
 	// chat history + current chat
 	var promptInputStr = "# History #\n" + chatHistoryText + "\nUSER: " + userText;
-
-	// 직접 입력한 시스템 프롬프트
-	var systempPromptInputStr = document.getElementById("promptarea").value;
-
-	if (systempPromptInputStr.length !== 0 && systempPromptInputStr.charAt(systempPromptInputStr.length - 1) !== ".") {
-		systempPromptInputStr += ".";
-	}
 	
-	console.log("systempPromptInputStr: " + systempPromptInputStr);
-	
-	// 선택한 시스템 프롬프트
-	var selectedSystemPromptStr = "";
-	var selectSystemPromptKeys = Object.keys(JSON.parse(localStorage.getItem("selectSystemPrompt")));
-
-	
-	if (selectedSystemPrompt != null) {
-		for (var selected of selectedSystemPrompt) {
-			if (!selectSystemPromptKeys.includes(selected)) {
-				continue;
-			}
-			
-			var temp = JSON.parse(localStorage.getItem("selectSystemPrompt"))[selected];
-	
-			if (selectedSystemPromptStr.length != 0) {
-				selectedSystemPromptStr += " ";
-			}
-			
-			selectedSystemPromptStr += temp.systemPrompt;
-			
-			if (selectedSystemPromptStr.charAt(selectedSystemPromptStr.length - 1) !== ".") {
-				selectedSystemPromptStr += ".";
-			}
-			
-			console.log("selectedSystemPromptStr: ",selectedSystemPromptStr);
-
-		}
-	}
-
-	console.log("최종 system_prompt: ", selectedSystemPromptStr + " " + systempPromptInputStr);
-
+	// 최종 system prompt
+	systemPromptConcat = (localStorage.getItem("systemPromptSelectedValue") == null)?"":localStorage.getItem("systemPromptSelectedValue") 
+			 + " " + (localStorage.getItem("systemPromptInputValue") == null)?"":localStorage.getItem("systemPromptInputValue");
+		
+	console.log("systemPromptConcat: ", systemPromptConcat);
 	
 	// FIXME
 	var requestParam = {
 			"prompt_id" : "test",
 			"model" : selectedModel,
 			"prompt" : promptInputStr,
-			"system_prompt" : selectedSystemPromptStr + " " + systempPromptInputStr,
+			"system_prompt" : systemPromptConcat,
 			"properties" : currentParamValueJson,
 			"file_path_list" : "",
 			"additional_work" : ""
 			};
 
+	// TODO localStorage 비울 필요 없는 지 확인 필요
 	if (localStorage.getItem(JSON.stringify(requestParam)) != null) {
 		console.log("local storage is not null");
 		
@@ -239,6 +240,7 @@ function chatTypeingEnd(incomingChatDiv, pElement) {
 	chatContainer.scrollTo(0, chatContainer.scrollHeight);
 }
 
+// TODO 기능 동작, 필요 여부 확인 필요
 const loadDataFromLocalstorage = () => {
 	// Load saved chats and theme from local storage and apply/add on the page
 	const themeColor = localStorage.getItem("themeColor");

@@ -35,7 +35,8 @@
 
 						<!--　모델　선택　-->
 						<div class="selectmodel">
-							
+							<select id="select-model">
+							</select>
 						</div>
 
 						<!--　상단　메뉴　-->
@@ -98,13 +99,19 @@
 							<img
 								src="<%=application.getContextPath()%>/resources/img/export.svg"
 								class="settingicon">
-							<div class="titlelabel">내보내기</div>
+							<div class="titlelabel">
+								<span id="export-file">내보내기</span>
+							</div>
 						</div>
 						<div class="settingmenu">
 							<img
 								src="<%=application.getContextPath()%>/resources/img/import.svg"
 								class="settingicon">
-							<div class="titlelabel">가져오기</div>
+							<div class="titlelabel">
+								<input type="file" id="import-file" name="file"
+									style="display: none;" /> <label for="import-file"
+									id="import-label">가져오기</label>
+							</div>
 						</div>
 						<div class="settingmenu">
 							<img
