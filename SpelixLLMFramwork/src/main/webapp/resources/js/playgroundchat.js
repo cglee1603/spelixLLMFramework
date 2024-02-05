@@ -174,7 +174,8 @@ const getChatResponse = async (incomingChatDiv) => {
 	var promptInputStr = "# History #\n" + chatHistoryText + "\nUSER: " + userText;
 	
 	// 최종 system prompt
-	systemPromptConcat = localStorage.getItem("systemPromptSelectedValue") + " " + localStorage.getItem("systemPromptInputValue");
+	systemPromptConcat = (localStorage.getItem("systemPromptSelectedValue") == null)?"":localStorage.getItem("systemPromptSelectedValue") 
+			 + " " + (localStorage.getItem("systemPromptInputValue") == null)?"":localStorage.getItem("systemPromptInputValue");
 		
 	console.log("systemPromptConcat: ", systemPromptConcat);
 	
