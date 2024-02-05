@@ -34,7 +34,10 @@
 					<div class="overlap-group">
 
 						<!--　모델　선택　-->
-						<div class="selectmodel"></div>
+						<div class="selectmodel">
+							<select id="select-model">
+							</select>
+						</div>
 
 						<!--　상단　메뉴　-->
 						<div class="settingmenu">
@@ -104,7 +107,11 @@
 							<img
 								src="<%=application.getContextPath()%>/resources/img/import.svg"
 								class="settingicon">
-							<div class="titlelabel">가져오기</div>
+							<div class="titlelabel">
+								<input type="file" id="import-file" name="file"
+									style="display: none;" /> <label for="import-file"
+									id="import-label">가져오기</label>
+							</div>
 						</div>
 						<div class="settingmenu">
 							<img

@@ -2,7 +2,6 @@
 /*
  * 시스템 프롬프트 선택
  */
-var selectedSystemPrompt;
 var $promptList = $('.promptlist');
 
 $(document).ready(function () {
@@ -47,7 +46,7 @@ $(document).ready(function () {
 
 $promptList.on('change', function (e) {      
     // 선택된 옵션들의 텍스트 배열을 가져오기
-    selectedSystemPrompt = $(this).find('option:selected').map(function () {
+    var selectedSystemPrompt = $(this).find('option:selected').map(function () {
         return $(this).text();
     }).get();
 

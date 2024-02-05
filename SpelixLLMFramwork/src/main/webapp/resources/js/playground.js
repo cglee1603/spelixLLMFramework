@@ -53,34 +53,7 @@ $('.selectmodel').on('select2:select', function (e) {
         url: "getParamMasterByParamId.do",
         success: function (data) {
             $.each(data, function(index, value){
-                var newParamDiv = document.createElement('div');
-                newParamDiv.classList.add('param');
-                newParamDiv.innerHTML = `
-                    <div class="param-1">
-                        <div class="paramtitle">${value.parameterName}</div>
-                        <div class="prograss">
-                            <input type="range" class="parambar" id="parambar" value="${value.defaultValue}"
-                                min="${value.minValue}" max="${value.maxValue}">
-                            <input type="text" class="paramInput" id="paramInput" value="${value.defaultValue}">
-                        </div>
-                    </div>`;
-                paramContainer.appendChild(newParamDiv);
-                
-                var progressBar = newParamDiv.querySelector('.parambar');
-                let textInput = newParamDiv.querySelector('.paramInput');
-                
-                var tempJson = {};
-                tempJson.min = value.minValue;
-                tempJson.max = value.maxValue;
-                tempJson.value = textInput.value;
-                
-                currentParamValueJson[value.parameterName] = tempJson; 
-
-                progressBar.addEventListener('input', function() {
-                    textInput.value = this.value;
-
-                    currentParamValueJson[value.parameterName] = textInput.value; 
-                });
+            	createParam(paramContainer, value);
             });
         },
         error: function (error) {
@@ -88,6 +61,43 @@ $('.selectmodel').on('select2:select', function (e) {
         }
     });
 });
+
+
+
+function createParam(paramContainer, json) {
+    var newParamDiv = document.createElement('div');
+    newParamDiv.classList.add('param');
+    newParamDiv.innerHTML = `
+        <div class="param-1">
+            <div class="paramtitle">${json.parameterName}</div>
+            <div class="prograss">
+                <input type="range" class="parambar" id="parambar" value="${json.defaultValue}"
+                    min="${json.minValue}" max="${json.maxValue}">
+                <input type="text" class="paramInput" id="paramInput" value="${json.defaultValue}">
+            </div>
+        </div>`;
+    paramContainer.appendChild(newParamDiv);
+    
+    var progressBar = newParamDiv.querySelector('.parambar');
+    let textInput = newParamDiv.querySelector('.paramInput');
+    
+    var tempJson = {};
+    tempJson.minValue = json.minValue;
+    tempJson.maxValue = json.maxValue;
+    tempJson.defaultValue = textInput.value;
+    tempJson.parameterName = json.parameterName;
+    
+    currentParamValueJson[json.parameterName] = tempJson;
+
+    progressBar.addEventListener('input', function() {
+        textInput.value = this.value;
+        tempJson.defaultValue = textInput.value;
+
+        currentParamValueJson[json.parameterName] = tempJson;
+    });
+    
+}
+
 
 
 
@@ -198,17 +208,18 @@ function loadContent(mode) {
 /*
  * json 파일 내보내기
  */
-function exportToFile() {
-    // 파일 내용 생성 또는 가져오기
-    var fileContent = {};
+document.getElementById('export-file').addEventListener('click', exportToFile);
 
-	 fileContent.model = selectedModel;
-	 fileContent.parameters = currentParamValueJson;
-	 fileContent.systemPrompt = (localStorage.getItem("systemPromptSelectedValue") == null)?"":localStorage.getItem("systemPromptSelectedValue") 
-			 + " " + (localStorage.getItem("systemPromptInputValue") == null)?"":localStorage.getItem("systemPromptInputValue");
+function exportToFile() {
+    var fileContent = {};
+    fileContent.model = selectedModel;
+	fileContent.parameters = currentParamValueJson;
+
+	var systemPromtSelectedValue =(localStorage.getItem("systemPromptSelectedValue") == null || localStorage.getItem("systemPromptSelectedValue").length == 0)?"":localStorage.getItem("systemPromptSelectedValue");
+	var systemPromptInputValue = (localStorage.getItem("systemPromptInputValue") == null || localStorage.getItem("systemPromptInputValue").length == 0)?"":localStorage.getItem("systemPromptInputValue");			
+	fileContent.systemPrompt = systemPromtSelectedValue + " " + systemPromptInputValue;
 // fileContent.variables = ;
 
-    
     var blob = new Blob([JSON.stringify(fileContent)], { type: 'text/plain' });
     var downloadLink = document.createElement('a');
     downloadLink.href = URL.createObjectURL(blob);
@@ -218,7 +229,60 @@ function exportToFile() {
     document.body.removeChild(downloadLink);
 }
 
-document.getElementById('export-file').addEventListener('click', exportToFile);
 
 
 
+/*
+ * json 파일 가져오기
+ */
+document.getElementById('import-file').addEventListener('change', importFromFile);
+
+function importFromFile() {
+	 var fileInput = document.getElementById('import-file');
+	    var file = fileInput.files[0];
+
+	    if (file) {
+	        var reader = new FileReader();
+	        reader.readAsText(file);
+
+	        reader.onload = function (e) {
+	            var fileContent = e.target.result;
+
+	            try {
+	                var jsonData = JSON.parse(fileContent);
+
+	                // TODO model 설정
+	                selectedModel = jsonData.model;
+	                $("#select-model").val(selectedModel);
+	                
+
+	                console.log('selectedModel:', selectedModel);
+	                
+	                
+	                // param 설정
+	                var paramContainer = document.querySelector('.paramall');
+	                paramContainer.innerHTML = '';
+	                currentParamValueJson = {};
+	                
+	                for (var tmp in jsonData.parameters) {
+	                	createParam(paramContainer, jsonData.parameters[tmp]);
+	                }
+	                
+	                // system prompt 설정
+	            	localStorage.removeItem("systemPromptSelectedValue");
+	            	localStorage.removeItem("systemPromptInputValue");
+	            	
+	            	var systemPromptTxt = jsonData.systemPrompt;
+	            	localStorage.setItem("systemPromptInputValue", systemPromptTxt);
+	            	promptArea.value = systemPromptTxt;
+
+	            } catch (error) {
+	                console.error('JSON 파싱 오류:', error);
+	            }
+	        };
+
+	    } else {
+	        alert('파일을 가져오는 데 실패했습니다.');
+	    }
+
+}
