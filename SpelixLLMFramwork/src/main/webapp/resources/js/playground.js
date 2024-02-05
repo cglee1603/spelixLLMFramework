@@ -69,7 +69,12 @@ $('.selectmodel').on('select2:select', function (e) {
                 var progressBar = newParamDiv.querySelector('.parambar');
                 let textInput = newParamDiv.querySelector('.paramInput');
                 
-                currentParamValueJson[value.parameterName] = textInput.value; 
+                var tempJson = {};
+                tempJson.min = value.minValue;
+                tempJson.max = value.maxValue;
+                tempJson.value = textInput.value;
+                
+                currentParamValueJson[value.parameterName] = tempJson; 
 
                 progressBar.addEventListener('input', function() {
                     textInput.value = this.value;
@@ -186,3 +191,34 @@ function loadContent(mode) {
  popup.style.display = "none";
  }
  }
+
+
+ 
+ 
+/*
+ * json 파일 내보내기
+ */
+function exportToFile() {
+    // 파일 내용 생성 또는 가져오기
+    var fileContent = {};
+
+	 fileContent.model = selectedModel;
+	 fileContent.parameters = currentParamValueJson;
+	 fileContent.systemPrompt = (localStorage.getItem("systemPromptSelectedValue") == null)?"":localStorage.getItem("systemPromptSelectedValue") 
+			 + " " + (localStorage.getItem("systemPromptInputValue") == null)?"":localStorage.getItem("systemPromptInputValue");
+// fileContent.variables = ;
+
+    
+    var blob = new Blob([JSON.stringify(fileContent)], { type: 'text/plain' });
+    var downloadLink = document.createElement('a');
+    downloadLink.href = URL.createObjectURL(blob);
+    downloadLink.download = 'setting.json';
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
+}
+
+document.getElementById('export-file').addEventListener('click', exportToFile);
+
+
+

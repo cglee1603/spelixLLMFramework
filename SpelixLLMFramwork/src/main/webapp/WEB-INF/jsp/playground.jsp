@@ -34,9 +34,7 @@
 					<div class="overlap-group">
 
 						<!--　모델　선택　-->
-						<div class="selectmodel">
-							
-						</div>
+						<div class="selectmodel"></div>
 
 						<!--　상단　메뉴　-->
 						<div class="settingmenu">
@@ -98,7 +96,9 @@
 							<img
 								src="<%=application.getContextPath()%>/resources/img/export.svg"
 								class="settingicon">
-							<div class="titlelabel">내보내기</div>
+							<div class="titlelabel">
+								<span id="export-file">내보내기</span>
+							</div>
 						</div>
 						<div class="settingmenu">
 							<img
