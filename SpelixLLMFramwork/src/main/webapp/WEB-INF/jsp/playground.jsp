@@ -34,10 +34,9 @@
 					<div class="overlap-group">
 
 						<!--　모델　선택　-->
-						<div class="selectmodel">
-							<select id="select-model">
-							</select>
-						</div>
+						<select class="selectmodel" id="selectmodel">
+							<option value="">모델을 선택해 주세요</option>
+						</select>
 
 						<!--　상단　메뉴　-->
 						<div class="settingmenu">

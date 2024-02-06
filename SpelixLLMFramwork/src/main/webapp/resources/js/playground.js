@@ -5,23 +5,19 @@
 var modelNameTypeJson = {};
 
 $(document).ready(function () {
-    var $modelList = $('.selectmodel');
+    var $modelSelect = $('#selectmodel'); // select 요소를 선택
 
     function loadPromptModelList() {
         $.ajax({
             type: "POST",
             url: "getAllPromptModelList.do",
             success: function (data) {
-                // 데이터를 <option> 태그로 변환하고 select 요소에 추가
-            	$.each(data, function(index, value){
+                // 데이터를 select 요소에 추가
+                $.each(data, function(index, value){
                     var option = new Option(value.modelName, value.modelName);
-                    $modelList.append($(option));
+                    $modelSelect.append(option);
                     
                     modelNameTypeJson[value.modelName] = value.modelType; 
-                });
-
-                $modelList.select2({
-                    placeholder: '모델을 선택해 주세요'
                 });
             },
             error: function (error) {
@@ -33,15 +29,9 @@ $(document).ready(function () {
     loadPromptModelList();
 });
 
-
-/*
- * 모델 선택 후 파라미터 동적 생성
- */
-var selectedModel = "";
-var currentParamValueJson = {};
-
-$('.selectmodel').on('select2:select', function (e) {
-    selectedModel = e.params.data.text;
+// 모델 선택 이벤트 핸들러
+$('#selectmodel').on('change', function () {
+    selectedModel = this.value;
 
     var paramContainer = document.querySelector('.paramall');
     paramContainer.innerHTML = '';
@@ -53,7 +43,7 @@ $('.selectmodel').on('select2:select', function (e) {
         url: "getParamMasterByParamId.do",
         success: function (data) {
             $.each(data, function(index, value){
-            	createParam(paramContainer, value);
+                createParam(paramContainer, value);
             });
         },
         error: function (error) {
@@ -251,14 +241,10 @@ function importFromFile() {
 	            try {
 	                var jsonData = JSON.parse(fileContent);
 
-	                // TODO model 설정
+	                // model 설정
 	                selectedModel = jsonData.model;
-	                $("#select-model").val(selectedModel);
-	                
+	                $("#selectmodel").val(selectedModel);
 
-	                console.log('selectedModel:', selectedModel);
-	                
-	                
 	                // param 설정
 	                var paramContainer = document.querySelector('.paramall');
 	                paramContainer.innerHTML = '';
