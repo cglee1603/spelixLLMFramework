@@ -14,14 +14,16 @@ public class PromptMasterDTO {
 	private String promptId;
 	private String promptVer;
 	private String model;
+	private String promptName;
 	private String promptDesc;
 	private String promptType;
 	// FIXME 데이터 타입 확인 필요
 	private Object llmCustomIds;
 	private String prompt;
 	private float promptRate;
-	private String basePrompId;
+	private String basePromptId;
 	private Object sysPromptIds;
+	private String sysPromptEtc;
 	private String constUser;
 	private String useYN;
 	private String parmJson;

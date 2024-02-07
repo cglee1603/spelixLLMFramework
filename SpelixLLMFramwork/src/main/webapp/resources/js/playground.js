@@ -272,3 +272,44 @@ function importFromFile() {
 	    }
 
 }
+
+
+
+/*
+ * 저장하기
+ */
+document.getElementById('save-prompt-master').addEventListener('click', savePromptMaster);
+
+function savePromptMaster(){
+	
+	// FIXME
+	var requestParam = {
+			"promptId" : "test",
+			"promptVer" : "test",
+			"model" : selectedModel,
+			"promptName" : "test",
+			"prompt" : "test",
+			"basePrompId" : "test",
+			"useYN" : "Y",
+			"parmJson" : JSON.stringify(currentParamValueJson)
+
+	};
+	
+	console.log("requestParam: ",requestParam);
+	
+	$.ajax({
+	    type: "POST",
+	    data: requestParam,
+	    url: "savePromptMaster.do",
+	    success: function (data) {
+	        alert("저장하기 성공");
+	    },
+	    error: function (error) {
+	        alert("저장하기 실패");
+	    }
+	});
+	
+}
+
+
+

@@ -23,4 +23,6 @@ public interface PlaygroundDAO {
 
 	ModelTypeMasterDTO getModelTypeMaster(String selectedModelTypeName);
 
+	int savePromptMaster(PromptMasterDTO promptMasterDTO);
+
 }

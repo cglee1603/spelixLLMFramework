@@ -43,7 +43,9 @@
 							<img
 								src="<%=application.getContextPath()%>/resources/img/save.svg"
 								class="settingicon">
-							<div class="titlelabel">저장하기</div>
+							<div class="titlelabel">
+								<span id="save-prompt-master">저장하기</span>
+							</div>
 						</div>
 						<div class="settingmenu">
 							<img
