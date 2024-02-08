@@ -51,13 +51,15 @@
 		<id property="promptId" column="prmt_id" />
 		<id property="promptVer" column="prmt_ver" />
 		<result property="model" column="model" />
+		<result property="promptName" column="prmt_name" />
 		<result property="promptDesc" column="prmt_desc" />
 		<result property="promptType" column="prmt_type" />
 		<result property="llmCustomIds" column="llm_cust_ids" />
 		<result property="prompt" column="prmt" />
 		<result property="promptRate" column="prmt_rate" />
-		<result property="basePrompId" column="base_prmt_id" />
+		<result property="basePromptId" column="base_prmt_id" />
 		<result property="sysPromptIds" column="sys_prmt_ids" />
+		<result property="sysPromptEtc" column="sys_prmt_etc" />
 		<result property="constUser" column="const_user" />
 		<result property="useYN" column="use_yn" />
 		<result property="parmJson" column="parm_json" />
@@ -72,6 +74,30 @@
 		select *
 		from spx_prmt_mst
 	</select>
+
+	<insert id="savePromptMaster"
+		parameterType="com.spelix.domain.PromptMasterDTO">
+		insert into spx_prmt_mst (
+		prmt_id,
+		prmt_ver,
+		model,
+		prmt_name,
+		prmt,
+		base_prmt_id,
+		use_yn,
+		parm_json
+		)
+		VALUES (
+		#{promptId},
+		#{promptVer},
+		#{model},
+		#{promptName},
+		#{prompt},
+		#{basePromptId},
+		#{useYN},
+		cast(#{parmJson} as json)
+		)
+	</insert>
 
 
 

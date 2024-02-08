@@ -15,9 +15,11 @@ public interface PlaygroundService {
 	List<PromptSystemDTO> getPromptSystemInfo();
 
 	List<PromptMasterDTO> getAllPromptMaster();
-	
+
 	List<ModelMasterDTO> getAllPromptModelList();
-	
+
 	List<ParameterMasterDTO> getParamMasterByParamId(String selectedModelTypeName);
+
+	int savePromptMaster(PromptMasterDTO promptMasterDTO);
 
 }

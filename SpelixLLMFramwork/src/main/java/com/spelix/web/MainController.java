@@ -153,6 +153,7 @@ public class MainController {
 		return response.toString();
 	}
 
+//TODO name 변경
 	@RequestMapping(value = "/selectPromptSample.do", method = RequestMethod.POST)
 	@ResponseBody
 	public List<PromptBaseDTO> selectPromptSample() {
@@ -210,16 +211,11 @@ public class MainController {
 		return paramMasterByParamId;
 	}
 
-	@RequestMapping(value = "/savePrompt.do", method = RequestMethod.POST)
+	@RequestMapping(value = "/savePromptMaster.do", method = RequestMethod.POST)
 	@ResponseBody
-	public void savePrompt() {
-		log.debug("savePrompt");
+	public int savePromptMaster(PromptMasterDTO promptMasterDTO) {
+		
+		return playgroundService.savePromptMaster(promptMasterDTO);
 
-//		String modelParamJsonStr = playgroundService.getModelParamJsonStr();
-
-//		log.debug("modelParamJsonStr selectedModel: " + selectedModel);
-//		log.debug("modelParamJsonStr: " + modelParamJsonStr);
-//
-//		return modelParamJsonStr;
 	}
 }

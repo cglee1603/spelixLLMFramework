@@ -40,8 +40,8 @@
 						placeholder="You are an AI assistant that helps people find information."
 						id="promptarea"></textarea>
 					<div class="import-button-container">
-						<button type="button" id="import-custom-prompt"
-							class="import-custom-prompt">입력</button>
+						<button type="button" id="prompt-input-button"
+							class="prompt-input-button">입력</button>
 					</div>
 				</div>
 			</div>

@@ -59,4 +59,9 @@ public class PlaygroundServiceImpl implements PlaygroundService {
 
 		return playgroundDAO.getParamMasterByParamId(paramIdsArray);
 	}
+
+	public int savePromptMaster(PromptMasterDTO promptMasterDTO) {
+		return playgroundDAO.savePromptMaster(promptMasterDTO);
+	}
+
 }
