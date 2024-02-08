@@ -286,7 +286,7 @@ margin-right:10px;
   justify-content: flex-end; /* 오른쪽 정렬 */
 }
 
-.import-custom-prompt{
+.prompt-input-button{
 	background-color: #d7d7d7; /* 녹색 배경 */
 	color: black; /* 흰색 텍스트 */
     padding: 5px 10px;

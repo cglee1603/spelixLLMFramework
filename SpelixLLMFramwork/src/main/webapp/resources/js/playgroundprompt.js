@@ -52,10 +52,48 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 /*
- * 
+ * 프롬프트 입력 결과 받기
  */
+var promptArea = document.getElementById('promptarea');
+var resultText = document.querySelector('.result-text');
+var inputTxt;
 
-// FIXME
+
+promptArea.addEventListener('input', function() {
+    inputTxt = promptArea.value;
+});
+
+
+document.getElementById('prompt-input-button').addEventListener('click', getLlmResponse);
+
+function getLlmResponse () {
+	const pElement = document.createElement("p");
+
+	// FIXME
+	var requestParam = {
+			"prompt_id" : "test",
+			"model" : selectedModel,
+			"prompt" : inputTxt,
+			"properties" : currentParamValueJson,
+	};
+	
+	$.ajax({
+		type: "POST",
+		url: "getChatbotResponse.do",
+		data: { requestParam : JSON.stringify(requestParam) },
+		dataType: "json",
+		success: function(data, status) {			
+			resultText.innerHTML = data.prompt_result + "<br>";			
+		},
+		error: function(xhr, status, error) {
+			resultText.innerHTML = "죄송합니다. 답변을 드릴 수 없습니다. 잠시후 다시 시도해 주세요." + "<br>";
+		}
+	});
+}
+
+
+
+
 function typeWriter(element, text, i = 0) {
   if (i < text.length) {
     element.innerHTML += text.charAt(i);
@@ -66,11 +104,5 @@ function typeWriter(element, text, i = 0) {
     element.style.borderRight = "none";
   }
 }
-
-const resultText = document.querySelector('.result-text');
-const textToType = "결과값 결과값 결과값"; // 여기에 타이핑할 텍스트를 입력하세요
-
-typeWriter(resultText, textToType);
-
 
 
