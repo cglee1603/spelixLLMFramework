@@ -26,7 +26,7 @@
 	<resultMap id="PromptSystemResultMap"
 		type="com.spelix.domain.PromptSystemDTO">
 		<id property="systemPromptId" column="sys_prmt_id" />
-		<id property="systemPromptVer" column="sys_prmt_ver" />
+		<result property="systemPromptVer" column="sys_prmt_ver" />
 		<result property="systemPromptName" column="sys_prmt_name" />
 		<result property="systemPrompt" column="sys_prmt" />
 		<result property="constUser" column="const_user" />
@@ -39,7 +39,7 @@
 	<select id="getPromptSystemInfo"
 		resultMap="PromptSystemResultMap">
 		select
-		sys_prmt_name, sys_prmt from
+		sys_prmt_id, sys_prmt_name, sys_prmt from
 		spx_prmt_sys
 	</select>
 
@@ -49,16 +49,18 @@
 	<resultMap id="PromptMasterResultMap"
 		type="com.spelix.domain.PromptMasterDTO">
 		<id property="promptId" column="prmt_id" />
-		<id property="promptVer" column="prmt_ver" />
+		<result property="promptVer" column="prmt_ver" />
 		<result property="model" column="model" />
 		<result property="promptName" column="prmt_name" />
 		<result property="promptDesc" column="prmt_desc" />
 		<result property="promptType" column="prmt_type" />
-		<result property="llmCustomIds" column="llm_cust_ids" />
+		<result property="llmCustomIds" column="llm_cust_ids"
+			typeHandler="com.spelix.typeHandler.PostgreSQLArrayToStringTypeHandler" />
 		<result property="prompt" column="prmt" />
 		<result property="promptRate" column="prmt_rate" />
 		<result property="basePromptId" column="base_prmt_id" />
-		<result property="sysPromptIds" column="sys_prmt_ids" />
+		<result property="sysPromptIds" column="sys_prmt_ids"
+			typeHandler="com.spelix.typeHandler.PostgreSQLArrayToStringTypeHandler" />
 		<result property="sysPromptEtc" column="sys_prmt_etc" />
 		<result property="constUser" column="const_user" />
 		<result property="useYN" column="use_yn" />
@@ -85,17 +87,25 @@
 		prmt,
 		base_prmt_id,
 		use_yn,
-		parm_json
+		parm_json,
+		prmt_type,
+		sys_prmt_ids,
+		sys_prmt_etc
 		)
 		VALUES (
-		#{promptId},
+		'PM_' || LPAD(nextval('seq_prmt_mst_id')::TEXT,
+		7, '0'),
 		#{promptVer},
 		#{model},
 		#{promptName},
 		#{prompt},
 		#{basePromptId},
 		#{useYN},
-		cast(#{parmJson} as json)
+		cast(#{parmJson} as json),
+		#{promptType},
+		#{sysPromptIds, typeHandler =
+		com.spelix.typeHandler.PostgreSQLArrayToStringTypeHandler},
+		#{sysPromptEtc}
 		)
 	</insert>
 

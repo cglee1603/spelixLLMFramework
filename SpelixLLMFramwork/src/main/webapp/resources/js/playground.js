@@ -105,7 +105,7 @@ $(document).ready(function() {
         loadContent(selectedMode);
     });
 });
-
+// TODO 변수들 초기화
 function loadContent(mode) {
     $.ajax({
         url: '/SpelixLLMFramework/' + mode, // 예:
@@ -150,7 +150,8 @@ function loadContent(mode) {
  var popup = document.getElementById("prompt-sample-popup");
  var promptSample = document.querySelector(".prompt-sample");
  var closeButton = document.getElementsByClassName("close-button")[0];
-
+var promptBaseId;
+ 
 // 프롬프트 샘플 팝업 열기
  promptSample.onclick = function() {
  popup.style.display = "block"; 
@@ -171,6 +172,8 @@ function loadContent(mode) {
                 promptSampleDiv.click(function() {
                     // chat-input 필드에 프롬프트 설명을 삽입합니다.
                     $('#chat-input').val(value.basePromptDesc);
+                    promptBaseId = value.basePromptId;
+                    console.log("promptBaseId: ",promptBaseId);
                     // 팝업을 닫습니다.
                     popup.style.display = "none";
                 });
@@ -281,19 +284,33 @@ function importFromFile() {
 document.getElementById('save-prompt-master').addEventListener('click', savePromptMaster);
 
 function savePromptMaster(){
+	var promptType = $("#changemode option:selected").text();
 	
-	// FIXME
-	var requestParam = {
-			"promptId" : "test",
-			"promptVer" : "test",
-			"model" : selectedModel,
-			"promptName" : "test",
-			"prompt" : "test",
-			"basePrompId" : "test",
-			"useYN" : "Y",
-			"parmJson" : JSON.stringify(currentParamValueJson)
+	var selectedSysPromptValue = $(".promptlist option:selected").map(function() {
+	    return $(this).text();
+	}).get();
+	var sysPromptIds = [];
+	for (var selected of selectedSysPromptValue) {
+		sysPromptIds.push(JSON.parse(localStorage.getItem("systemPromptSelectOption"))[selected].systemPromptId);
+		}
+	
+	var requestParam = new Object();
+	requestParam.promptVer = "0001";
+	requestParam.model = selectedModel;
+	requestParam.promptName = "test";
+	requestParam.basePromptId = promptBaseId;
+	requestParam.useYN = "Y";
+	requestParam.parmJson = JSON.stringify(currentParamValueJson);
+	requestParam.promptType = promptType;
+	requestParam.sysPromptIds = sysPromptIds;
 
-	};
+	if (promptType === "프롬프트"){
+		requestParam.prompt = inputTxt;
+	}
+	
+	if (localStorage.getItem("systemPromptInputValue") != null){
+		requestParam.sysPromptEtc = localStorage.getItem("systemPromptInputValue");
+	}
 	
 	console.log("requestParam: ",requestParam);
 	
@@ -301,6 +318,7 @@ function savePromptMaster(){
 	    type: "POST",
 	    data: requestParam,
 	    url: "savePromptMaster.do",
+	    traditional: true,
 	    success: function (data) {
 	        alert("저장하기 성공");
 	    },
@@ -313,3 +331,10 @@ function savePromptMaster(){
 
 
 
+
+/*
+ * 변수 초기화
+ */
+function initializeVariable(){
+	
+}
