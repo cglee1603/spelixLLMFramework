@@ -286,6 +286,14 @@ document.getElementById('save-prompt-master').addEventListener('click', saveProm
 function savePromptMaster(){
 	var promptType = $("#changemode option:selected").text();
 	
+	var selectedSysPromptValue = $(".promptlist option:selected").map(function() {
+	    return $(this).text();
+	}).get();
+	var sysPromptIds = [];
+	for (var selected of selectedSysPromptValue) {
+		sysPromptIds.push(JSON.parse(localStorage.getItem("systemPromptSelectOption"))[selected].systemPromptId);
+		}
+	
 	var requestParam = new Object();
 	requestParam.promptVer = "0001";
 	requestParam.model = selectedModel;
@@ -294,12 +302,14 @@ function savePromptMaster(){
 	requestParam.useYN = "Y";
 	requestParam.parmJson = JSON.stringify(currentParamValueJson);
 	requestParam.promptType = promptType;
-	requestParam.sysPromptIds = "";
-	requestParam.sysPromptEtc = localStorage.getItem("systemPromptInputValue");
+	requestParam.sysPromptIds = sysPromptIds;
 
-	
 	if (promptType === "프롬프트"){
 		requestParam.prompt = inputTxt;
+	}
+	
+	if (localStorage.getItem("systemPromptInputValue") != null){
+		requestParam.sysPromptEtc = localStorage.getItem("systemPromptInputValue");
 	}
 	
 	console.log("requestParam: ",requestParam);
@@ -308,6 +318,7 @@ function savePromptMaster(){
 	    type: "POST",
 	    data: requestParam,
 	    url: "savePromptMaster.do",
+	    traditional: true,
 	    success: function (data) {
 	        alert("저장하기 성공");
 	    },

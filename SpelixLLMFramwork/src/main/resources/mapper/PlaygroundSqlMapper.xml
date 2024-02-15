@@ -49,16 +49,18 @@
 	<resultMap id="PromptMasterResultMap"
 		type="com.spelix.domain.PromptMasterDTO">
 		<id property="promptId" column="prmt_id" />
-		<id property="promptVer" column="prmt_ver" />
+		<result property="promptVer" column="prmt_ver" />
 		<result property="model" column="model" />
 		<result property="promptName" column="prmt_name" />
 		<result property="promptDesc" column="prmt_desc" />
 		<result property="promptType" column="prmt_type" />
-		<result property="llmCustomIds" column="llm_cust_ids" />
+		<result property="llmCustomIds" column="llm_cust_ids"
+			typeHandler="com.spelix.typeHandler.PostgreSQLArrayToStringTypeHandler" />
 		<result property="prompt" column="prmt" />
 		<result property="promptRate" column="prmt_rate" />
 		<result property="basePromptId" column="base_prmt_id" />
-		<result property="sysPromptIds" column="sys_prmt_ids" />
+		<result property="sysPromptIds" column="sys_prmt_ids"
+			typeHandler="com.spelix.typeHandler.PostgreSQLArrayToStringTypeHandler" />
 		<result property="sysPromptEtc" column="sys_prmt_etc" />
 		<result property="constUser" column="const_user" />
 		<result property="useYN" column="use_yn" />
@@ -87,10 +89,12 @@
 		use_yn,
 		parm_json,
 		prmt_type,
+		sys_prmt_ids,
 		sys_prmt_etc
 		)
 		VALUES (
-		'PM_' || LPAD(nextval('seq_prmt_mst_id')::TEXT, 7, '0'),
+		'PM_' || LPAD(nextval('seq_prmt_mst_id')::TEXT,
+		7, '0'),
 		#{promptVer},
 		#{model},
 		#{promptName},
@@ -99,6 +103,8 @@
 		#{useYN},
 		cast(#{parmJson} as json),
 		#{promptType},
+		#{sysPromptIds, typeHandler =
+		com.spelix.typeHandler.PostgreSQLArrayToStringTypeHandler},
 		#{sysPromptEtc}
 		)
 	</insert>
