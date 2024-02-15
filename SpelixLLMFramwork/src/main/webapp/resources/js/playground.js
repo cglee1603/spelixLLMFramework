@@ -153,6 +153,12 @@ var promptBaseId;
  
 // 프롬프트 샘플 팝업 열기
  promptSample.onclick = function() {
+	 
+		if (typeof selectedModel === 'undefined') {
+			alert("프롬프트 샘플 가져오기 실패. 모델을 선택해 주세요.");
+			return;
+		}
+	 
  popup.style.display = "block"; 
  $.ajax({
 	 type: "POST",
@@ -198,6 +204,12 @@ var promptBaseId;
 document.getElementById('export-file').addEventListener('click', exportToFile);
 
 function exportToFile() {
+	
+	if (typeof selectedModel === 'undefined') {
+		alert("내보내기 실패. 모델을 선택해 주세요.");
+		return;
+	}
+	
     var fileContent = {};
     fileContent.model = selectedModel;
 	fileContent.parameters = currentParamValueJson;
@@ -278,6 +290,12 @@ function importFromFile() {
 document.getElementById('save-prompt-master').addEventListener('click', savePromptMaster);
 
 function savePromptMaster(){
+	
+	if (typeof selectedModel === 'undefined') {
+		alert("저장하기 실패. 모델을 선택해 주세요.");
+		return;
+	}
+	
 	var promptType = $("#changemode option:selected").text();
 	
 	var selectedSysPromptValue = $(".promptlist option:selected").map(function() {
