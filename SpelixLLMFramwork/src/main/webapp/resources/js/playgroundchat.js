@@ -16,7 +16,6 @@ $(document).ready(function () {
             success: function (data) {
             	var systemPromptInfoJson = {};
             	
-                // 데이터를 <option> 태그로 변환하고 select 요소에 추가
                 data.forEach(function (item) {
                 	var systemPromptName = item.systemPromptName;
                 	systemPromptInfoJson[systemPromptName] = item;
@@ -44,8 +43,7 @@ $(document).ready(function () {
 });
 
 
-$promptList.on('change', function (e) {      
-    // 선택된 옵션들의 텍스트 배열을 가져오기
+$promptList.on('change', function (e) {
     var selectedSystemPrompt = $(this).find('option:selected').map(function () {
         return $(this).text();
     }).get();
@@ -147,20 +145,18 @@ document.addEventListener('DOMContentLoaded', function() {
 /*
  * 챗봇
  */
-const chatInput = document.querySelector("#chat-input");
-const sendButton = document.querySelector("#send-btn");
-const chatContainer = document.querySelector(".chat-container");
-let userText = null;
+var chatInput = document.querySelector("#chat-input");
+var sendButton = document.querySelector("#send-btn");
+var chatContainer = document.querySelector(".chat-container");
+var userText = null;
 var chatHistoryText = "";
 var systemPromptConcat = "";
 
 const createChatElement = (content, className) => {
-	// Create new div and apply chat, specified class and set html content of
-	// div
 	const chatDiv = document.createElement("div");
 	chatDiv.classList.add("chat", className);
 	chatDiv.innerHTML = content;
-	return chatDiv; // Return the created chat div
+	return chatDiv;
 }
 
 
@@ -175,8 +171,6 @@ const getChatResponse = async (incomingChatDiv) => {
 	// 최종 system prompt
 	systemPromptConcat = (localStorage.getItem("systemPromptSelectedValue") == null)?"":localStorage.getItem("systemPromptSelectedValue") 
 			 + " " + (localStorage.getItem("systemPromptInputValue") == null)?"":localStorage.getItem("systemPromptInputValue");
-		
-	console.log("systemPromptConcat: ", systemPromptConcat);
 	
 	// FIXME
 	var requestParam = {
@@ -206,7 +200,7 @@ const getChatResponse = async (incomingChatDiv) => {
 			url: "getChatbotResponse.do",
 			data: { requestParam : JSON.stringify(requestParam) },
 			dataType: "json",
-			async: true, // 요청을 동기적으로 보내기 위해 async 옵션을 false로 설정
+			async: true,
 			success: function(data, status) {				
 				pElement.textContent = data.prompt_result;
 
@@ -242,23 +236,18 @@ function chatTypeingEnd(incomingChatDiv, pElement) {
 
 // TODO 기능 동작, 필요 여부 확인 필요
 const loadDataFromLocalstorage = () => {
-	// Load saved chats and theme from local storage and apply/add on the page
 	const themeColor = localStorage.getItem("themeColor");
-	chatContainer.scrollTo(0, chatContainer.scrollHeight); // Scroll to bottom
-															// of the chat
-															// container
+	chatContainer.scrollTo(0, chatContainer.scrollHeight);
 }
 
 const copyResponse = (copyBtn) => {
-	// Copy the text content of the response to the clipboard
 	const reponseTextElement = copyBtn.parentElement.querySelector("p");
 	navigator.clipboard.writeText(reponseTextElement.textContent);
 	copyBtn.textContent = "done";
 	setTimeout(() => copyBtn.textContent = "content_copy", 1000);
 }
 
-const showTypingAnimation = () => {	
-	// Display the typing animation and call the getChatResponse function
+const showTypingAnimation = () => {
 	// FIXME 절대 경로 설정
 	const html = `<div class="chat-content">
                     <div class="chat-details">
@@ -271,8 +260,6 @@ const showTypingAnimation = () => {
                     </div>
                     <span onclick="copyResponse(this)" class="material-symbols-rounded">content_copy</span>
                 </div>`;
-	// Create an incoming chat div with typing animation and append it to chat
-	// container
 	const incomingChatDiv = createChatElement(html, "incoming");
 
 	chatContainer.appendChild(incomingChatDiv);
@@ -281,11 +268,9 @@ const showTypingAnimation = () => {
 }
 
 const handleOutgoingChat = () => {
-	userText = chatInput.value.trim(); // Get chatInput value and remove extra
-										// spaces
-	if (!userText) return; // If chatInput is empty return from here
+	userText = chatInput.value.trim();
+	if (!userText) return;
 
-	// Clear the input field and reset its height
 	chatInput.value = "";
 	chatInput.style.height = `${initialInputHeight}px`;
 
@@ -296,8 +281,6 @@ const handleOutgoingChat = () => {
                     </div>
                 </div>`;
 
-	// Create an outgoing chat div with user's message and append it to chat
-	// container
 	const outgoingChatDiv = createChatElement(html, "outgoing");
 	chatContainer.querySelector(".default-text")?.remove();
 	chatContainer.appendChild(outgoingChatDiv);
@@ -309,14 +292,11 @@ const handleOutgoingChat = () => {
 const initialInputHeight = chatInput.scrollHeight;
 
 chatInput.addEventListener("input", () => {
-	// Adjust the height of the input field dynamically based on its content
 	chatInput.style.height = `${initialInputHeight}px`;
 	chatInput.style.height = `${chatInput.scrollHeight}px`;
 });
 
 chatInput.addEventListener("keydown", (e) => {
-	// If the Enter key is pressed without Shift and the window width is larger
-	// than 800 pixels, handle the outgoing chat
 	if (e.key === "Enter" && !e.shiftKey && window.innerWidth > 800) {
 		e.preventDefault();
 		handleOutgoingChat();
