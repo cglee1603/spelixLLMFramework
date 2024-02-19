@@ -58,6 +58,17 @@ $(document).ready(function() {
     $(".import-prompt").click(function() {
         // 팝업 창 표시 (선택적)
         $("#import-prompt-popup").show();
+        
+        $(".import-popup-content").scroll(function() {
+            // 가로 스크롤 위치에 따라 닫기 버튼의 위치를 조정합니다.
+            var scrollPosition = $(".import-popup-content").scrollLeft();
+            var containerWidth = $(".import-popup-content").outerWidth();
+            var buttonWidth = $(".import-close-button").outerWidth();
+            
+            // 닫기 버튼의 새로운 right 위치를 계산합니다.
+            var newRightPosition = containerWidth - buttonWidth - scrollPosition - 10; // 10px는 초기 오른쪽 여백입니다.
+            $(".import-close-button").css('right', newRightPosition + 'px');
+        });
 
         // AJAX 요청 실행
         $.ajax({
@@ -67,6 +78,8 @@ $(document).ready(function() {
                 var pageSize = 10; // 페이지 당 행의 수
                 var pageCount = Math.ceil(data.length / pageSize); // 총 페이지 수
                 var currentPage = 1;
+                
+                console.log(data);
 
                 // 페이지네이션 초기화
                 $(".pagination").empty();
@@ -90,18 +103,26 @@ $(document).ready(function() {
                     var start = (page - 1) * pageSize;
                     var end = start + pageSize;
 
-                    // 테이블 초기화
                     $("#inputtable tbody").empty();
 
-                    // 데이터 추가
-                    for(var i = start; i < end && i < data.length; i++) {
+                    // 테이블 헤더에서 data-field 속성을 가져와서 headers 배열을 생성합니다.
+                    var headers = $("#inputtable thead th").map(function() {
+                        return $(this).data('field');
+                    }).get();
+
+
+                    for (var i = start; i < end && i < data.length; i++) {
                         var row = $('<tr/>');
-                        $.each(data[i], function(key, value) {
-                            $('<td/>').text(value).appendTo(row);
+                        $.each(headers, function(index, field) {
+                            // headers 배열에 있는 각 field에 대응하는 데이터 값을 가져와서 td를 생성합니다.
+                            var cellValue = data[i][field] || '';
+                            $('<td/>').text(cellValue).appendTo(row);
                         });
                         $("#inputtable tbody").append(row);
                     }
                 }
+
+
             },
             error: function(xhr, status, error) {
             	console.log(xhr.responseText); 

@@ -7,10 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Azure AI Studio Interface</title>
 
-<link rel="stylesheet" type="text/css"
-	href="<%=application.getContextPath()%>/resources/css/global.css">
-<link rel="stylesheet" type="text/css"
-	href="<%=application.getContextPath()%>/resources/css/styleguide.css">
+
 <link
 	href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css"
 	rel="stylesheet" />
@@ -21,6 +18,10 @@
 <link
 	href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css"
 	rel="stylesheet">
+	<link rel="stylesheet" type="text/css"
+	href="<%=application.getContextPath()%>/resources/css/global.css">
+<link rel="stylesheet" type="text/css"
+	href="<%=application.getContextPath()%>/resources/css/styleguide.css">
 <link rel="stylesheet" type="text/css"
 	href="<%=application.getContextPath()%>/resources/css/playground.css">
 
@@ -67,21 +68,26 @@
 										<!-- table heading -->
 										<thead>
 											<tr>
-												<th><label class="tablelabel">ID</label></th>
-												<th><label class="tablelabel">Version</label></th>
-												<th><label class="tablelabel">모델</label></th>
-												<th><label class="tablelabel">Name</label></th>
-												<th><label class="tablelabel">Type</label></th>
-												<th><label class="tablelabel">LLM ID</label></th>
-												<th><label class="tablelabel">Prompt</label></th>
-												<th><label class="tablelabel">정답률</label></th>
-												<th class="sysprompt"><label class="tablelabel">시스템 프롬프트 ID</label></th>
-												<th class="sysprompt"><label class="tablelabel">시스템 프롬프트</label></th>
-												<th><label class="tablelabel">작성자</label></th>
-												<th><label class="tablelabel">입력일</label></th>
-												<th><label class="tablelabel">수정자</label></th>
-												<th><label class="tablelabel">수정일</label></th>
-												<th><label class="tablelabel">사용여부</label></th>
+												<th class="promptId" data-field="promptId"><label class="tablelabel">ID</label></th>
+												<th class="promptVer" data-field="promptVer"><label class="tablelabel">Version</label></th>
+												<th class="model" data-field="model"><label class="tablelabel">모델</label></th>
+												<th class="promptName" data-field="promptName"><label class="tablelabel">Name</label></th>
+												<th class="promptDesc" data-field="promptDesc"><label class="tablelabel">Desc</label></th>
+												<th class="promptType" data-field="promptType"><label class="tablelabel">Type</label></th>
+												<th class="llmCustomIds" data-field="llmCustomIds"><label class="tablelabel">LLM ID</label></th>
+												<th class="prompt" data-field="prompt"><label class="tablelabel">Prompt</label></th>
+												<th class="promptRate" data-field="promptRate"><label class="tablelabel">정답률</label></th>
+												<th class="basePromptId" data-field="basePromptId"><label class="tablelabel">베이스 프롬프트 ID</label></th>
+												<th class="sysPromptIds" data-field="sysPromptIds"><label class="tablelabel">시스템 프롬프트 ID</label></th>
+												<th class="sysPromptEtc" data-field="sysPromptEtc"><label class="tablelabel">지정되지 않은 시스템 프롬프트</label></th>
+												<th class="sysprompt" data-field="sysprompt"><label class="tablelabel">시스템 프롬프트</label></th>
+												<th class="constUser" data-field="constUser"><label class="tablelabel">작성자</label></th>
+												<th class="useYN" data-field="useYN"><label class="tablelabel">사용여부</label></th>
+												<th class="parmJson" data-field="parmJson"><label class="tablelabel">파라미터</label></th>
+												<th class="insertUser" data-field="insertUser"><label class="tablelabel">입력자</label></th>
+												<th class="insertDate" data-field="insertDate"><label class="tablelabel">입력일</label></th>
+												<th class="updateUser" data-field="updateUser"><label class="tablelabel">수정자</label></th>
+												<th class="updateDate" data-field="updateDate"><label class="tablelabel">수정일</label></th>
 											</tr>
 											<tr>
 												<th></th>
@@ -105,6 +111,11 @@
 													value=""></th>
 												<th><input class="js-filter  form-control" type="text"
 													value=""></th>
+												<th></th>
+												<th></th>
+												<th></th>
+												<th></th>
+												<th></th>
 												<th></th>
 												<th></th>
 											</tr>
