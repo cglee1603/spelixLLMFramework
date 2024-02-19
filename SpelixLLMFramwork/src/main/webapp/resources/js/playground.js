@@ -52,6 +52,64 @@ $('#selectmodel').on('change', function () {
     });
 });
 
+/*불러오기 테이블 - ajax 동작 안됨*/
+
+$(document).ready(function() {
+    // 불러오기 버튼 클릭 이벤트
+    $(".import-prompt").click(function() {
+        // 팝업 창 표시 (선택적)
+        $("#import-prompt-popup").show();
+
+        // AJAX 요청 실행
+        $.ajax({
+        	type: 'POST',
+            url: 'getPromptMaster.do',            
+            success: function(data) {
+                var pageSize = 10; // 페이지 당 행의 수
+                var pageCount = Math.ceil(data.length / pageSize); // 총 페이지 수
+                var currentPage = 1;
+
+                // 페이지네이션 초기화
+                $(".pagination").empty();
+
+                // 페이지 번호 생성
+                for(var i = 1 ; i <= pageCount; i++){
+                    $(".pagination").append('<li><a href="#">' + i + '</a></li>');
+                }
+
+                // 첫 페이지 로드
+                displayPage(currentPage, data, pageSize);
+
+                // 페이지 번호 클릭 이벤트
+                $('.pagination').on('click', 'li', function() {
+                    currentPage = $(this).index() + 1;
+                    displayPage(currentPage, data, pageSize);
+                });
+
+                // 페이지에 데이터 표시
+                function displayPage(page, data, pageSize) {
+                    var start = (page - 1) * pageSize;
+                    var end = start + pageSize;
+
+                    // 테이블 초기화
+                    $("#inputtable tbody").empty();
+
+                    // 데이터 추가
+                    for(var i = start; i < end && i < data.length; i++) {
+                        var row = $('<tr/>');
+                        $.each(data[i], function(key, value) {
+                            $('<td/>').text(value).appendTo(row);
+                        });
+                        $("#inputtable tbody").append(row);
+                    }
+                }
+            },
+            error: function(xhr, status, error) {
+            	console.log(xhr.responseText); 
+            	}
+        });
+    });
+});
 
 
 function createParam(paramContainer, json) {
