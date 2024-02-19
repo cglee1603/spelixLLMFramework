@@ -5,14 +5,13 @@
 var modelNameTypeJson = {};
 
 $(document).ready(function () {
-    var $modelSelect = $('#selectmodel'); // select 요소를 선택
+    var $modelSelect = $('#selectmodel');
 
     function loadPromptModelList() {
         $.ajax({
             type: "POST",
             url: "getAllPromptModelList.do",
             success: function (data) {
-                // 데이터를 select 요소에 추가
                 $.each(data, function(index, value){
                     var option = new Option(value.modelName, value.modelName);
                     $modelSelect.append(option);
@@ -154,27 +153,28 @@ var promptBaseId;
  
 // 프롬프트 샘플 팝업 열기
  promptSample.onclick = function() {
+	 
+		if (typeof selectedModel === 'undefined') {
+			alert("프롬프트 샘플 가져오기 실패. 모델을 선택해 주세요.");
+			return;
+		}
+	 
  popup.style.display = "block"; 
  $.ajax({
 	 type: "POST",
 	 url: "selectPromptSample.do",
 	 success: function(data){
-		  $(".base-prompt-all").empty(); // 이전 데이터를 비웁니다.
+		  $(".base-prompt-all").empty();
             $.each(data, function(index, value){
-                // 각 프롬프트 샘플에 대한 요소를 생성합니다.
                 var promptSampleDiv = $('<div class="base-prompt-sample"></div>');
                 promptSampleDiv.append('<div class="base-prompt-title">' + value.basePromptName + '</div>');
                 promptSampleDiv.append('<div class="base-prompt-desc">' + value.basePromptDesc + '</div>');
 
-                // 생성된 요소를 base-prompt-all 클래스를 가진 요소에 추가합니다.
                 $(".base-prompt-all").append(promptSampleDiv);
-         // 클릭 이벤트 핸들러를 추가합니다.
                 promptSampleDiv.click(function() {
-                    // chat-input 필드에 프롬프트 설명을 삽입합니다.
                     $('#chat-input').val(value.basePromptDesc);
                     promptBaseId = value.basePromptId;
                     console.log("promptBaseId: ",promptBaseId);
-                    // 팝업을 닫습니다.
                     popup.style.display = "none";
                 });
             });
@@ -204,6 +204,12 @@ var promptBaseId;
 document.getElementById('export-file').addEventListener('click', exportToFile);
 
 function exportToFile() {
+	
+	if (typeof selectedModel === 'undefined') {
+		alert("내보내기 실패. 모델을 선택해 주세요.");
+		return;
+	}
+	
     var fileContent = {};
     fileContent.model = selectedModel;
 	fileContent.parameters = currentParamValueJson;
@@ -284,6 +290,12 @@ function importFromFile() {
 document.getElementById('save-prompt-master').addEventListener('click', savePromptMaster);
 
 function savePromptMaster(){
+	
+	if (typeof selectedModel === 'undefined') {
+		alert("저장하기 실패. 모델을 선택해 주세요.");
+		return;
+	}
+	
 	var promptType = $("#changemode option:selected").text();
 	
 	var selectedSysPromptValue = $(".promptlist option:selected").map(function() {
