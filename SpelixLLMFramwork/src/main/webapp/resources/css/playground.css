@@ -1,190 +1,208 @@
 * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
 }
 
 .wrapper {
-    display: flex;
-    height: 100%;
-
+	display: flex;
+	height: 100%;
 }
 
 .content {
-    flex-grow: 1;
-    background-color: #fff;
+	flex-grow: 1;
+	background-color: #fff;
 	padding: 20px;
 	height: 100%;
 }
 
-.contentstable {    
-    background-color: #fff;
+.contentstable {
+	background-color: #fff;
 }
 
 .allsetting {
-  display: flex;
-  justify-content: space-between; /* 추가: 자식 요소들을 양쪽 끝에 정렬 */
-  align-items: center;
-  border: 1px solid #eee;
-  border-radius : 6px;
-  display: flex;
-  height: 45px;
-  padding: 6px 7px;
-  width: 100%;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2); /* 그림자 효과 추가 */
-  flex-wrap: nowrap; /* 줄바꿈 방지 */
+	display: flex;
+	justify-content: space-between; /* 추가: 자식 요소들을 양쪽 끝에 정렬 */
+	align-items: center;
+	border: 1px solid #eee;
+	border-radius: 6px;
+	display: flex;
+	height: 45px;
+	padding: 6px 7px;
+	width: 100%;
+	box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.2); /* 그림자 효과 추가 */
+	flex-wrap: nowrap; /* 줄바꿈 방지 */
 }
 
 .overlap-group, .selectmodel, .settingmenu, .mode {
-  display: flex;
-  align-items: center;
+	display: flex;
+	align-items: center;
 }
 
 .overlap-group {
-  height: 40px;
-  display: flex;
+	height: 40px;
+	display: flex;
 }
 
 .selectmodel {
-  width: 300px !important;
-    height: 40px;
-  margin-right: 10px; /* 필요에 따라 조정 */
-    display: flex; /* Flexbox 레이아웃 사용 */
-  align-items: center; /* 수직 가운데 정렬 */
+	width: 300px !important;
+	height: 40px;
+	margin-right: 10px; /* 필요에 따라 조정 */
+	display: flex; /* Flexbox 레이아웃 사용 */
+	align-items: center; /* 수직 가운데 정렬 */
 }
 
- .selectmodel select{
-  align-items: flex-start;
-  border: 1px solid #cbc3c3;
-  display: flex;
-  gap: 9px;
-  height: 30px;
-  justify-content: center;
-  margin-left: 10px;
-  width: 70%;
-  padding: 5px 30px 5px 10px;
-  outline: 0 none;
-  border-radius: 6px;
+.selectmodel select {
+	align-items: flex-start;
+	border: 1px solid #cbc3c3;
+	display: flex;
+	gap: 9px;
+	height: 30px;
+	justify-content: center;
+	margin-left: 10px;
+	width: 70%;
+	padding: 5px 30px 5px 10px;
+	outline: 0 none;
+	border-radius: 6px;
 }
 
 .settingmenu {
-  width: 150px;
-  height: 40px;
-  margin-right: 10px; /* 필요에 따라 조정 */
-  display: flex; /* Flexbox 레이아웃 사용 */
-  align-items: center; /* 수직 가운데 정렬 */
-  flex: 1; /* 유연한 크기 조정 */
+	width: 150px;
+	height: 40px;
+	margin-right: 10px; /* 필요에 따라 조정 */
+	display: flex; /* Flexbox 레이아웃 사용 */
+	align-items: center; /* 수직 가운데 정렬 */
+	flex: 1; /* 유연한 크기 조정 */
 }
 
-.settingicon{
-width:30px;
-height:30px;
-margin-right:10px;
+.settingicon {
+	width: 30px;
+	height: 30px;
+	margin-right: 10px;
 }
 
- .mode {
-  height: 40px;
-  width: 183px;
-  display: flex; /* Flexbox 레이아웃 사용 */
-  align-items: center; /* 수직 가운데 정렬 */
-   margin-left: auto;
+.mode {
+	height: 40px;
+	width: 183px;
+	display: flex; /* Flexbox 레이아웃 사용 */
+	align-items: center; /* 수직 가운데 정렬 */
+	margin-left: auto;
 }
 
 .titlelabel {
-  font-size:16px;
-  font-family:var(--font-family-noto_sans);
-  font-weight:600;
- 
+	font-size: 16px;
+	font-family: var(--font-family-noto_sans);
+	font-weight: 600;
 }
 
-.sample{
-	 cursor: pointer;
+.sample {
+	cursor: pointer;
 }
 
- .mode select{
-  align-items: flex-start;
-  border: 1px solid #cbc3c3;
-  display: flex;
-  gap: 9px;
-  height: 30px;
-  justify-content: center;
-  margin-left: 10px;
-  width: 70%;
-  padding: 5px 30px 5px 10px;
-  outline: 0 none;
-  border-radius: 6px;
-  
+.mode select {
+	align-items: flex-start;
+	border: 1px solid #cbc3c3;
+	display: flex;
+	gap: 9px;
+	height: 30px;
+	justify-content: center;
+	margin-left: 10px;
+	width: 70%;
+	padding: 5px 30px 5px 10px;
+	outline: 0 none;
+	border-radius: 6px;
 }
 
 /* 불러오기 팝업 컨테이너 스타일 */
 .import-prompt-popup {
-    display: none;
-    position: fixed;
-    z-index: 1;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0,0,0,0.4);
+	display: none;
+	position: fixed;
+	z-index: 1;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+	background-color: rgba(0, 0, 0, 0.4);
 }
 
 /* 불러오기 팝업 콘텐츠 스타일 */
 .import-popup-content {
-    background-color: #fefefe;
-    margin: 15% auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 80%;
-    max-width: 800px;
+	background-color: #fefefe;
+	margin: 15% auto;
+	padding: 20px;
+	border: 1px solid #888;
+	width: 80%;
+	overflow: auto;
 }
 
-.import-prompt-all {
 
+.import-popup-content table {
+	width: 100%;
+}
+
+.import-popup-content th, .import-popup-content td {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.import-popup-content th{
+	text-align:center;
+}
+
+
+
+/* 선택적: 각 열에 대한 최소 너비 설정 */
+.import-popup-content td.parmJson {
+    min-width: 50px !important; /* 예시 값, 필요에 따라 조정 */
 }
 
 /* 샘플 팝업 컨테이너 스타일 */
 .prompt-sample-popup {
-    display: none;
-    position: fixed;
-    z-index: 1;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0,0,0,0.4);
+	display: none;
+	position: fixed;
+	z-index: 1;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+	background-color: rgba(0, 0, 0, 0.4);
 }
 
 /* 샘플 팝업 콘텐츠 스타일 */
 .popup-content {
-    background-color: #fefefe;
-    margin: 15% auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 80%;
-    max-width: 600px;
+	background-color: #fefefe;
+	margin: 15% auto;
+	padding: 20px;
+	border: 1px solid #888;
+	width: 80%;
+	max-width: 600px;
 }
 
 /* 닫기 버튼 스타일 */
-.close-button {
-    color: #aaa;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
+.close-button, .import-close-button {
+	color: #aaa;
+	float: right;
+	font-size: 28px;
+	font-weight: bold;
 }
 
-.close-button:hover,
-.close-button:focus {
-    color: black;
-    text-decoration: none;
-    cursor: pointer;
+.close-button:hover, 
+.close-button:focus, 
+.import-close-button:hover,
+.import-close-button:focus {
+	color: black;
+	text-decoration: none;
+	cursor: pointer;
 }
 
 .base-prompt-all {
 	display: grid;
 	grid-template-columns: 1fr 1fr;
-	grid-template-rows: 100px 100px; padding : 40px;
+	grid-template-rows: 100px 100px;
+	padding: 40px;
 	gap: 20px;
 	padding: 40px;
 }
@@ -194,589 +212,628 @@ margin-right:10px;
 	display: flex;
 	flex-direction: column;
 	padding: 10px;
-	cursor:pointer;
+	cursor: pointer;
 }
 
 .base-prompt-title {
 	font-size: 21px;
-	font-family: var(- -font-family-noto_sans);
+	font-family: var(--font-family-noto_sans);
 	font-weight: bold;
-	margin-bottom:10px;
+	margin-bottom: 10px;
 }
 
 .sampledesc {
 	font-size: 16px;
-	font-family: var(- -font-family-noto_sans);
+	font-family: var(--font-family-noto_sans);
 	font-weight: 400;
 }
 
 .maincontents {
-  align-items: flex-start;
-  height:80vh;
+	align-items: flex-start;
+	height: 80vh;
 }
 
 .setting {
-  align-items: flex-start;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-left:3px;
-  padding: 10px 8px;
-  height:100%;
-  box-shadow: 8px 0 10px -5px #eaeaea; /* 오른쪽에만 그림자 효과 */
+	align-items: flex-start;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	margin-left: 3px;
+	padding: 10px 8px;
+	height: 100%;
+	box-shadow: 8px 0 10px -5px #eaeaea; /* 오른쪽에만 그림자 효과 */
 }
 
 .maintitle {
-  font-size:18px;
-  font-family:var(--font-family-noto_sans);
-  font-weight:600;
+	font-size: 18px;
+	font-family: var(--font-family-noto_sans);
+	font-weight: 600;
 }
 
 .buttonarea {
-  display: flex; /* Flexbox 레이아웃 적용 */
-  justify-content: space-between; /* 버튼들 사이에 공간을 균등하게 분배 */
-  /* 추가적인 스타일링 (간격, 정렬 등) */
+	display: flex; /* Flexbox 레이아웃 적용 */
+	justify-content: space-between; /* 버튼들 사이에 공간을 균등하게 분배 */
+	/* 추가적인 스타일링 (간격, 정렬 등) */
 }
 
 .systembutton {
-  background-color: #ffffff; /* 배경색 흰색 */
-  border: none; /* 테두리 제거 */
-  display: flex; /* Flexbox 레이아웃 사용 */
-  align-items: center; /* 수직 가운데 정렬 */
-  justify-content: center; /* 수평 가운데 정렬 */
-  cursor: pointer; /* 마우스 커서 변경 */
-  padding: 10px; /* 패딩 추가 (필요에 따라 조절) */
-  text-align: center; /* 텍스트 가운데 정렬 */
-  font-family:var(--font-family-noto_sans);
-  font-size:14px;
-  font-weight:600;
+	background-color: #ffffff; /* 배경색 흰색 */
+	border: none; /* 테두리 제거 */
+	display: flex; /* Flexbox 레이아웃 사용 */
+	align-items: center; /* 수직 가운데 정렬 */
+	justify-content: center; /* 수평 가운데 정렬 */
+	cursor: pointer; /* 마우스 커서 변경 */
+	padding: 10px; /* 패딩 추가 (필요에 따라 조절) */
+	text-align: center; /* 텍스트 가운데 정렬 */
+	font-family: var(- -font-family-noto_sans);
+	font-size: 14px;
+	font-weight: 600;
 }
 
 .systembutton:hover {
-  background-color: #eaeaea; /* 마우스 오버 시 배경색 변경 */
+	background-color: #eaeaea; /* 마우스 오버 시 배경색 변경 */
 }
 
-.systemicon{
-width:20px;
-height:20px;
-margin-right:10px;
+.systemicon {
+	width: 20px;
+	height: 20px;
+	margin-right: 10px;
 }
 
 .systemprompt {
- display: flex; /* Flexbox 레이아웃 사용 */
-  flex-direction: column; /* 요소들을 세로로 정렬 */
-  align-items: flex-start;
-  margin-top: 30px;
-  padding: 10px;
-  width: 100%;
-  height: 60%;
+	display: flex; /* Flexbox 레이아웃 사용 */
+	flex-direction: column; /* 요소들을 세로로 정렬 */
+	align-items: flex-start;
+	margin-top: 30px;
+	padding: 10px;
+	width: 100%;
+	height: 60%;
 }
 
 .subtitle {
-  font-size:15px;
-  font-family:var(--font-family-noto_sans);
-  font-weight:600;
+	font-size: 15px;
+	font-family: var(--font-family-noto_sans);
+	font-weight: 600;
 }
 
 .promptlist {
- margin-top:10px;
-width:100%;
-  height:15%;
+	margin-top: 10px;
+	width: 100%;
+	height: 15%;
 }
 
 .promptlist select {
-  border: 1px solid #eaeaea;
-  border-radius:6px;
-  width:100%;
-  height: 100%
+	border: 1px solid #eaeaea;
+	border-radius: 6px;
+	width: 100%;
+	height: 100%
 }
 
 .select2-dropdown {
-  background-color: #f2f2f2; /* 배경색 변경 */
-  font-family: var(--font-family-noto_sans);
-  font-size:13px;
+	background-color: #f2f2f2; /* 배경색 변경 */
+	font-family: var(- -font-family-noto_sans);
+	font-size: 13px;
 }
 
-.select2-container--default .select2-results__option--highlighted[aria-selected] {
-  background-color: #eaeaea; /* 하이라이트 배경색 변경 */
-  color: #000; /* 글꼴 색상 변경 */
+.select2-container--default .select2-results__option--highlighted[aria-selected]
+	{
+	background-color: #eaeaea; /* 하이라이트 배경색 변경 */
+	color: #000; /* 글꼴 색상 변경 */
 }
 
-.select2-container--default.select2-container--focus .select2-selection--multiple{
+.select2-container--default.select2-container--focus .select2-selection--multiple
+	{
 	border: 1px solid #eaeaea;
 }
 
 .select2-selection__choice {
- background-color: #eaeaea;
-  color: #333; /* 글꼴 색상 변경 */
+	background-color: #eaeaea;
+	color: #333; /* 글꼴 색상 변경 */
 }
 
 /* Select2 드롭다운 내부의 스크롤 바 스타일 */
 .select2-results__options::-webkit-scrollbar {
-    width: 8px; /* 스크롤 바의 너비 */
+	width: 8px; /* 스크롤 바의 너비 */
 }
 
 /* 스크롤 트랙 (바탕) 스타일 */
 .select2-results__options::-webkit-scrollbar-track {
-    background: #f1f1f1; /* 스크롤 트랙의 배경색 */
-	 border-radius: 10px; /* 둥근 모서리 만들기 */
+	background: #f1f1f1; /* 스크롤 트랙의 배경색 */
+	border-radius: 10px; /* 둥근 모서리 만들기 */
 }
 
 /* 스크롤 핸들 (움직이는 부분) 스타일 */
 .select2-results__options::-webkit-scrollbar-thumb {
-    background: #888; /* 스크롤 핸들의 색상 */
-	 border-radius: 10px; /* 둥근 모서리 만들기 */
+	background: #888; /* 스크롤 핸들의 색상 */
+	border-radius: 10px; /* 둥근 모서리 만들기 */
 }
 
 /* 스크롤 핸들에 마우스 호버 시 스타일 */
 .select2-results__options::-webkit-scrollbar-thumb:hover {
-    background: #555; /* 스크롤 핸들의 색상 변경 */
+	background: #555; /* 스크롤 핸들의 색상 변경 */
 }
 
-.select2-container--default .select2-selection--multiple .select2-selection__choice{
-	  background: #c4edd4;
-	  border:1px solid #c4edd4;
-	  font-family:var(--font-family-noto_sans);
-	  text-align:center;
+.select2-container--default .select2-selection--multiple .select2-selection__choice
+	{
+	background: #c4edd4;
+	border: 1px solid #c4edd4;
+	font-family: var(--font-family-noto_sans);
+	text-align: center;
 }
 
-.select2-container--default .select2-selection--multiple .select2-selection__choice__remove{
-    color:#000;
+.select2-container--default .select2-selection--multiple .select2-selection__choice__remove
+	{
+	color: #000;
 }
 
 .prompttext {
-  margin-top: 20px;
-  width: 100%;
-  height: 85%;
-  box-sizing: border-box; /* 테두리와 패딩을 너비와 높이에 포함 */
-  display: flex; /* Flexbox 레이아웃 사용 */
-  flex-direction: column; /* 세로 방향으로 요소들을 정렬 */
+	margin-top: 20px;
+	width: 100%;
+	height: 85%;
+	box-sizing: border-box; /* 테두리와 패딩을 너비와 높이에 포함 */
+	display: flex; /* Flexbox 레이아웃 사용 */
+	flex-direction: column; /* 세로 방향으로 요소들을 정렬 */
 }
 
-.prompttext > * {
-  margin-bottom: 10px; /* 요소들 사이의 간격 */
+.prompttext>* {
+	margin-bottom: 10px; /* 요소들 사이의 간격 */
 }
 
 .prompttext textarea {
-  margin-top:10px;
-  resize: none;
-  width: 100%; /* 부모 요소의 너비에 맞게 조정 */
-  flex-grow: 1; /* 남은 공간을 모두 차지하도록 설정 */
-  border: 1px solid #eaeaea;
-  border-radius:6px;
-  color: #000000;
-  font-family:var(--font-family-noto_sans);
-  font-size: 14px;
-  border-radius: 2px;
-  background: #ffffff;
-  box-sizing: border-box; /* 테두리와 패딩을 너비와 높이에 포함 */
-  padding: 10px;
+	margin-top: 10px;
+	resize: none;
+	width: 100%; /* 부모 요소의 너비에 맞게 조정 */
+	flex-grow: 1; /* 남은 공간을 모두 차지하도록 설정 */
+	border: 1px solid #eaeaea;
+	border-radius: 6px;
+	color: #000000;
+	font-family: var(--font-family-noto_sans);
+	font-size: 14px;
+	border-radius: 2px;
+	background: #ffffff;
+	box-sizing: border-box; /* 테두리와 패딩을 너비와 높이에 포함 */
+	padding: 10px;
 }
 
 .variable {
- width : 100%;
-  height:40%;
-  padding: 10px; /* 내부 여백 추가 */
+	width: 100%;
+	height: 40%;
+	padding: 10px; /* 내부 여백 추가 */
 }
 
 .line-with-text {
-  display: flex;
-  align-items: center;
-  white-space: nowrap;
+	display: flex;
+	align-items: center;
+	white-space: nowrap;
 }
 
 .line {
-  flex-grow: 1;
-  border: none;
-  border-top: 1px solid #eaeaea;
-  margin: 0 10px;
+	flex-grow: 1;
+	border: none;
+	border-top: 1px solid #eaeaea;
+	margin: 0 10px;
 }
 
 .line {
-  flex-grow: 1;
-  border: none;
-  border-top: 1px solid #eaeaea;
-  margin: 0 10px;
+	flex-grow: 1;
+	border: none;
+	border-top: 1px solid #eaeaea;
+	margin: 0 10px;
 }
 
 .addvariable {
-  cursor: pointer; /* 마우스 커서를 포인터로 변경 */
-  transition: background-color 0.3s; /* 부드러운 색상 변화 효과 */
-  width:100px;
-  height:30px;
-  margin-top:10px;
-  padding:5px;
-  box-sizing: border-box;
+	cursor: pointer; /* 마우스 커서를 포인터로 변경 */
+	transition: background-color 0.3s; /* 부드러운 색상 변화 효과 */
+	width: 100px;
+	height: 30px;
+	margin-top: 10px;
+	padding: 5px;
+	box-sizing: border-box;
 }
 
 .variableltitle {
-  font-size:15px;
-  font-family:var(--font-family-noto_sans);
-  font-weight:600;
-  text-align:left;
+	font-size: 15px;
+	font-family: var(--font-family-noto_sans);
+	font-weight: 600;
+	text-align: left;
 }
+
 .addvariable:hover {
-  background-color: #eee; /* 마우스 오버 시 배경색 변경 */
+	background-color: #eee; /* 마우스 오버 시 배경색 변경 */
 }
 
 #variablesContainer {
-    margin-top: 10px;
+	margin-top: 10px;
 }
 
 .variableItem {
-    background-color: #ffffff;
-    padding: 5px;
-    margin-top: 5px;
-	font-size:14px;
-	font-family:var(--font-family-noto_sans);
+	background-color: #ffffff;
+	padding: 5px;
+	margin-top: 5px;
+	font-size: 14px;
+	font-family: var(--font-family-noto_sans);
 	position: relative; /* X 버튼의 위치 설정을 위해 */
-    padding-right: 25px; /* X 버튼 공간 확보 */
+	padding-right: 25px; /* X 버튼 공간 확보 */
 }
 
 .variableItem .deleteButton {
-    position: absolute;
-    right: 0;
-    top: 0;
-    border: none;
-    background: none;
-    cursor: pointer;
-    font-size: 15px;
-    font-weight: bold;
-    color: #aaa;
+	position: absolute;
+	right: 0;
+	top: 0;
+	border: none;
+	background: none;
+	cursor: pointer;
+	font-size: 15px;
+	font-weight: bold;
+	color: #aaa;
 }
 
 .modal {
-    display: none; /* 기본적으로 숨김 */
-    position: fixed; /* 고정 위치 */
-    z-index: 1; /* 최상위에 위치 */
-    left: 0;
-    top: 0;
-    width: 100%; /* 전체 너비 */
-    height: 100%; /* 전체 높이 */
-    overflow: auto; /* 필요시 스크롤 활성화 */
-    background-color: rgb(0,0,0); /* 기본 색상 */
-    background-color: rgba(0,0,0,0.4); /* 투명도가 있는 검정색 */
-    padding-top: 60px;
+	display: none; /* 기본적으로 숨김 */
+	position: fixed; /* 고정 위치 */
+	z-index: 1; /* 최상위에 위치 */
+	left: 0;
+	top: 0;
+	width: 100%; /* 전체 너비 */
+	height: 100%; /* 전체 높이 */
+	overflow: auto; /* 필요시 스크롤 활성화 */
+	background-color: rgb(0, 0, 0); /* 기본 색상 */
+	background-color: rgba(0, 0, 0, 0.4); /* 투명도가 있는 검정색 */
+	padding-top: 60px;
 }
 
 .modal-content {
 	position: relative; /* X 버튼의 위치를 조정하기 위해 */
-    background-color: #fefefe;
-    margin: 15% auto; /* 상단으로부터 5% 그리고 중앙 정렬 */
-    padding: 20px;
-    border: 1px solid #888;
-    width: 40%; /* 화면 크기에 따라 조정 */
+	background-color: #fefefe;
+	margin: 15% auto; /* 상단으로부터 5% 그리고 중앙 정렬 */
+	padding: 20px;
+	border: 1px solid #888;
+	width: 40%; /* 화면 크기에 따라 조정 */
 }
 
 .modal-close {
-    position: absolute;
-    right: 10px;
-    top: 0;
-    color: #aaa;
-    font-size: 28px;
-    font-weight: bold;
-    cursor: pointer;
+	position: absolute;
+	right: 10px;
+	top: 0;
+	color: #aaa;
+	font-size: 28px;
+	font-weight: bold;
+	cursor: pointer;
 }
 
-.modal-close:hover,
-.modal-close:focus {
-    color: black;
-    text-decoration: none;
-    cursor: pointer;
+.modal-close:hover, .modal-close:focus {
+	color: black;
+	text-decoration: none;
+	cursor: pointer;
 }
 
-.variableInput{
-  border: 1px solid #eaeaea;
-  border-radius:6px;
-  padding: 5px;
-  width: 100%; /* 텍스트 입력창 너비 줄임 */
-  height:40px;
-  margin-bottom: 10px;
-  margin-top:10px;
-	
+.variableInput {
+	border: 1px solid #eaeaea;
+	border-radius: 6px;
+	padding: 5px;
+	width: 100%; /* 텍스트 입력창 너비 줄임 */
+	height: 40px;
+	margin-bottom: 10px;
+	margin-top: 10px;
 }
 
-.addVariableButton{
-	border:none;
-	background:#eaeaea;
-	font-size:14px;
-	font-family:var(--font-family-noto_sans);
-	color:#000;
-	width:50px;
-	height:30px;
-	border-radius:6px;
-	align-items:center;
-		
+.addVariableButton {
+	border: none;
+	background: #eaeaea;
+	font-size: 14px;
+	font-family: var(--font-family-noto_sans);
+	color: #000;
+	width: 50px;
+	height: 30px;
+	border-radius: 6px;
+	align-items: center;
 }
 
 .chatbot {
-  align-items: stretch;
-  display: flex;
-  justify-content: space-between; /* 하단 정렬 */
-  flex-direction: column; /* 이 부분을 추가합니다 */
-  height:100%;
-  padding: 10px;
-  box-shadow: -8px 0 10px -5px #eaeaea, 8px 0 10px -5px #eaeaea; /* 양쪽에 그림자 효과 */
+	align-items: stretch;
+	display: flex;
+	justify-content: space-between; /* 하단 정렬 */
+	flex-direction: column; /* 이 부분을 추가합니다 */
+	height: 100%;
+	padding: 10px;
+	box-shadow: -8px 0 10px -5px #eaeaea, 8px 0 10px -5px #eaeaea;
+	/* 양쪽에 그림자 효과 */
 }
 
 .chat-container {
- flex-grow: 1; /* chat-container가 가능한 많은 공간을 차지하도록 설정 */
-  overflow-y: auto;
-  max-height: 600px;
-  align-items:flex-end;
+	flex-grow: 1; /* chat-container가 가능한 많은 공간을 차지하도록 설정 */
+	overflow-y: auto;
+	max-height: 600px;
+	align-items: flex-end;
 }
 
 /* Chats container styling */
+:where (.chat-container, textarea )::-webkit-scrollbar {
+	width: 6px;
+}
 
-:where(.chat-container, textarea)::-webkit-scrollbar {
-  width: 6px;
+:where (.chat-container, textarea )::-webkit-scrollbar-track {
+	background: #F7F7F8;
+	border-radius: 25px;
 }
-:where(.chat-container, textarea)::-webkit-scrollbar-track {
-  background: #F7F7F8;
-  border-radius: 25px;
-}
-:where(.chat-container, textarea)::-webkit-scrollbar-thumb {
-  background: #a9a9bc;
-  border-radius: 25px;
+
+:where (.chat-container, textarea )::-webkit-scrollbar-thumb {
+	background: #a9a9bc;
+	border-radius: 25px;
 }
 
 .chat-container .chat {
-  padding: 25px 10px;
-  display: flex;
-  justify-content: center;
-  color: #343541;
+	padding: 25px 10px;
+	display: flex;
+	justify-content: center;
+	color: #343541;
 }
+
 .chat-container .chat.outgoing {
-  background:  #FFFFFF;
-  border: 1px solid #FFFFFF;
+	background: #FFFFFF;
+	border: 1px solid #FFFFFF;
 }
+
 .chat-container .chat.incoming {
-  background: #F7F7F8;
-  border: 1px solid #D9D9E3;
+	background: #F7F7F8;
+	border: 1px solid #D9D9E3;
 }
+
 .chat .chat-content {
-  display: flex;
-  max-width: 1200px;
-  width: 100%;
-  align-items: flex-start;
-  justify-content: space-between;
+	display: flex;
+	max-width: 1200px;
+	width: 100%;
+	align-items: flex-start;
+	justify-content: space-between;
 }
+
 span.material-symbols-rounded {
-  user-select: none;
-  cursor: pointer;
+	user-select: none;
+	cursor: pointer;
 }
+
 .chat .chat-content span {
-  cursor: pointer;
-  font-size: 1.3rem;
-  color: #a9a9bc;
-  visibility: hidden;
+	cursor: pointer;
+	font-size: 1.3rem;
+	color: #a9a9bc;
+	visibility: hidden;
 }
-.chat:hover .chat-content:not(:has(.typing-animation), :has(.error)) span {
-  visibility: visible;
+
+.chat:hover .chat-content:not (:has (.typing-animation ), :has (.error
+	)) span {
+	visibility: visible;
 }
+
 .chat .chat-details {
-  display: flex;
-  align-items: center;
+	display: flex;
+	align-items: center;
 }
+
 .chat .chat-details img {
-  width: 35px;
-  height: 35px;
-  align-self: flex-start;
-  object-fit: cover;
-  border-radius: 2px;
+	width: 35px;
+	height: 35px;
+	align-self: flex-start;
+	object-fit: cover;
+	border-radius: 2px;
 }
+
 .chat .chat-details p {
-  white-space: pre-wrap;
-  font-size: 1.05rem;
-  padding: 0 50px 0 25px;
-  color: #343541;
-  word-break: break-word;
+	white-space: pre-wrap;
+	font-size: 1.05rem;
+	padding: 0 50px 0 25px;
+	color: #343541;
+	word-break: break-word;
 }
+
 .chat .chat-details p.error {
-  color: #e55865;
+	color: #e55865;
 }
+
 .chat .typing-animation {
-  padding-left: 25px;
-  display: inline-flex;
+	padding-left: 25px;
+	display: inline-flex;
 }
 
 .typing-animation .typing-dot {
-  height: 7px;
-  width: 7px;
-  border-radius: 50%;
-  margin: 0 3px;
-  opacity: 0.7;
-  background: #343541;
-  animation: animateDots 1.5s var(--delay) ease-in-out infinite;
-}
-.typing-animation .typing-dot:first-child {
-  margin-left: 0;
-}
-@keyframes animateDots {
-  0%,44% {
-    transform: translateY(0px);
-  }
-  28% {
-    opacity: 0.4;
-    transform: translateY(-6px);
-  }
-  44% {
-    opacity: 0.2;
-  }
+	height: 7px;
+	width: 7px;
+	border-radius: 50%;
+	margin: 0 3px;
+	opacity: 0.7;
+	background: #343541;
+	animation: animateDots 1.5s var(- -delay) ease-in-out infinite;
 }
 
+.typing-animation .typing-dot:first-child {
+	margin-left: 0;
+}
+
+@
+keyframes animateDots { 0%,44% {
+	transform: translateY(0px);
+}
+
+28%
+{
+opacity
+:
+ 
+0
+.4
+;
+
+    
+transform
+:
+ 
+translateY
+(-6px);
+
+  
+}
+44%
+{
+opacity
+:
+ 
+0
+.2
+;
+
+  
+}
+}
 .textarea-container {
-  position: relative;
+	position: relative;
 }
 
 .chattext {
-align-items:flex-end;
-  height: 114px;
-  width: 100%;
+	align-items: flex-end;
+	height: 114px;
+	width: 100%;
 }
 
 .chattext textarea {
-  resize: none;
-  width: 100%; /* 부모 요소의 너비에 맞게 조정 */
-  border: 1px solid #eaeaea;
-  color: #000000;
-  font-size: 14px;
-  font-family:var(--font-family-noto_sans);
-  border-radius: 2px;
-  background: #ffffff;
-  box-sizing: border-box; /* 테두리와 패딩을 너비와 높이에 포함 */
-  height:80px;
-  padding : 10px;
+	resize: none;
+	width: 100%; /* 부모 요소의 너비에 맞게 조정 */
+	border: 1px solid #eaeaea;
+	color: #000000;
+	font-size: 14px;
+	font-family: var(--font-family-noto_sans);
+	border-radius: 2px;
+	background: #ffffff;
+	box-sizing: border-box; /* 테두리와 패딩을 너비와 높이에 포함 */
+	height: 80px;
+	padding: 10px;
 }
 
 .chattext span {
-  position: absolute;
-right: 10px; /* 오른쪽 여백 설정 */
-  bottom: 30px; /* 아래쪽 여백 설정 */
-  visibility: hidden;
+	position: absolute;
+	right: 10px; /* 오른쪽 여백 설정 */
+	bottom: 30px; /* 아래쪽 여백 설정 */
+	visibility: hidden;
 }
+
 .chattext textarea:valid ~ span {
-  visibility: visible;
+	visibility: visible;
 }
 
 /* Reponsive Media Query */
 @media screen and (max-width: 600px) {
-  .default-text h1 {
-    font-size: 2.3rem;
-  }
-  :where(.default-text p, textarea, .chat p) {
-    font-size: 0.95rem!important;
-  }
-  .chat-container .chat {
-    padding: 20px 10px;
-  }
-  .chat-container .chat img {
-    height: 32px;
-    width: 32px;
-  }
-  .chat-container .chat p {
-    padding: 0 20px;
-  }
-  .chat .chat-content:not(:has(.typing-animation), :has(.error)) span {
-    visibility: visible;
-  }
-  .typing-container {
-    padding: 15px 10px;
-  }
-  .typing-textarea textarea {
-    height: 45px;
-    padding: 10px 40px 10px 10px;
-  }
-  .typing-content span {
-    height: 45px;
-    width: 45px;
-    margin-left: 5px;
-  }
-  span.material-symbols-rounded {
-    font-size: 1.25rem!important;
-  }
+	.default-text h1 {
+		font-size: 2.3rem;
+	}
+	:where (.default-text p, textarea, .chat p ) {
+		font-size: 0.95rem !important;
+	}
+	.chat-container .chat {
+		padding: 20px 10px;
+	}
+	.chat-container .chat img {
+		height: 32px;
+		width: 32px;
+	}
+	.chat-container .chat p {
+		padding: 0 20px;
+	}
+	.chat .chat-content:not (:has (.typing-animation ), :has (.error )) span
+		{
+		visibility: visible;
+	}
+	.typing-container {
+		padding: 15px 10px;
+	}
+	.typing-textarea textarea {
+		height: 45px;
+		padding: 10px 40px 10px 10px;
+	}
+	.typing-content span {
+		height: 45px;
+		width: 45px;
+		margin-left: 5px;
+	}
+	span.material-symbols-rounded {
+		font-size: 1.25rem !important;
+	}
 }
 
 .parameter {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  gap: 10px;
-  margin-left: 3px;
-  padding: 10px 8px;
-  box-shadow: -8px 0 10px -5px #eaeaea; /* 왼쪽에만 그림자 효과 */
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	gap: 10px;
+	margin-left: 3px;
+	padding: 10px 8px;
+	box-shadow: -8px 0 10px -5px #eaeaea; /* 왼쪽에만 그림자 효과 */
 }
 
 .paramall {
- display: flex; /* Flex 컨테이너로 설정 */
-  flex-direction: column; /* 요소들을 세로로 쌓음 */
-  align-items: flex-end;
-  padding: 10px;
-  width: 100%;
-  margin-top:30px;
-  gap:10px;
+	display: flex; /* Flex 컨테이너로 설정 */
+	flex-direction: column; /* 요소들을 세로로 쌓음 */
+	align-items: flex-end;
+	padding: 10px;
+	width: 100%;
+	margin-top: 30px;
+	gap: 10px;
 }
 
 .param {
-  align-items: flex-end;
-  display: flex;
-  height: 69px;
-  padding: 10px;
-  width: 100%;
+	align-items: flex-end;
+	display: flex;
+	height: 69px;
+	padding: 10px;
+	width: 100%;
 }
 
 .param-1 {
-   display: flex;
-  flex-direction: column; /* 세로 방향 정렬 */
-  align-items: flex-start; /* 왼쪽 정렬 */
+	display: flex;
+	flex-direction: column; /* 세로 방향 정렬 */
+	align-items: flex-start; /* 왼쪽 정렬 */
 }
 
 .paramtitle {
-  font-size: 14px; /* 글씨 크기 조정 */
-   font-family:var(--font-family-noto_sans);
-  font-weight:500;
-  margin-bottom: 5px; /* 프로그래스 바와의 간격 조정 */
+	font-size: 14px; /* 글씨 크기 조정 */
+	font-family: var(--font-family-noto_sans);
+	font-weight: 500;
+	margin-bottom: 5px; /* 프로그래스 바와의 간격 조정 */
 }
 
 .prograss {
-  display: flex; /* Flexbox 레이아웃 사용 */
-  align-items: center; /* 세로 방향 가운데 정렬 */
-   justify-content: space-between;
+	display: flex; /* Flexbox 레이아웃 사용 */
+	align-items: center; /* 세로 방향 가운데 정렬 */
+	justify-content: space-between;
 }
 
 .parambar {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 90%; /* 너비를 내용에 맞게 조정 */
-  flex-grow: 1; /* 남은 공간을 채우도록 설정 */
-  height: 5px;
-  background: #eaeaea;
-  outline: none;
-  border-radius: 5px;
-  margin-right: 10px; /* 텍스트 입력창과의 간격 조정 */
+	-webkit-appearance: none;
+	appearance: none;
+	width: 90%; /* 너비를 내용에 맞게 조정 */
+	flex-grow: 1; /* 남은 공간을 채우도록 설정 */
+	height: 5px;
+	background: #eaeaea;
+	outline: none;
+	border-radius: 5px;
+	margin-right: 10px; /* 텍스트 입력창과의 간격 조정 */
 }
 
 .parambar:hover {
-  background: #87acf1; /* 호버 상태일 때 파란색으로 변경 */
+	background: #87acf1; /* 호버 상태일 때 파란색으로 변경 */
 }
 
 .parambar::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 15px;
-  height:15px;
-  border: 2px solid #000000; /* 검은색 테두리 */
-  background: #ffffff; /* 흰색 바탕 */
-  border-radius: 50%;
-  cursor: pointer;
+	-webkit-appearance: none;
+	appearance: none;
+	width: 15px;
+	height: 15px;
+	border: 2px solid #000000; /* 검은색 테두리 */
+	background: #ffffff; /* 흰색 바탕 */
+	border-radius: 50%;
+	cursor: pointer;
 }
-
 
 .paramInput {
- margin-left: 20px;
-  border: 1px solid #555;
-  padding: 5px;
-  width: 20%; /* 텍스트 입력창 너비 줄임 */
+	margin-left: 20px;
+	border: 1px solid #555;
+	padding: 5px;
+	width: 20%; /* 텍스트 입력창 너비 줄임 */
 }
-
-
