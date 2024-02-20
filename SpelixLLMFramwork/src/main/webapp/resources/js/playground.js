@@ -51,13 +51,27 @@ $('#selectmodel').on('change', function () {
     });
 });
 
-/*불러오기 테이블 - ajax 동작 안됨*/
+/* 불러오기 테이블 */
 
 $(document).ready(function() {
     // 불러오기 버튼 클릭 이벤트
     $(".import-prompt").click(function() {
         // 팝업 창 표시 (선택적)
         $("#import-prompt-popup").show();
+        
+        $(".import-popup-content").scroll(function() {
+            // 가로 스크롤 위치에 따라 닫기 버튼의 위치를 조정합니다.
+            var scrollPosition = $(".import-popup-content").scrollLeft();
+            var containerWidth = $(".import-popup-content").outerWidth();
+            var buttonWidth = $(".import-close-button").outerWidth();
+            
+            // 닫기 버튼의 새로운 right 위치를 계산합니다.
+            var newRightPosition = containerWidth - buttonWidth - scrollPosition - 10; // 10px는
+																						// 초기
+																						// 오른쪽
+																						// 여백입니다.
+            $(".import-close-button").css('left', newRightPosition + 'px');
+        });
 
         // AJAX 요청 실행
         $.ajax({
@@ -67,6 +81,8 @@ $(document).ready(function() {
                 var pageSize = 10; // 페이지 당 행의 수
                 var pageCount = Math.ceil(data.length / pageSize); // 총 페이지 수
                 var currentPage = 1;
+                
+                console.log(data);
 
                 // 페이지네이션 초기화
                 $(".pagination").empty();
@@ -90,18 +106,30 @@ $(document).ready(function() {
                     var start = (page - 1) * pageSize;
                     var end = start + pageSize;
 
-                    // 테이블 초기화
                     $("#inputtable tbody").empty();
 
-                    // 데이터 추가
-                    for(var i = start; i < end && i < data.length; i++) {
+                    // 첫 번째 헤더를 제외한 나머지 헤더에서 class와 data-field 속성을 가져와서 headers
+					// 배열을 생성합니다.
+                    var headers = $("#inputtable thead th").map(function(index) {
+                        if (index > 0) { // 첫 번째 헤더는 라디오 버튼이므로 제외
+                            return { field: $(this).data('field'), class: $(this).attr('class') };
+                        }
+                    }).get();
+
+                    for (var i = start; i < end && i < data.length; i++) {
                         var row = $('<tr/>');
-                        $.each(data[i], function(key, value) {
-                            $('<td/>').text(value).appendTo(row);
+
+                        // 첫 번째 셀에 라디오 버튼 추가
+                        $('<td/>').html('<input type="radio" name="selection" value="' + i + '" />').appendTo(row);
+
+                        $.each(headers, function(index, header) {
+                            var cellValue = data[i][header.field] || '';
+                            $('<td/>').addClass(header.class).text(cellValue).appendTo(row);
                         });
                         $("#inputtable tbody").append(row);
                     }
                 }
+
             },
             error: function(xhr, status, error) {
             	console.log(xhr.responseText); 
@@ -110,8 +138,86 @@ $(document).ready(function() {
     });
 });
 
+/* 불러오기 화면 parsing */
+$(document).ready(function() {
+    loadContent('playgroundchat');
+    console.log("1");
+    // 모드 변경 시 콘텐츠 로드
+    $('#changemode').on('change', function() {
+        var selectedMode = $(this).val();
+        loadContent(selectedMode);
+    });
 
-function createParam(paramContainer, json) {
+    // 모델 변경 시 파라미터 로드
+    $('#selectmodel').on('change', loadModelParameters);
+    
+    $(".import-button button").click(function() {
+        var selectedRow = $('input[type="radio"][name="selection"]:checked').closest('tr');
+
+        if (selectedRow.length > 0) {
+            var modelValue = selectedRow.find("td.model").text();
+            var promptTypeValue = selectedRow.find("td.promptType").text().trim();
+
+            $("#selectmodel").val(modelValue);
+            if (promptTypeValue === '프롬프트') {
+                $("#changemode").val("playgroundprompt");
+            } else if (promptTypeValue === '채팅') {
+                $("#changemode").val("playgroundchat");
+            }
+
+            if ($("#selectmodel").val() === null) {
+                $("#selectmodel").val("");
+            }
+            if ($("#changemode").val() === null) {
+                $("#changemode").val("playgroundchat");
+            }
+
+            // 모달 창 숨김과 동시에 변경된 모드와 모델에 대한 로드 함수 호출
+
+            $("#import-prompt-popup").hide(function() {
+                loadContent($("#changemode").val(), function() {
+                    // loadContent의 AJAX 요청이 완료된 후 loadModelParameters 호출
+                    loadModelParameters();
+                });
+            });
+        } else {
+            alert("라디오 버튼을 선택해주세요.");
+        }
+    });
+});
+
+
+
+/* 모델 선택 후 파라미터 로드 하는 fuction - FIX_DS */
+function loadModelParameters() {
+    var selectedModel = $('#selectmodel').val();
+    var paramContainer = $('.paramall').get(0); // jQuery 객체에서 순수 DOM 객체로 변환
+
+    if (paramContainer) {
+        paramContainer.innerHTML = '';
+        currentParamValueJson = {};
+
+        $.ajax({
+            type: "POST",
+            data: { selectedModelTypeName: modelNameTypeJson[selectedModel] },
+            url: "getParamMasterByParamId.do",
+            success: function (data) {
+                // DOM이 완전히 업데이트되었는지 확인
+                setTimeout(function() {
+                    $.each(data, function(index, value) {
+                        createParam(paramContainer, value);
+                    });
+                }, 0);
+            },
+            error: function () {
+                alert("모델 파라미터를 가져오는 데 실패했습니다.");
+            }
+        });
+    }
+}
+function createParam(paramContainer, json,index) {
+	
+	console.log("Creating param for:", json);
     var newParamDiv = document.createElement('div');
     newParamDiv.classList.add('param');
     newParamDiv.innerHTML = `
@@ -127,9 +233,10 @@ function createParam(paramContainer, json) {
     
     var progressBar = newParamDiv.querySelector('.parambar');
     let textInput = newParamDiv.querySelector('.paramInput');
-    
+
     var tempJson = {};
     tempJson.minValue = json.minValue;
+    console.log(tempJson.minValue);
     tempJson.maxValue = json.maxValue;
     tempJson.defaultValue = textInput.value;
     tempJson.parameterName = json.parameterName;
@@ -146,24 +253,8 @@ function createParam(paramContainer, json) {
 }
 
 
-
-
-
-/*
- * 모드 변경시 다른 페이지 로드
- */
-$(document).ready(function() {
-    // 페이지 로드 시 기본 콘텐츠 로드
-    loadContent('playgroundchat');
-
-    // 모드 변경 시 콘텐츠 재로드
-    $('#changemode').on('change', function() {
-        var selectedMode = $(this).val();
-        loadContent(selectedMode);
-    });
-});
 // TODO 변수들 초기화
-function loadContent(mode) {
+function loadContent(mode, callback) {
     $.ajax({
         url: '/SpelixLLMFramework/' + mode, // 예:
 											// /SpelixLLMFramework/playgroundchat
@@ -173,6 +264,12 @@ function loadContent(mode) {
         success: function(response) {
             // 서버로부터 받은 HTML 컨텐츠를 maincontents 영역에 삽입
             $('#maincontents').html(response);
+            
+
+            // 추가된 콜백 함수 실행
+            if (typeof callback === 'function') {
+                callback();
+            }
         },
         error: function(error) {
             console.log(error);
