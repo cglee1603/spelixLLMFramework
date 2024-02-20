@@ -18,7 +18,7 @@
 <link
 	href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css"
 	rel="stylesheet">
-	<link rel="stylesheet" type="text/css"
+<link rel="stylesheet" type="text/css"
 	href="<%=application.getContextPath()%>/resources/css/global.css">
 <link rel="stylesheet" type="text/css"
 	href="<%=application.getContextPath()%>/resources/css/styleguide.css">
@@ -58,47 +58,64 @@
 						</div>
 
 						<!-- 팝업 창 -->
-										<div id="import-prompt-popup" class="import-prompt-popup">
+						<div id="import-prompt-popup" class="import-prompt-popup">
 							<div class="import-popup-content">
 								<span class="import-close-button">&times;</span>
 								<h2>불러오기 리스트</h2>
 								<div class=import-prompt-all>
-									<table class="js-dynamitable table  table-bordered"
+									<table class="js-dynamitable table table-bordered"
 										id="inputtable">
 										<!-- table heading -->
 										<thead>
 											<tr>
-												<th class="promptId" data-field="promptId"><label class="tablelabel">ID</label></th>
-												<th class="promptVer" data-field="promptVer"><label class="tablelabel">Version</label></th>
-												<th class="model" data-field="model"><label class="tablelabel">모델</label></th>
-												<th class="promptName" data-field="promptName"><label class="tablelabel">Name</label></th>
-												<th class="promptDesc" data-field="promptDesc"><label class="tablelabel">Desc</label></th>
-												<th class="promptType" data-field="promptType"><label class="tablelabel">Type</label></th>
-												<th class="llmCustomIds" data-field="llmCustomIds"><label class="tablelabel">LLM ID</label></th>
-												<th class="prompt" data-field="prompt"><label class="tablelabel">Prompt</label></th>
-												<th class="promptRate" data-field="promptRate"><label class="tablelabel">정답률</label></th>
-												<th class="basePromptId" data-field="basePromptId"><label class="tablelabel">베이스 프롬프트 ID</label></th>
-												<th class="sysPromptIds" data-field="sysPromptIds"><label class="tablelabel">시스템 프롬프트 ID</label></th>
-												<th class="sysPromptEtc" data-field="sysPromptEtc"><label class="tablelabel">지정되지 않은 시스템 프롬프트</label></th>
-												<th class="sysprompt" data-field="sysprompt"><label class="tablelabel">시스템 프롬프트</label></th>
-												<th class="constUser" data-field="constUser"><label class="tablelabel">작성자</label></th>
-												<th class="useYN" data-field="useYN"><label class="tablelabel">사용여부</label></th>
-												<th class="parmJson" data-field="parmJson"><label class="tablelabel">파라미터</label></th>
-												<th class="insertUser" data-field="insertUser"><label class="tablelabel">입력자</label></th>
-												<th class="insertDate" data-field="insertDate"><label class="tablelabel">입력일</label></th>
-												<th class="updateUser" data-field="updateUser"><label class="tablelabel">수정자</label></th>
-												<th class="updateDate" data-field="updateDate"><label class="tablelabel">수정일</label></th>
+												<th></th>
+												<th class="promptId" data-field="promptId"><label
+													class="tablelabel">ID</label></th>
+												<th class="promptVer" data-field="promptVer"><label
+													class="tablelabel">Version</label></th>
+												<th class="model" data-field="model"><label
+													class="tablelabel">모델</label></th>
+												<th class="promptName" data-field="promptName"><label
+													class="tablelabel">Name</label></th>
+												<th class="promptDesc" data-field="promptDesc"><label
+													class="tablelabel">Desc</label></th>
+												<th class="promptType" data-field="promptType"><label
+													class="tablelabel">Type</label></th>
+												<th class="llmCustomIds" data-field="llmCustomIds"><label
+													class="tablelabel">LLM ID</label></th>
+												<th class="prompt" data-field="prompt"><label
+													class="tablelabel">Prompt</label></th>
+												<th class="promptRate" data-field="promptRate"><label
+													class="tablelabel">정답률</label></th>
+												<th class="basePromptId" data-field="basePromptId"><label
+													class="tablelabel">베이스 프롬프트 ID</label></th>
+												<th class="sysPromptIds" data-field="sysPromptIds"><label
+													class="tablelabel">시스템 프롬프트 ID</label></th>
+												<th class="sysPromptEtc" data-field="sysPromptEtc"><label
+													class="tablelabel">지정되지 않은 시스템 프롬프트</label></th>
+												<th class="sysprompt" data-field="sysprompt"><label
+													class="tablelabel">시스템 프롬프트</label></th>
+												<th class="constUser" data-field="constUser"><label
+													class="tablelabel">작성자</label></th>
+												<th class="useYN" data-field="useYN"><label
+													class="tablelabel">사용여부</label></th>
+												<th class="parmJson" data-field="parmJson"><label
+													class="tablelabel">파라미터</label></th>
+												<th class="insertUser" data-field="insertUser"><label
+													class="tablelabel">입력자</label></th>
+												<th class="insertDate" data-field="insertDate"><label
+													class="tablelabel">입력일</label></th>
+												<th class="updateUser" data-field="updateUser"><label
+													class="tablelabel">수정자</label></th>
+												<th class="updateDate" data-field="updateDate"><label
+													class="tablelabel">수정일</label></th>
 											</tr>
 											<tr>
 												<th></th>
 												<th></th>
+												<th></th>
 												<th><input class="js-filter  form-control" type="text"
 													value=""></th>
-												<th><input class="js-filter  form-control" type="text"
-													value=""></th>
-												<th><input class="js-filter  form-control" type="text"
-													value=""></th>
-													<th></th>
 												<th><input class="js-filter  form-control" type="text"
 													value=""></th>
 												<th><input class="js-filter  form-control" type="text"
@@ -106,7 +123,12 @@
 												<th></th>
 												<th><input class="js-filter  form-control" type="text"
 													value=""></th>
-													<th></th>
+												<th><input class="js-filter  form-control" type="text"
+													value=""></th>
+												<th></th>
+												<th><input class="js-filter  form-control" type="text"
+													value=""></th>
+												<th></th>
 												<th><input class="js-filter  form-control" type="text"
 													value=""></th>
 												<th><input class="js-filter  form-control" type="text"
@@ -120,15 +142,18 @@
 												<th></th>
 											</tr>
 										</thead>
-										<tbody>			
+										<tbody>
 										</tbody>
 									</table>
 								</div>
+								<div class="import-button">
+									<button type="button">확인</button>
+								</div>
 								<div class="pagination-wrapper">
-            <ul class="pagination">
-                <!-- 페이지네이션 링크가 여기에 동적으로 생성됩니다 -->
-            </ul>
-        </div>
+									<ul class="pagination">
+										<!-- 페이지네이션 링크가 여기에 동적으로 생성됩니다 -->
+									</ul>
+								</div>
 							</div>
 						</div>
 						<div class="settingmenu">
