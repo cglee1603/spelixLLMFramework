@@ -93,8 +93,6 @@
 													class="tablelabel">시스템 프롬프트 ID</label></th>
 												<th class="sysPromptEtc" data-field="sysPromptEtc"><label
 													class="tablelabel">지정되지 않은 시스템 프롬프트</label></th>
-												<th class="sysprompt" data-field="sysprompt"><label
-													class="tablelabel">시스템 프롬프트</label></th>
 												<th class="constUser" data-field="constUser"><label
 													class="tablelabel">작성자</label></th>
 												<th class="useYN" data-field="useYN"><label
@@ -111,35 +109,27 @@
 													class="tablelabel">수정일</label></th>
 											</tr>
 											<tr>
-												<th></th>
-												<th></th>
-												<th></th>
-												<th><input class="js-filter  form-control" type="text"
-													value=""></th>
-												<th><input class="js-filter  form-control" type="text"
-													value=""></th>
-												<th><input class="js-filter  form-control" type="text"
-													value=""></th>
-												<th></th>
-												<th><input class="js-filter  form-control" type="text"
-													value=""></th>
-												<th><input class="js-filter  form-control" type="text"
-													value=""></th>
-												<th></th>
-												<th><input class="js-filter  form-control" type="text"
-													value=""></th>
-												<th></th>
-												<th><input class="js-filter  form-control" type="text"
-													value=""></th>
-												<th><input class="js-filter  form-control" type="text"
-													value=""></th>
-												<th></th>
-												<th></th>
-												<th></th>
-												<th></th>
-												<th></th>
-												<th></th>
-												<th></th>
+											<th></th>
+											<th></th>
+											<th></th>
+											<th></th>
+											<th></th>
+											<th></th>
+											<th></th>
+											<th></th>
+											<th></th>
+											<th></th>
+											<th></th>
+											<th></th>
+											<th></th>
+											<th></th>
+											<th></th>
+											<th></th>
+											<th></th>
+											<th></th>
+											<th></th>
+											<th></th>
+
 											</tr>
 										</thead>
 										<tbody>
