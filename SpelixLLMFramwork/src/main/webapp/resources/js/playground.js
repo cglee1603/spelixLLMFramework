@@ -5,14 +5,13 @@
 var modelNameTypeJson = {};
 
 $(document).ready(function () {
-    var $modelSelect = $('#selectmodel'); // select 요소를 선택
+    var $modelSelect = $('#selectmodel');
 
     function loadPromptModelList() {
         $.ajax({
             type: "POST",
             url: "getAllPromptModelList.do",
             success: function (data) {
-                // 데이터를 select 요소에 추가
                 $.each(data, function(index, value){
                     var option = new Option(value.modelName, value.modelName);
                     $modelSelect.append(option);
@@ -82,8 +81,7 @@ $(document).ready(function() {
                 var pageSize = 10; // 페이지 당 행의 수
                 var pageCount = Math.ceil(data.length / pageSize); // 총 페이지 수
                 var currentPage = 1;
-                
-                console.log(data);
+
 
                 // 페이지네이션 초기화
                 $(".pagination").empty();
@@ -140,9 +138,10 @@ $(document).ready(function() {
 });
 
 /* 불러오기 화면 parsing */
+var paramJson = null; // 전역 변수로 paramJson을 선언 import 할때만 써야하기 때문
+
 $(document).ready(function() {
     loadContent('playgroundchat');
-    console.log("1");
     // 모드 변경 시 콘텐츠 로드
     $('#changemode').on('change', function() {
         var selectedMode = $(this).val();
@@ -158,13 +157,17 @@ $(document).ready(function() {
         if (selectedRow.length > 0) {
             var modelValue = selectedRow.find("td.model").text();
             var promptTypeValue = selectedRow.find("td.promptType").text().trim();
-
+            var sysPromptIdsValue = selectedRow.find("td.sysPromptIds").text().trim();
+            var sysPromptEtcValue = selectedRow.find("td.sysPromptEtc").text();
+            var importparamJson = selectedRow.find("td.parmJson").text().trim();
+            
             $("#selectmodel").val(modelValue);
             if (promptTypeValue === '프롬프트') {
                 $("#changemode").val("playgroundprompt");
             } else if (promptTypeValue === '채팅') {
                 $("#changemode").val("playgroundchat");
             }
+            
 
             if ($("#selectmodel").val() === null) {
                 $("#selectmodel").val("");
@@ -177,8 +180,20 @@ $(document).ready(function() {
 
             $("#import-prompt-popup").hide(function() {
                 loadContent($("#changemode").val(), function() {
+                	
+                	console.log(sysPromptIdsValue);
+                	
+                	// sysPromptIds 값을 배열로 변환하고 #promptlist에 반영
+                    updatePromptList(sysPromptIdsValue);
+            
+                    // 지정되지 않은 시스템 프롬프트 textarea에 반영
+                    if (sysPromptEtcValue) {
+                        $("#syspromptetcarea").val(sysPromptEtcValue);
+                    }
+
                     // loadContent의 AJAX 요청이 완료된 후 loadModelParameters 호출
-                    loadModelParameters();
+                	globalParamJson = JSON.parse(importparamJson);// 전역변수에 할당
+                	loadModelParameters();
                 });
             });
         } else {
@@ -206,6 +221,11 @@ function loadModelParameters() {
                 // DOM이 완전히 업데이트되었는지 확인
                 setTimeout(function() {
                     $.each(data, function(index, value) {
+                    	// 여기에서 globalParamJson 값을 확인하고 조건에 따라 처리
+                    	 if (globalParamJson && globalParamJson.hasOwnProperty(value.parameterName)) {
+                             value = globalParamJson[value.parameterName];
+                         }
+                    	
                         createParam(paramContainer, value);
                     });
                 }, 0);
@@ -216,9 +236,9 @@ function loadModelParameters() {
         });
     }
 }
+
 function createParam(paramContainer, json,index) {
 	
-	console.log("Creating param for:", json);
     var newParamDiv = document.createElement('div');
     newParamDiv.classList.add('param');
     newParamDiv.innerHTML = `
@@ -251,6 +271,33 @@ function createParam(paramContainer, json,index) {
         currentParamValueJson[json.parameterName] = tempJson;
     });
     
+}
+
+//sysPromptIds 문자열을 파싱하여 #promptlist에 옵션으로 추가하는 함수
+function updatePromptList(sysPromptIdsValue) {
+    var promptList = $('#promptlist');
+    promptList.empty(); // 기존 옵션들을 제거
+    
+    var selectedValues = [];
+
+    if (sysPromptIdsValue) {
+        // 콤마로 구분된 값을 배열로 변환
+        var sysPromptIdsArray = sysPromptIdsValue.split(',');
+        
+        console.log(sysPromptIdsArray);
+
+        // 배열의 각 요소에 대해 옵션을 추가하고 선택된 값 배열에 추가
+        sysPromptIdsArray.forEach(function(id) {
+            promptList.append(new Option(id, id, false, false));
+            selectedValues.push(id);
+        });
+    }
+    
+    // select2에 선택된 값을 설정
+    promptList.val(selectedValues).trigger('change');
+
+    // select2 라이브러리를 사용하여 업데이트
+    promptList.select2();
 }
 
 
@@ -309,27 +356,28 @@ var promptBaseId;
  
 // 프롬프트 샘플 팝업 열기
  promptSample.onclick = function() {
+	 
+		if (typeof selectedModel === 'undefined') {
+			alert("프롬프트 샘플 가져오기 실패. 모델을 선택해 주세요.");
+			return;
+		}
+	 
  popup.style.display = "block"; 
  $.ajax({
 	 type: "POST",
 	 url: "selectPromptSample.do",
 	 success: function(data){
-		  $(".base-prompt-all").empty(); // 이전 데이터를 비웁니다.
+		  $(".base-prompt-all").empty();
             $.each(data, function(index, value){
-                // 각 프롬프트 샘플에 대한 요소를 생성합니다.
                 var promptSampleDiv = $('<div class="base-prompt-sample"></div>');
                 promptSampleDiv.append('<div class="base-prompt-title">' + value.basePromptName + '</div>');
                 promptSampleDiv.append('<div class="base-prompt-desc">' + value.basePromptDesc + '</div>');
 
-                // 생성된 요소를 base-prompt-all 클래스를 가진 요소에 추가합니다.
                 $(".base-prompt-all").append(promptSampleDiv);
-         // 클릭 이벤트 핸들러를 추가합니다.
                 promptSampleDiv.click(function() {
-                    // chat-input 필드에 프롬프트 설명을 삽입합니다.
                     $('#chat-input').val(value.basePromptDesc);
                     promptBaseId = value.basePromptId;
                     console.log("promptBaseId: ",promptBaseId);
-                    // 팝업을 닫습니다.
                     popup.style.display = "none";
                 });
             });
@@ -359,6 +407,12 @@ var promptBaseId;
 document.getElementById('export-file').addEventListener('click', exportToFile);
 
 function exportToFile() {
+	
+	if (typeof selectedModel === 'undefined') {
+		alert("내보내기 실패. 모델을 선택해 주세요.");
+		return;
+	}
+	
     var fileContent = {};
     fileContent.model = selectedModel;
 	fileContent.parameters = currentParamValueJson;
@@ -439,6 +493,12 @@ function importFromFile() {
 document.getElementById('save-prompt-master').addEventListener('click', savePromptMaster);
 
 function savePromptMaster(){
+	
+	if (typeof selectedModel === 'undefined') {
+		alert("저장하기 실패. 모델을 선택해 주세요.");
+		return;
+	}
+	
 	var promptType = $("#changemode option:selected").text();
 	
 	var selectedSysPromptValue = $(".promptlist option:selected").map(function() {

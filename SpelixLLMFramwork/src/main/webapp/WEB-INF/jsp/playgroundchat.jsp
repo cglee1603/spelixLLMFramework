@@ -43,7 +43,7 @@
 					<div class="subtitle">프롬프트 입력</div>
 					<textarea
 						placeholder="You are an AI assistant that helps people find information."
-						id="promptarea"></textarea>
+						id="syspromptetcarea"></textarea>
 				</div>
 			</div>
 
