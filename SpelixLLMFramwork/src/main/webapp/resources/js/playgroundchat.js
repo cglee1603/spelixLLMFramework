@@ -31,6 +31,12 @@ $(document).ready(function () {
                     placeholder: '프롬프트를 선택해 주세요',
                     multiple: true
                 });
+                
+                // localStorage에서 selectedSysPromptIds 값을 읽어와 select2에 반영
+                var selectedSysPromptIds = localStorage.getItem("selectedSysPromptIds");
+                if (selectedSysPromptIds) {
+                    updateSelectedPrompts(selectedSysPromptIds);
+                }
  
             },
             error: function (error) {
@@ -40,6 +46,11 @@ $(document).ready(function () {
     }
 
     loadPromptData();
+    
+    function updateSelectedPrompts(ids) {
+        var idsArray = ids.split(',');
+        $promptList.val(idsArray).trigger('change');
+    }
 
 });
 
@@ -139,44 +150,38 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-
-
-
 /*
  * 챗봇
  */
-const chatInput = document.querySelector("#chat-input");
-const sendButton = document.querySelector("#send-btn");
-const chatContainer = document.querySelector(".chat-container");
-let userText = null;
+
+var chatInput = document.querySelector("#chat-input");
+var sendButton = document.querySelector("#send-btn");
+var chatContainer = document.querySelector(".chat-container");
+var userText = null;
 var chatHistoryText = "";
 var systemPromptConcat = "";
 
-const createChatElement = (content, className) => {
-	// Create new div and apply chat, specified class and set html content of
-	// div
-	const chatDiv = document.createElement("div");
-	chatDiv.classList.add("chat", className);
-	chatDiv.innerHTML = content;
-	return chatDiv; // Return the created chat div
+function createChatElement(content, className) {
+    var chatDiv = document.createElement("div");
+    chatDiv.classList.add("chat", className);
+    chatDiv.innerHTML = content;
+    return chatDiv; // Return the created chat div
 }
 
-
-const getChatResponse = async (incomingChatDiv) => {
-	const pElement = document.createElement("p");
+function getChatResponse(incomingChatDiv, selectedModel, chatHistoryText, userText, currentParamValueJson) {
+	var pElement = document.createElement("p");
 	
-	console.log("selectedModel: "+ selectedModel);
+	console.log("selectedModel: " + selectedModel);
 	
 	// chat history + current chat
 	var promptInputStr = "# History #\n" + chatHistoryText + "\nUSER: " + userText;
 	
 	// 최종 system prompt
-	systemPromptConcat = (localStorage.getItem("systemPromptSelectedValue") == null)?"":localStorage.getItem("systemPromptSelectedValue") 
-			 + " " + (localStorage.getItem("systemPromptInputValue") == null)?"":localStorage.getItem("systemPromptInputValue");
+	var systemPromptConcat = (localStorage.getItem("systemPromptSelectedValue") == null) ? "" : localStorage.getItem("systemPromptSelectedValue") 
+			 + " " + (localStorage.getItem("systemPromptInputValue") == null) ? "" : localStorage.getItem("systemPromptInputValue");
 		
 	console.log("systemPromptConcat: ", systemPromptConcat);
 	
-	// FIXME
 	var requestParam = {
 			"prompt_id" : "test",
 			"model" : selectedModel,
@@ -185,9 +190,8 @@ const getChatResponse = async (incomingChatDiv) => {
 			"properties" : currentParamValueJson,
 			"file_path_list" : "",
 			"additional_work" : ""
-			};
+	};
 
-	// TODO localStorage 비울 필요 없는 지 확인 필요
 	if (localStorage.getItem(JSON.stringify(requestParam)) != null) {
 		console.log("local storage is not null");
 		
@@ -198,33 +202,24 @@ const getChatResponse = async (incomingChatDiv) => {
 			chatTypeingEnd(incomingChatDiv, pElement);
 		}, 1000);
 		
-	} else {		
+	} else {
 		$.ajax({
 			type: "POST",
 			url: "getChatbotResponse.do",
 			data: { requestParam : JSON.stringify(requestParam) },
 			dataType: "json",
-			async: true, // 요청을 동기적으로 보내기 위해 async 옵션을 false로 설정
-			success: function(data, status) {				
+			async: true,
+			success: function(data) {				
 				pElement.textContent = data.prompt_result;
-
 				localStorage.setItem(JSON.stringify(requestParam), JSON.stringify(data));
 				chatTypeingEnd(incomingChatDiv, pElement);
-
-				// chat history
-				if (chatHistoryText.length != 0){
-					chatHistoryText = chatHistoryText + "\n";
-				}
-				
-				chatHistoryText = chatHistoryText + "USER: " + userText + "\nBOT: " + pElement.textContent;
+				chatHistoryText += chatHistoryText.length ? "\n" : "";
+				chatHistoryText += "USER: " + userText + "\nBOT: " + pElement.textContent;
 				console.log(chatHistoryText);
-
-				
 			},
-			error: function(xhr, status, error) {
+			error: function() {
 				pElement.classList.add("error");
 				pElement.textContent = "죄송합니다. 답변을 드릴 수 없습니다. 잠시후 다시 시도해 주세요.";
-
 				chatTypeingEnd(incomingChatDiv, pElement);
 			}
 		});
@@ -238,27 +233,10 @@ function chatTypeingEnd(incomingChatDiv, pElement) {
 	chatContainer.scrollTo(0, chatContainer.scrollHeight);
 }
 
-// TODO 기능 동작, 필요 여부 확인 필요
-const loadDataFromLocalstorage = () => {
-	// Load saved chats and theme from local storage and apply/add on the page
-	const themeColor = localStorage.getItem("themeColor");
-	chatContainer.scrollTo(0, chatContainer.scrollHeight); // Scroll to bottom
-															// of the chat
-															// container
-}
-
-const copyResponse = (copyBtn) => {
-	// Copy the text content of the response to the clipboard
-	const reponseTextElement = copyBtn.parentElement.querySelector("p");
-	navigator.clipboard.writeText(reponseTextElement.textContent);
-	copyBtn.textContent = "done";
-	setTimeout(() => copyBtn.textContent = "content_copy", 1000);
-}
-
-const showTypingAnimation = () => {	
-	// Display the typing animation and call the getChatResponse function
-	// FIXME 절대 경로 설정
-	const html = `<div class="chat-content">
+function showTypingAnimation() {
+    // Display the typing animation and call the getChatResponse function
+    // FIXME 절대 경로 설정
+    var html = `<div class="chat-content">
                     <div class="chat-details">
                         <img src="/SpelixLLMFramework/resources/img/ai_brain.svg" alt="chatbot-img">
                         <div class="typing-animation">
@@ -267,60 +245,58 @@ const showTypingAnimation = () => {
                             <div class="typing-dot" style="--delay: 0.4s"></div>
                         </div>
                     </div>
-                    <span onclick="copyResponse(this)" class="material-symbols-rounded">content_copy</span>
                 </div>`;
-	// Create an incoming chat div with typing animation and append it to chat
-	// container
-	const incomingChatDiv = createChatElement(html, "incoming");
 
-	chatContainer.appendChild(incomingChatDiv);
-	chatContainer.scrollTo(0, chatContainer.scrollHeight);
-	getChatResponse(incomingChatDiv);
+    // Create an incoming chat div with typing animation and append it to chat container
+    const incomingChatDiv = createChatElement(html, "incoming");
+
+    chatContainer.appendChild(incomingChatDiv);
+    chatContainer.scrollTo(0, chatContainer.scrollHeight);
+    getChatResponse(incomingChatDiv);
 }
 
-const handleOutgoingChat = () => {
-	userText = chatInput.value.trim(); // Get chatInput value and remove extra
-										// spaces
-	if (!userText) return; // If chatInput is empty return from here
+function handleOutgoingChat() {
+    userText = chatInput.value.trim();
+    if (!userText) return;
 
-	// Clear the input field and reset its height
-	chatInput.value = "";
-	chatInput.style.height = `${initialInputHeight}px`;
+    chatInput.value = "";
+    chatInput.style.height = `${initialInputHeight}px`;
 
-	const html = `<div class="chat-content">
+    var html = `<div class="chat-content">
                     <div class="chat-details">
                         <img src="/SpelixLLMFramework/resources/img/user3.svg" alt="user-img">
                         <p>${userText}</p>
                     </div>
                 </div>`;
 
-	// Create an outgoing chat div with user's message and append it to chat
-	// container
-	const outgoingChatDiv = createChatElement(html, "outgoing");
-	chatContainer.querySelector(".default-text")?.remove();
-	chatContainer.appendChild(outgoingChatDiv);
-	chatContainer.scrollTo(0, chatContainer.scrollHeight);
-	setTimeout(showTypingAnimation, 500);
+    var outgoingChatDiv = createChatElement(html, "outgoing");
+    chatContainer.querySelector(".default-text")?.remove();
+    chatContainer.appendChild(outgoingChatDiv);
+    chatContainer.scrollTo(0, chatContainer.scrollHeight);
+    setTimeout(showTypingAnimation, 500);
 }
 
 
-const initialInputHeight = chatInput.scrollHeight;
+var initialInputHeight = chatInput.scrollHeight;
 
-chatInput.addEventListener("input", () => {
-	// Adjust the height of the input field dynamically based on its content
-	chatInput.style.height = `${initialInputHeight}px`;
-	chatInput.style.height = `${chatInput.scrollHeight}px`;
-});
+function adjustInputHeight() {
+    // Adjust the height of the input field dynamically based on its content
+    chatInput.style.height = `${initialInputHeight}px`;
+    chatInput.style.height = `${chatInput.scrollHeight}px`;
+}
 
-chatInput.addEventListener("keydown", (e) => {
-	// If the Enter key is pressed without Shift and the window width is larger
-	// than 800 pixels, handle the outgoing chat
-	if (e.key === "Enter" && !e.shiftKey && window.innerWidth > 800) {
-		e.preventDefault();
-		handleOutgoingChat();
-	}
-});
+chatInput.addEventListener("input", adjustInputHeight);
 
-loadDataFromLocalstorage();
+function handleKeyDown(e) {
+    // If the Enter key is pressed without Shift and the window width is larger than 800 pixels, handle the outgoing chat
+    if (e.key === "Enter" && !e.shiftKey && window.innerWidth > 800) {
+        e.preventDefault();
+        handleOutgoingChat();
+    }
+}
+
+
+chatInput.addEventListener("keydown", handleKeyDown);
+
 sendButton.addEventListener("click", handleOutgoingChat);
 

@@ -1,4 +1,5 @@
 
+var paramJson = null; // 전역 변수로 paramJson을 선언 import 할때만 써야하기 때문
 /*
  * 모델 선택
  */
@@ -42,6 +43,8 @@ $('#selectmodel').on('change', function () {
         url: "getParamMasterByParamId.do",
         success: function (data) {
             $.each(data, function(index, value){
+            	 // globalParamJson의 존재 여부를 확인하고, 없으면 value를 그대로 사용합니다.
+            	
                 createParam(paramContainer, value);
             });
         },
@@ -138,7 +141,7 @@ $(document).ready(function() {
 });
 
 /* 불러오기 화면 parsing */
-var paramJson = null; // 전역 변수로 paramJson을 선언 import 할때만 써야하기 때문
+
 
 $(document).ready(function() {
     loadContent('playgroundchat');
@@ -180,11 +183,7 @@ $(document).ready(function() {
 
             $("#import-prompt-popup").hide(function() {
                 loadContent($("#changemode").val(), function() {
-                	
-                	console.log(sysPromptIdsValue);
-                	
-                	// sysPromptIds 값을 배열로 변환하고 #promptlist에 반영
-                    updatePromptList(sysPromptIdsValue);
+                	 localStorage.setItem("selectedSysPromptIds", sysPromptIdsValue);
             
                     // 지정되지 않은 시스템 프롬프트 textarea에 반영
                     if (sysPromptEtcValue) {
@@ -192,7 +191,7 @@ $(document).ready(function() {
                     }
 
                     // loadContent의 AJAX 요청이 완료된 후 loadModelParameters 호출
-                	globalParamJson = JSON.parse(importparamJson);// 전역변수에 할당
+                    paramJson = JSON.parse(importparamJson);// 전역변수에 할당
                 	loadModelParameters();
                 });
             });
@@ -206,6 +205,12 @@ $(document).ready(function() {
 
 /* 모델 선택 후 파라미터 로드 하는 fuction - FIX_DS */
 function loadModelParameters() {
+	
+	// globalParamJson의 존재 여부를 확인합니다.
+    if (typeof paramJson === 'undefined') {
+    	paramJson = {}; // globalParamJson이 없으면 빈 객체로 초기화합니다.
+    }
+	
     var selectedModel = $('#selectmodel').val();
     var paramContainer = $('.paramall').get(0); // jQuery 객체에서 순수 DOM 객체로 변환
 
@@ -222,8 +227,8 @@ function loadModelParameters() {
                 setTimeout(function() {
                     $.each(data, function(index, value) {
                     	// 여기에서 globalParamJson 값을 확인하고 조건에 따라 처리
-                    	 if (globalParamJson && globalParamJson.hasOwnProperty(value.parameterName)) {
-                             value = globalParamJson[value.parameterName];
+                    	 if (paramJson && paramJson.hasOwnProperty(value.parameterName)) {
+                             value = paramJson[value.parameterName];
                          }
                     	
                         createParam(paramContainer, value);
@@ -273,43 +278,21 @@ function createParam(paramContainer, json,index) {
     
 }
 
-//sysPromptIds 문자열을 파싱하여 #promptlist에 옵션으로 추가하는 함수
-function updatePromptList(sysPromptIdsValue) {
-    var promptList = $('#promptlist');
-    promptList.empty(); // 기존 옵션들을 제거
-    
-    var selectedValues = [];
-
-    if (sysPromptIdsValue) {
-        // 콤마로 구분된 값을 배열로 변환
-        var sysPromptIdsArray = sysPromptIdsValue.split(',');
-        
-        console.log(sysPromptIdsArray);
-
-        // 배열의 각 요소에 대해 옵션을 추가하고 선택된 값 배열에 추가
-        sysPromptIdsArray.forEach(function(id) {
-            promptList.append(new Option(id, id, false, false));
-            selectedValues.push(id);
-        });
-    }
-    
-    // select2에 선택된 값을 설정
-    promptList.val(selectedValues).trigger('change');
-
-    // select2 라이브러리를 사용하여 업데이트
-    promptList.select2();
-}
-
 
 // TODO 변수들 초기화
 function loadContent(mode, callback) {
+	
+	var noCache = new Date().getTime(); // 현재 시간을 타임스탬프로 사용
+    var url = '/SpelixLLMFramework/' + mode + '?t=' + noCache; // URL에 타임스탬프 추가
+	
     $.ajax({
-        url: '/SpelixLLMFramework/' + mode, // 예:
+        url: url, // 예:
 											// /SpelixLLMFramework/playgroundchat
 											// 또는
 											// /SpelixLLMFramework/playgroundprompt
         type: 'GET',
         success: function(response) {
+        	
             // 서버로부터 받은 HTML 컨텐츠를 maincontents 영역에 삽입
             $('#maincontents').html(response);
             
@@ -320,6 +303,7 @@ function loadContent(mode, callback) {
             }
         },
         error: function(error) {
+        	
             console.log(error);
         }
     });
