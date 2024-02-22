@@ -304,3 +304,4 @@ chatInput.addEventListener("keydown", (e) => {
 loadDataFromLocalstorage();
 sendButton.addEventListener("click", handleOutgoingChat);
 
+
