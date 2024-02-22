@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.spelix.config.ApplicationConfig;
 import com.spelix.domain.ModelMasterDTO;
 import com.spelix.domain.ParameterMasterDTO;
 import com.spelix.domain.PromptBaseDTO;
@@ -38,15 +39,13 @@ public class PlaygroundController {
 
 	private static final Logger log = LoggerFactory.getLogger(PlaygroundController.class);
 
-	// FIXME
-	private static String HOST_IP = "192.168.122.26";
-	private static String HOST_MURDER_PORT = "5000";
-
+	private final ApplicationConfig applicationConfig;
 	private final PlaygroundService playgroundService;
 
 	@Autowired
-	public PlaygroundController(PlaygroundService playgroundService) {
+	public PlaygroundController(PlaygroundService playgroundService, ApplicationConfig applicationConfig) {
 		this.playgroundService = playgroundService;
+		this.applicationConfig = applicationConfig;
 	}
 
 	@RequestMapping(value = "/playground", method = RequestMethod.GET)
@@ -73,7 +72,11 @@ public class PlaygroundController {
 	@RequestMapping(value = "getChatbotResponse.do")
 	@ResponseBody
 	public Map<String, Object> getChatbotResponse(@RequestParam("requestParam") String requestParam) {
-		String apiUrl = "http://" + HOST_IP + ":" + HOST_MURDER_PORT + "/sp_demo";
+
+		StringBuilder apiUrl = new StringBuilder();
+		apiUrl.append("http://").append(applicationConfig.getHost());
+		apiUrl.append(":").append(applicationConfig.getPort());
+		apiUrl.append("/").append(applicationConfig.getPath());
 
 		log.debug("apiUrl: " + apiUrl);
 		log.debug("requestParam: " + requestParam);
@@ -83,7 +86,7 @@ public class PlaygroundController {
 
 		sp_route.put("sp_route", requestParamJson);
 
-		String result = getApiResultJsonStr(apiUrl, sp_route.toString());
+		String result = getApiResultJsonStr(apiUrl.toString(), sp_route.toString());
 
 		log.debug("result: " + result);
 
