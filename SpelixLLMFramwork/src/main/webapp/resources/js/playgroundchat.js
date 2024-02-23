@@ -5,6 +5,8 @@
 var $promptList = $('.promptlist');
 
 $(document).ready(function () {
+	
+	console.log($promptList);
 	localStorage.removeItem("systemPromptSelectOption");
 	localStorage.removeItem("systemPromptSelectedValue");
 	localStorage.removeItem("systemPromptInputValue");
@@ -60,6 +62,7 @@ $promptList.on('change', function (e) {
     var selectedSystemPrompt = $(this).find('option:selected').map(function () {
         return $(this).text();
     }).get();
+    
 
 	var selectedSystemPromptStr = "";
 
@@ -69,6 +72,7 @@ $promptList.on('change', function (e) {
 		}
     
     	selectedSystemPromptStr += JSON.parse(localStorage.getItem("systemPromptSelectOption"))[selectedValue].systemPrompt;
+    	
     	
     	if (selectedSystemPromptStr.charAt(selectedSystemPromptStr.length - 1) !== ".") {
 			selectedSystemPromptStr += ".";
