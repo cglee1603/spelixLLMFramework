@@ -1,0 +1,78 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.spelix.dao.PlaygroundDAO">
+
+
+	<!-- 프롬프트 마스터 -->
+	<resultMap id="PromptMasterResultMap"
+		type="com.spelix.domain.PromptMasterDTO">
+		<id property="promptId" column="prmt_id" />
+		<result property="promptVer" column="prmt_ver" />
+		<result property="model" column="model" />
+		<result property="promptName" column="prmt_name" />
+		<result property="promptDesc" column="prmt_desc" />
+		<result property="promptType" column="prmt_type" />
+		<result property="llmCustomIds" column="llm_cust_ids"
+			typeHandler="com.spelix.typeHandler.PostgreSQLArrayToStringTypeHandler" />
+		<result property="prompt" column="prmt" />
+		<result property="promptRate" column="prmt_rate" />
+		<result property="basePromptId" column="base_prmt_id" />
+		<result property="sysPromptIds" column="sys_prmt_ids"
+			typeHandler="com.spelix.typeHandler.PostgreSQLArrayToStringTypeHandler" />
+		<result property="sysPromptEtc" column="sys_prmt_etc" />
+		<result property="constUser" column="const_user" />
+		<result property="useYN" column="use_yn" />
+		<result property="parmJson" column="parm_json" />
+		<result property="insertUser" column="insert_user" />
+		<result property="insertDate" column="insert_date" />
+		<result property="updateUser" column="update_user" />
+		<result property="updateDate" column="update_date" />
+	</resultMap>
+
+	<!-- 모델 마스터 -->
+	<resultMap id="ModelMasterResultMap"
+		type="com.spelix.domain.ModelMasterDTO">
+		<id property="modelId" column="model_id" />
+		<result property="modelType" column="model_type" />
+		<result property="modelName" column="model_name" />
+		<result property="useYN" column="use_yn" />
+		<result property="insertUser" column="insert_user" />
+		<result property="insertDate" column="insert_date" />
+		<result property="updateUser" column="update_user" />
+		<result property="updateDate" column="update_date" />
+	</resultMap>
+
+
+
+	<!-- 모델 타입 마스터 -->
+	<resultMap id="ModelTypeMasterResultMap"
+		type="com.spelix.domain.ModelTypeMasterDTO">
+		<id property="modelTypeId" column="model_type_id" />
+		<result property="modelTypeName" column="model_type_name" />
+		<result property="modelTypeParameters"
+			column="model_type_parms" />
+		<result property="insertUser" column="insert_user" />
+		<result property="insertDate" column="insert_date" />
+		<result property="updateUser" column="update_user" />
+		<result property="updateDate" column="update_date" />
+	</resultMap>
+
+
+	<!-- 파라미터 마스터 -->
+	<resultMap id="ParameterMasterResultMap"
+		type="com.spelix.domain.ParameterMasterDTO">
+		<id property="parameterId" column="parm_id" />
+		<result property="parameterName" column="parm_name" />
+		<result property="valueType" column="val_type" />
+		<result property="minValue" column="min_val" />
+		<result property="maxValue" column="max_val" />
+		<result property="valueOffset" column="val_offset" />
+		<result property="defaultValue" column="default_val" />
+		<result property="insertUser" column="insert_user" />
+		<result property="insertDate" column="insert_date" />
+		<result property="updateUser" column="update_user" />
+		<result property="updateDate" column="update_date" />
+	</resultMap>
+
+
+</mapper>
