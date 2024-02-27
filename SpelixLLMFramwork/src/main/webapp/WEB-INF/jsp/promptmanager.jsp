@@ -56,7 +56,8 @@
           <tr>
           <th><div class="prompt-checkbox-area">
           <input type="check" class="prompt-checkbox">
-          </div></th>
+          </div>
+        </th>
           <th></th>
           <th></th>
           <th></th>
