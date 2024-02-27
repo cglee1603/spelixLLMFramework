@@ -78,26 +78,10 @@
   flex-direction:column;
 }
 
-.prompt-delete-area{
-	display:flex;
-	width:30%;
-	height:70px;
-	padding:10px;
-	align-self: flex-end;
-	justify-content: flex-end;
-}
 
-.prompt-delete-button{
-	border: 1px solid #ddd;
-	height: 50px;
-	width:100px;
-	font-size:15px;
-	font-family: var(--font-family-noto_sans);
-	text-align:center;
-}
 
 .prompt-table-area{
-	border:1px solid black;
+
 	display:flex;
 	flex-direction:column;	
 }
@@ -107,17 +91,84 @@
 	color:#868686;
 }
 
+.prompt-title-button{
+	display:flex;
+justify-content: space-between; /* 양 끝에 요소를 배치합니다 */
+}
+
+.prompt-list-title{
+ height: 50px;
+    padding: 10px;
+}
+
+.prompt-delete-area{
+ height: 50px;
+    padding: 10px;
+}
+
+
+.prompt-delete-button{
+	border: 1px solid #ddd;
+    height: 30px;
+    width: 100px;
+    font-size: 15px;
+    font-family: var(--font-family-noto_sans);
+    text-align: center;
+}
+
 .prompt-table{
+	border-collapse:collapse;
+	text-indent:initial;
+	border-spacing:2px;
+	margin-bottom:10px;
+	width:100%;
+	color:#212529;
+	border-bottom:1px solid #e5e5e5;
+}
+
+.prompt-table th:first-child{
+	border-left:0;	
+}
+
+.prompt-table thead th{
+	background-color : #f4f4f4;
+	border-bottom: 1px solid #fff;
+	line-height:16px;
+	text-align:center;
+	vertical-align:middle;
+	padding:12px 0;
 	
 }
 
-.prompt-table th{
-	background-color : #f4f4f4;
-	
+.prompt-table th, .prompt-table td{
+	border-left:1px solid #fff;
+	border-top:0;
+	font-size:13px;
+	font-weight:400;
+	color:#333;
+	word-break:break-all;
 }
+
 
 .prompt-checkbox{
 	display : inline-block;
 	width:15px;
 	padding:0;
+}
+
+.prompt-checkbox-label{
+	padding-left:20px;
+	margin-bottom:0;
+	vertical-align:top;
+	cursor:pointer;
+}
+
+.prompt-checkbox-label::before{
+	border-radius:1px;
+	top:6px;
+	width:15px;
+	height:15px;
+	background:#fff;
+	border:1px solid #bbb;
+	transition:background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;
 }
