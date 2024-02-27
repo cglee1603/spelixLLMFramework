@@ -23,6 +23,7 @@ public class PromptManagerServiceImpl implements PromptManagerService {
 	public List<PromptMasterDTO> getAllPromptMaster() {
 		return promptManagerDAO.getAllPromptMaster();
 	}
+	
 
 	public int deletePromptMasterById(String promptId) {
 		return promptManagerDAO.deletePromptMasterById(promptId);

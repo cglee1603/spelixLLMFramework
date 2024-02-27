@@ -8,6 +8,8 @@ import com.spelix.domain.PromptMasterDTO;
 public interface PromptManagerDAO {
 
 	List<PromptMasterDTO> getAllPromptMaster();
+	
+	List<PromptMasterDTO> getModelPromptData();
 
 	int deletePromptMasterById(String promptId);
 

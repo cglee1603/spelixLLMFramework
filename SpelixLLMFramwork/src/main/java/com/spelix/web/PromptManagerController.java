@@ -20,7 +20,7 @@ import com.spelix.domain.PromptMasterDTO;
 import com.spelix.service.PromptManagerService;
 
 @Controller
-@RequestMapping("/promptmanager")
+//@RequestMapping("/promptmanager")
 public class PromptManagerController {
 
 	private static final Logger log = LoggerFactory.getLogger(PlaygroundController.class);
@@ -32,14 +32,15 @@ public class PromptManagerController {
 		this.promptManagerService = promptManagerService;
 	}
 
-	@GetMapping()
+	@GetMapping("/promptmanager")
 	public String promptmanager(Locale locale, Model model) {
 		model.addAttribute("serverTime", "");
 
 		return "promptmanager";
 	}
 
-	@GetMapping("/getAllPromptMaster")
+	@RequestMapping(value = "/promptmanager/getAllPromptMaster.do", method = RequestMethod.POST)
+	@ResponseBody	
 	public List<PromptMasterDTO> getAllPromptMaster() {
 		List<PromptMasterDTO> allPromptMasterList = promptManagerService.getAllPromptMaster();
 
@@ -47,15 +48,16 @@ public class PromptManagerController {
 
 		return allPromptMasterList;
 	}
+	
 
-	@DeleteMapping("/deletePromptMasterById")
+	@RequestMapping(value = "/promptmanager/deletePromptMasterById.do", method = RequestMethod.POST)
 	@ResponseBody
 	public int deletePromptMasterById(@RequestParam("promptId") String promptId) {
 		log.debug("deletePromptMasterById promptId: " + promptId);
 		return promptManagerService.deletePromptMasterById(promptId);
 	}
 
-	@RequestMapping(value = "/getAllPromptModelList.do", method = RequestMethod.POST)
+	@RequestMapping(value = "/promptmanager/getAllPromptModelList.do", method = RequestMethod.POST)
 	@ResponseBody
 	public List<ModelMasterDTO> getAllPromptModelList() {
 

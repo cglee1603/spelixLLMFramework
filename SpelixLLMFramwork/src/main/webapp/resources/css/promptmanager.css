@@ -71,14 +71,10 @@
 
 .prompt-area {
   display:flex;
-  border: 1px solid;
-  border-color: var(--black);
   height: 750px;
   width: 100%;
   flex-direction:column;
 }
-
-
 
 .prompt-table-area{
 
@@ -150,25 +146,39 @@ justify-content: space-between; /* 양 끝에 요소를 배치합니다 */
 }
 
 
+.prompt-checkbox-area{
+	line-height:16px;
+	top:0;
+	vertical-align:center;
+	height:1.5rem;
+}
+
 .prompt-checkbox{
 	display : inline-block;
 	width:15px;
 	padding:0;
 }
 
-.prompt-checkbox-label{
-	padding-left:20px;
-	margin-bottom:0;
-	vertical-align:top;
-	cursor:pointer;
+.prompt-table td:first-child{
+	border-left:0;
 }
 
-.prompt-checkbox-label::before{
-	border-radius:1px;
-	top:6px;
-	width:15px;
-	height:15px;
-	background:#fff;
-	border:1px solid #bbb;
-	transition:background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out,-webkit-box-shadow .15s ease-in-out;
+.prompt-table>tbody>tr>td{
+	border-top:1px solid #f4f4f4;
+	border-right:1px solid #f4f4f4;
+	border-bottom:none;
 }
+
+.prompt-table tbody tr td{	
+	padding-left:10px;
+	padding-right:10px;
+}
+
+.prompt-table td{
+	line-height:1.5rem;
+	padding:8px 0;
+}
+
+
+
+

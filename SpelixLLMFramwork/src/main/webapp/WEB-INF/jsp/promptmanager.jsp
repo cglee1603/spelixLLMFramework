@@ -34,10 +34,8 @@
           <div class="searchprompt">
           <label class="search-model">
           <span class="search-model-title">모델</span>
-          <select class="search-model-list">
-          <option value="all" disabled selected>전체</option>
-          <option value="model1">model-1</option>
-
+          <select class="search-model-list" id="search-model-list">
+          <option value="all" selected>전체</option>
           </select>
           </label>
           </div>
@@ -53,14 +51,14 @@
           </div>
           </div>
           <div class="table-responsive">
-          <table class="prompt-table">
+          <table class="prompt-table" id="prompt-table">
           <thead>
           <tr>
           <th><div class="prompt-checkbox-area">
           <input type="checkbox" class="prompt-checkbox" id="prompt-checkbox">
           </div>
         </th>
-          <th scope="col" class="promptId" data-field="promptId">ID</th>
+          <th class="promptId" data-field="promptId">ID</th>
           <th scope="col" class="promptVer" data-field="promptVer">버전</th>
           <th scope="col" class="model" data-field="model">모델</th>
           <th scope="col" class="promptName" data-field="promptName">제목</th>
@@ -68,13 +66,13 @@
           <th scope="col" class="promptType" data-field="promptType">타입</th>
           <th scope="col" class="llmCustomIds" data-field="llmCustomIds">Custom ID</th>
           <th scope="col" class="prompt" data-field="prompt">프롬프트</th>
-          <th scope="col" class="promptTestId" data-field="promptTestId">Test ID</th>
-          <th scope="col" class="promptRate" data-field="promptRate">정답률</th>
+<!--           <th scope="col" class="promptTestId" data-field="promptTestId">Test ID</th>
+ -->          <th scope="col" class="promptRate" data-field="promptRate">정답률</th>
           <th scope="col" class="sysPromptIds" data-field="sysPromptIds">시스템 프롬프트 ID</th>
           <th scope="col" class="sysPromptEtc" data-field="sysPromptEtc">시스템 프롬프트</th>
           <th scope="col" class="parmJson" data-field="parmJson">파라미터</th>
           <th scope="col" class="insertDate" data-field="insertDate">등록일자</th>
-          <th scope="col" class="verification">검증</th>
+          <th scope="col" class="verification" data-field="verification">검증</th>
           <th scope="col" class="useYN" data-field="useYN">사용여부</th>
           </tr>
           </thead>
