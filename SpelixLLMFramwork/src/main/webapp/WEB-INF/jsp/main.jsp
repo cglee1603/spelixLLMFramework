@@ -33,7 +33,7 @@
 		<div class="sidebar">
 			<div class="menu">
 				<div class="menu-item playground">플레이그라운드</div>
-				<div class="menu-item distribution">배포</div>
+				<div class="menu-item settingmodel">모델관리</div>
 				<div class="menu-item prompt">프롬프트 흐름</div>
 
 			</div>

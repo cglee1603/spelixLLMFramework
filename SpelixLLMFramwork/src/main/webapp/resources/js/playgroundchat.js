@@ -2,11 +2,9 @@
 /*
  * 시스템 프롬프트 선택
  */
-var $promptList = $('.promptlist');
+var $promptList = $('#promptlist');
 
 $(document).ready(function () {
-	
-	console.log($promptList);
 	localStorage.removeItem("systemPromptSelectOption");
 	localStorage.removeItem("systemPromptSelectedValue");
 	localStorage.removeItem("systemPromptInputValue");
@@ -18,27 +16,29 @@ $(document).ready(function () {
             success: function (data) {
             	var systemPromptInfoJson = {};
             	
-                // 데이터를 <option> 태그로 변환하고 select 요소에 추가
                 data.forEach(function (item) {
                 	var systemPromptName = item.systemPromptName;
                 	systemPromptInfoJson[systemPromptName] = item;
+
+                    var option = new Option(systemPromptName, item.systemPromptId);
+                    
+                	console.log("option: ", option);
+
                 	
-                    var option = new Option(systemPromptName, systemPromptName);
                     $promptList.append($(option));
+
                 });
                 
+                console.log("$promptList: ", $promptList.html());
+            	console.log("systemPromptInfoJson: ", systemPromptInfoJson);
+
+            	
             	localStorage.setItem("systemPromptSelectOption", JSON.stringify(systemPromptInfoJson));
 
                 $promptList.select2({
                     placeholder: '프롬프트를 선택해 주세요',
                     multiple: true
                 });
-                
-                // localStorage에서 selectedSysPromptIds 값을 읽어와 select2에 반영
-                var selectedSysPromptIds = localStorage.getItem("selectedSysPromptIds");
-                if (selectedSysPromptIds) {
-                    updateSelectedPrompts(selectedSysPromptIds);
-                }
  
             },
             error: function (error) {
@@ -48,14 +48,8 @@ $(document).ready(function () {
     }
 
     loadPromptData();
-    
-    function updateSelectedPrompts(ids) {
-        var idsArray = ids.split(',');
-        $promptList.val(idsArray).trigger('change');
-    }
 
 });
-
 
 $promptList.on('change', function (e) {      
     // 선택된 옵션들의 텍스트 배열을 가져오기

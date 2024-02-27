@@ -91,7 +91,7 @@
 
 .titlelabel {
 	font-size: 16px;
-	font-family: var(- -font-family-noto_sans);
+	font-family: var(--font-family-noto_sans);
 	font-weight: 600;
 }
 
@@ -216,14 +216,14 @@
 
 .base-prompt-title {
 	font-size: 21px;
-	font-family: var(- -font-family-noto_sans);
+	font-family: var(--font-family-noto_sans);
 	font-weight: bold;
 	margin-bottom: 10px;
 }
 
 .sampledesc {
 	font-size: 16px;
-	font-family: var(- -font-family-noto_sans);
+	font-family: var(--font-family-noto_sans);
 	font-weight: 400;
 }
 
@@ -245,7 +245,7 @@
 
 .maintitle {
 	font-size: 18px;
-	font-family: var(- -font-family-noto_sans);
+	font-family: var(--font-family-noto_sans);
 	font-weight: 600;
 }
 
@@ -264,7 +264,7 @@
 	cursor: pointer; /* 마우스 커서 변경 */
 	padding: 10px; /* 패딩 추가 (필요에 따라 조절) */
 	text-align: center; /* 텍스트 가운데 정렬 */
-	font-family: var(- -font-family-noto_sans);
+	font-family: var(--font-family-noto_sans);
 	font-size: 14px;
 	font-weight: 600;
 }
@@ -291,7 +291,7 @@
 
 .subtitle {
 	font-size: 15px;
-	font-family: var(- -font-family-noto_sans);
+	font-family: var(--font-family-noto_sans);
 	font-weight: 600;
 }
 
@@ -310,7 +310,7 @@
 
 .select2-dropdown {
 	background-color: #f2f2f2; /* 배경색 변경 */
-	font-family: var(- -font-family-noto_sans);
+	font-family: var(--font-family-noto_sans);
 	font-size: 13px;
 }
 
@@ -356,7 +356,7 @@
 	{
 	background: #c4edd4;
 	border: 1px solid #c4edd4;
-	font-family: var(- -font-family-noto_sans);
+	font-family: var(--font-family-noto_sans);
 	text-align: center;
 }
 
@@ -386,7 +386,7 @@
 	border: 1px solid #eaeaea;
 	border-radius: 6px;
 	color: #000000;
-	font-family: var(- -font-family-noto_sans);
+	font-family: var(--font-family-noto_sans);
 	font-size: 14px;
 	border-radius: 2px;
 	background: #ffffff;
@@ -432,7 +432,7 @@
 
 .variableltitle {
 	font-size: 15px;
-	font-family: var(- -font-family-noto_sans);
+	font-family: var(--font-family-noto_sans);
 	font-weight: 600;
 	text-align: left;
 }
@@ -450,7 +450,7 @@
 	padding: 5px;
 	margin-top: 5px;
 	font-size: 14px;
-	font-family: var(- -font-family-noto_sans);
+	font-family: var(--font-family-noto_sans);
 	position: relative; /* X 버튼의 위치 설정을 위해 */
 	padding-right: 25px; /* X 버튼 공간 확보 */
 }
@@ -520,7 +520,7 @@
 	border: none;
 	background: #eaeaea;
 	font-size: 14px;
-	font-family: var(- -font-family-noto_sans);
+	font-family: var(--font-family-noto_sans);
 	color: #000;
 	width: 50px;
 	height: 30px;
@@ -640,7 +640,7 @@ span.material-symbols-rounded {
 	margin: 0 3px;
 	opacity: 0.7;
 	background: #343541;
-	animation: animateDots 1.5s var(- -delay) ease-in-out infinite;
+	animation: animateDots 1.5s var(--delay) ease-in-out infinite;
 }
 
 .typing-animation .typing-dot:first-child {
@@ -716,7 +716,7 @@ opacity
 	border: 1px solid #eaeaea;
 	color: #000000;
 	font-size: 14px;
-	font-family: var(- -font-family-noto_sans);
+	font-family: var(--font-family-noto_sans);
 	border-radius: 2px;
 	background: #ffffff;
 	box-sizing: border-box; /* 테두리와 패딩을 너비와 높이에 포함 */
@@ -842,7 +842,7 @@ span.material-symbols-rounded {
 
 .paramtitle {
 	font-size: 14px; /* 글씨 크기 조정 */
-	font-family: var(- -font-family-noto_sans);
+	font-family: var(--font-family-noto_sans);
 	font-weight: 500;
 	margin-bottom: 5px; /* 프로그래스 바와의 간격 조정 */
 }
