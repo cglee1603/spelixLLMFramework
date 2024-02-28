@@ -14,4 +14,6 @@ public interface PromptManagerDAO {
 	int deletePromptMasterById(String promptId);
 
 	public List<ModelMasterDTO> getAllPromptModelList();
+	
+	int updateUseYNPromptMaster(String promptId);
 }

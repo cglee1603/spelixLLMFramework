@@ -40,7 +40,7 @@ public class PromptManagerController {
 	}
 
 	@RequestMapping(value = "/promptmanager/getAllPromptMaster.do", method = RequestMethod.POST)
-	@ResponseBody	
+	@ResponseBody
 	public List<PromptMasterDTO> getAllPromptMaster() {
 		List<PromptMasterDTO> allPromptMasterList = promptManagerService.getAllPromptMaster();
 
@@ -48,7 +48,6 @@ public class PromptManagerController {
 
 		return allPromptMasterList;
 	}
-	
 
 	@RequestMapping(value = "/promptmanager/deletePromptMasterById.do", method = RequestMethod.POST)
 	@ResponseBody
@@ -66,5 +65,13 @@ public class PromptManagerController {
 		log.debug("getAllPromptModelList promptModelList: " + promptModelList);
 
 		return promptModelList;
+	}
+
+	@RequestMapping(value = "/promptmanager/updateUseYNPromptMaster.do", method = RequestMethod.POST)
+	@ResponseBody
+	public int updateUseYNPromptMaster(@RequestParam("promptId") String promptId) {
+		log.debug("updateUseYNPromptMaster promptId: " + promptId);
+
+		return promptManagerService.updateUseYNPromptMaster(promptId);
 	}
 }

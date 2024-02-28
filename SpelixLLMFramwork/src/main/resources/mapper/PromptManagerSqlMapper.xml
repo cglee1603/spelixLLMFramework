@@ -41,6 +41,15 @@
 		WHERE prmt_id = #{prmtId}
 	</delete>
 
+	<update id="updateUseYNPromptMaster"
+		parameterType="java.lang.String">
+		UPDATE spx_prmt_mst
+		SET
+		use_yn = #{useYN}
+		WHERE
+		prmt_id =
+		#{promptId}
+	</update>
 
 
 	<!-- 모델 마스터 -->

@@ -23,7 +23,6 @@ public class PromptManagerServiceImpl implements PromptManagerService {
 	public List<PromptMasterDTO> getAllPromptMaster() {
 		return promptManagerDAO.getAllPromptMaster();
 	}
-	
 
 	public int deletePromptMasterById(String promptId) {
 		return promptManagerDAO.deletePromptMasterById(promptId);
@@ -32,4 +31,8 @@ public class PromptManagerServiceImpl implements PromptManagerService {
 	public List<ModelMasterDTO> getAllPromptModelList() {
 		return promptManagerDAO.getAllPromptModelList();
 	};
+
+	public int updateUseYNPromptMaster(String promptId) {
+		return promptManagerDAO.updateUseYNPromptMaster(promptId);
+	}
 }
