@@ -13,6 +13,7 @@ $(document).ready(function () {
         $.ajax({
             type: "POST",
             url: "getPromptSystemInfo.do",
+            async: false,
             success: function (data) {
             	var systemPromptInfoJson = {};
             	
@@ -21,10 +22,7 @@ $(document).ready(function () {
                 	systemPromptInfoJson[systemPromptName] = item;
 
                     var option = new Option(systemPromptName, item.systemPromptId);
-                    
-                	console.log("option: ", option);
 
-                	
                     $promptList.append($(option));
 
                 });

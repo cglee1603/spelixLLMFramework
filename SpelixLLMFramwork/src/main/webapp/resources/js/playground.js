@@ -154,54 +154,72 @@ $(document).ready(function() {
     // 모델 변경 시 파라미터 로드
     $('#selectmodel').on('change', loadModelParameters);
     
-    $(".import-button button").click(function() {
-        var selectedRow = $('input[type="radio"][name="selection"]:checked').closest('tr');
-
-        if (selectedRow.length > 0) {
-            var modelValue = selectedRow.find("td.model").text();
-            var promptTypeValue = selectedRow.find("td.promptType").text().trim();
-            var sysPromptIdsValue = selectedRow.find("td.sysPromptIds").text().trim();
-            var sysPromptEtcValue = selectedRow.find("td.sysPromptEtc").text();
-            var importparamJson = selectedRow.find("td.parmJson").text().trim();
-            
-            $("#selectmodel").val(modelValue);
-            if (promptTypeValue === '프롬프트') {
-                $("#changemode").val("playgroundprompt");
-            } else if (promptTypeValue === '채팅') {
-                $("#changemode").val("playgroundchat");
-            }
-            
-
-            if ($("#selectmodel").val() === null) {
-                $("#selectmodel").val("");
-            }
-            if ($("#changemode").val() === null) {
-                $("#changemode").val("playgroundchat");
-            }
-
-            // 모달 창 숨김과 동시에 변경된 모드와 모델에 대한 로드 함수 호출
-
-            $("#import-prompt-popup").hide(function() {
-                loadContent($("#changemode").val(), function() {
-                	 localStorage.setItem("selectedSysPromptIds", sysPromptIdsValue);
-            
-                    // 지정되지 않은 시스템 프롬프트 textarea에 반영
-                    if (sysPromptEtcValue) {
-                        $("#syspromptetcarea").val(sysPromptEtcValue);
-                    }
-
-                    // loadContent의 AJAX 요청이 완료된 후 loadModelParameters 호출
-                    paramJson = JSON.parse(importparamJson);// 전역변수에 할당
-                	loadModelParameters();
-                });
-            });
-        } else {
-            alert("라디오 버튼을 선택해주세요.");
-        }
-    });
+    
 });
 
 
+
+$(".import-button button").click(function() {
+    var selectedRow = $('input[type="radio"][name="selection"]:checked').closest('tr');
+
+    if (selectedRow.length > 0) {
+        var modelValue = selectedRow.find("td.model").text();
+        var promptTypeValue = selectedRow.find("td.promptType").text().trim();
+        var sysPromptIdsValue = selectedRow.find("td.sysPromptIds").text().trim();
+        var sysPromptEtcValue = selectedRow.find("td.sysPromptEtc").text();
+        var importparamJson = selectedRow.find("td.parmJson").text().trim();
+        
+        $("#selectmodel").val(modelValue);
+        if (promptTypeValue === '프롬프트') {
+            $("#changemode").val("playgroundprompt");
+        } else if (promptTypeValue === '채팅') {
+            $("#changemode").val("playgroundchat");
+        }
+        
+
+        if ($("#selectmodel").val() === null) {
+            $("#selectmodel").val("");
+        }
+        if ($("#changemode").val() === null) {
+            $("#changemode").val("playgroundchat");
+        }
+
+        // 모달 창 숨김과 동시에 변경된 모드와 모델에 대한 로드 함수 호출
+
+        $("#import-prompt-popup").hide(function() {
+        	updatePromptList(sysPromptIdsValue);
+
+        	// 지정되지 않은 시스템 프롬프트 textarea에 반영
+            if (sysPromptEtcValue) {
+                $("#syspromptetcarea").val(sysPromptEtcValue);
+            }
+
+            // loadContent의 AJAX 요청이 완료된 후 loadModelParameters 호출
+            paramJson = JSON.parse(importparamJson);// 전역변수에 할당
+        	loadModelParameters();
+        });
+    } else {
+        alert("라디오 버튼을 선택해주세요.");
+    }
+});
+
+//sysPromptIds 문자열을 파싱하여 #promptlist에 옵션으로 추가하는 함수
+function updatePromptList(sysPromptIdsValue) {
+
+	var selectedValues = [];
+	
+	if (sysPromptIdsValue) {
+		var sysPromptIdsArray = sysPromptIdsValue.split(',');
+		
+		sysPromptIdsArray.forEach(function(id) {
+			selectedValues.push(id);
+		});
+	}
+
+	$promptList.val(selectedValues).trigger('change');
+	$promptList.select2();
+
+}
 
 /* 모델 선택 후 파라미터 로드 하는 fuction - FIX_DS */
 function loadModelParameters() {
@@ -262,7 +280,6 @@ function createParam(paramContainer, json,index) {
 
     var tempJson = {};
     tempJson.minValue = json.minValue;
-    console.log(tempJson.minValue);
     tempJson.maxValue = json.maxValue;
     tempJson.defaultValue = textInput.value;
     tempJson.parameterName = json.parameterName;
