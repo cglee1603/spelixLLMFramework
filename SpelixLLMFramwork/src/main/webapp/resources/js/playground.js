@@ -1,9 +1,11 @@
 
 var paramJson = null; // 전역 변수로 paramJson을 선언 import 할때만 써야하기 때문
+var selectedModelId;
+
 /*
  * 모델 선택
  */
-var modelNameTypeJson = {};
+var modelMasterJsonById = {};
 
 $(document).ready(function () {
     var $modelSelect = $('#selectmodel');
@@ -14,10 +16,10 @@ $(document).ready(function () {
             url: "getAllPromptModelList.do",
             success: function (data) {
                 $.each(data, function(index, value){
-                    var option = new Option(value.modelName, value.modelName);
+                    var option = new Option(value.modelName, value.modelId);
                     $modelSelect.append(option);
                     
-                    modelNameTypeJson[value.modelName] = value.modelType; 
+                    modelMasterJsonById[value.modelId] = value; 
                 });
             },
             error: function (error) {
@@ -29,30 +31,6 @@ $(document).ready(function () {
     loadPromptModelList();
 });
 
-// 모델 선택 이벤트 핸들러
-$('#selectmodel').on('change', function () {
-    selectedModel = this.value;
-
-    var paramContainer = document.querySelector('.paramall');
-    paramContainer.innerHTML = '';
-    currentParamValueJson = {};
-
-    $.ajax({
-        type: "POST",
-        data: { selectedModelTypeName: modelNameTypeJson[selectedModel] },
-        url: "getParamMasterByParamId.do",
-        success: function (data) {
-            $.each(data, function(index, value){
-            	 // globalParamJson의 존재 여부를 확인하고, 없으면 value를 그대로 사용합니다.
-            	
-                createParam(paramContainer, value);
-            });
-        },
-        error: function (error) {
-            alert("모델 파라미터를 가져오는 데 실패했습니다.");
-        }
-    });
-});
 
 /* 불러오기 테이블 */
 
@@ -228,8 +206,8 @@ function loadModelParameters() {
     if (typeof paramJson === 'undefined') {
     	paramJson = {}; // globalParamJson이 없으면 빈 객체로 초기화합니다.
     }
-	
-    var selectedModel = $('#selectmodel').val();
+    
+    selectedModelId = this.value;
     var paramContainer = $('.paramall').get(0); // jQuery 객체에서 순수 DOM 객체로 변환
 
     if (paramContainer) {
@@ -238,7 +216,7 @@ function loadModelParameters() {
 
         $.ajax({
             type: "POST",
-            data: { selectedModelTypeName: modelNameTypeJson[selectedModel] },
+            data: { selectedModelTypeName: modelMasterJsonById[selectedModelId].modelType },
             url: "getParamMasterByParamId.do",
             success: function (data) {
                 // DOM이 완전히 업데이트되었는지 확인
