@@ -1,4 +1,5 @@
 var pageSize = 10;
+var currentPage = 1; 
 var modelNameTypeJson = {};
 window.promptData = []; // 전역 변수로 프롬프트 데이터 저장
 
@@ -37,6 +38,7 @@ function loadPromptData() {
 );
 }
 
+//기존 setupEventHandlers 함수에 이벤트 핸들러 추가
 function setupEventHandlers() {
 	$('#select-all-checkbox').change(function() {
 		$('.prompt-checkbox').prop('checked', $(this).is(':checked'));
@@ -44,20 +46,80 @@ function setupEventHandlers() {
 
 	$('.prompt-delete-button').click(deleteSelectedPrompts);
 
-	  // 모델 선택 변경 이벤트
     $('#search-model-list').change(filterAndDisplayData);
+
+    // 사용 여부 버튼에 대한 이벤트 핸들러 추가
+    $(document).on('click', '.prompt-useyn-button', function() {
+        var $button = $(this);
+        var promptId = $button.closest('tr').find('.promptId').text();
+
+        $.ajax({
+            url: '/path/to/update', // 실제 서버의 URL로 변경
+            method: 'POST',
+            data: { id: promptId },
+            success: function(response) {
+                if(response === 'Y') {
+                    $button.text('사용').removeClass('btn-secondary').addClass('btn-success');
+                } else {
+                    $button.text('미사용').removeClass('btn-success').addClass('btn-secondary');
+                }
+            },
+            error: function() {
+                alert('오류가 발생했습니다.');
+            }
+        });
+    });
 }
 
+
+
 function initializePagination(data, pageSize) {
-	var pageCount = Math.ceil(data.length / pageSize);
-	$(".pagination").empty().off('click').on('click', 'li', function() {
-		var currentPage = $(this).index() + 1;
-		displayPage(currentPage, data, pageSize);
-	});
-	for (var i = 1; i <= pageCount; i++) {
-		$(".pagination").append('<li><a href="#">' + i + '</a></li>');
-	}
+    var pageCount = Math.ceil(data.length / pageSize);
+    var $pagination = $(".pagination");
+
+    $pagination.empty().off('click').on('click', 'li', function() {
+        var $this = $(this);
+        if($this.hasClass('disabled')) {
+            return false;
+        }
+        var newPage = $this.data('page');
+        if(newPage === 'prev') {
+            currentPage = Math.max(currentPage - 1, 1);
+        } else if(newPage === 'next') {
+            currentPage = Math.min(currentPage + 1, pageCount);
+        } else {
+            currentPage = newPage;
+        }
+        displayPage(currentPage, data, pageSize);
+        updatePaginationButtons($pagination, pageCount);
+    });
+
+    // 페이지네이션 버튼 추가 (이전, 숫자, 다음)
+    addPaginationButtons($pagination, pageCount);
+
+    // 페이지네이션 버튼 상태 업데이트
+    updatePaginationButtons($pagination, pageCount);
 }
+
+function addPaginationButtons($pagination, pageCount) {
+    $pagination.append('<li class="page-item" data-page="prev"><a class="page-link" href="#" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>');
+    for (var i = 1; i <= pageCount; i++) {
+        $pagination.append('<li class="page-item" data-page="' + i + '"><a class="page-link" href="#">' + i + '</a></li>');
+    }
+    $pagination.append('<li class="page-item" data-page="next"><a class="page-link" href="#" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>');
+}
+
+function updatePaginationButtons($pagination, pageCount) {
+    $pagination.find('li').removeClass('active disabled');
+    $pagination.find('li').eq(currentPage).addClass('active');
+    if(currentPage === 1) {
+        $pagination.find('li[data-page="prev"]').addClass('disabled');
+    }
+    if(currentPage === pageCount) {
+        $pagination.find('li[data-page="next"]').addClass('disabled');
+    }
+}
+
 
 function displayPage(page, data, pageSize) {
 	var start = (page - 1) * pageSize;
@@ -113,16 +175,31 @@ function getCheckboxCell(value) {
 }
 
 function getTableCell(item, header) {
-	var cellValue = item[header.field] || '';
-	var cell = $('<td/>').addClass(header.class);
-	if (header.field === "verification") {
-		return cell.html('<button type="button" class="prompt-verification-button">검증</button>');
-	} else if (header.field === "useYN") {
-		var buttonText = cellValue === 'Y' ? '사용 중' : '미사용';
-		return cell.html('<button type="button" class="prompt-useyn-button">' + buttonText + '</button>');
-	} else {
-		return cell.text(cellValue);
-	}
+    var cellValue = item[header.field] || '';
+    var cell = $('<td/>').addClass(header.class);
+
+    if (header.field === "verification") {
+        return cell.html('<button type="button" class="btn prompt-verification-button">검증</button>');
+    } else if (header.field === "useYN") {
+        var buttonText = cellValue === 'Y' ? '사용' : '미사용';
+        var buttonClass = cellValue === 'Y' ? 'btn btn-success' : 'btn btn-secondary';
+        return cell.html('<button type="button" class="' + buttonClass + '">' + buttonText + '</button>');
+    }  else if (header.field === "parmJson") {
+        // JSON 데이터를 파싱하여 'parameterName: defaultValue' 형식으로 변환
+        var formattedData = '';
+        try {
+            var jsonData = JSON.parse(cellValue);
+            Object.keys(jsonData).forEach(function(key) {
+                var param = jsonData[key];
+                formattedData += param.parameterName + ': ' + param.defaultValue + '<br>';
+            });
+        } catch (e) {
+            formattedData = 'Invalid JSON';
+        }
+        return cell.html(formattedData);
+    } else {
+        return cell.text(cellValue);
+    }
 }
 
 

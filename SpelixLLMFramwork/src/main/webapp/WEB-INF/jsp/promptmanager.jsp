@@ -66,8 +66,8 @@
           <th scope="col" class="promptType" data-field="promptType">타입</th>
           <th scope="col" class="llmCustomIds" data-field="llmCustomIds">Custom ID</th>
           <th scope="col" class="prompt" data-field="prompt">프롬프트</th>
-<!--           <th scope="col" class="promptTestId" data-field="promptTestId">Test ID</th>
- -->          <th scope="col" class="promptRate" data-field="promptRate">정답률</th>
+          <th scope="col" class="promptTestId" data-field="promptTestId">Test ID</th>
+          <th scope="col" class="promptRate" data-field="promptRate">정답률</th>
           <th scope="col" class="sysPromptIds" data-field="sysPromptIds">시스템 프롬프트 ID</th>
           <th scope="col" class="sysPromptEtc" data-field="sysPromptEtc">시스템 프롬프트</th>
           <th scope="col" class="parmJson" data-field="parmJson">파라미터</th>
