@@ -60,8 +60,6 @@
 		resultMap="ModelMasterResultMap">
 		select model_type, model_name
 		from spx_model_mst
-		where use_yn
-		='Y'
 	</select>
 
 </mapper>
