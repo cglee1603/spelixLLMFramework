@@ -1,0 +1,153 @@
+* {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
+
+.wrapper {
+	display: flex;
+	height: 100%;
+}
+
+.content {
+	flex-grow: 1;
+	background-color: #fff;
+	height: 100%;
+}
+
+
+.prompt-verification-all{
+	padding:10px;
+	display:flex
+	
+}
+
+.prompt-test-area, .prompt-response-area {
+  width: 50%; /* 두 영역이 같은 크기로 나란히 배치되도록 설정 */
+  display: flex;
+  flex-direction: column; /* 수직 정렬 */
+  border:1px solid black;
+  height:700px;
+  padding:10px;
+}
+
+.prompt-edit-area{
+	display:flex;
+	flex-direction:column;
+	overflow-y:auto;
+}
+
+.prompt-Id-area,.prompt-Ver-area,.model-area{
+	height:40px;	
+}
+
+.prompt-Id-area,.prompt-Ver-area,.model-area,.prompt-area,.parmJson-area{
+	display:flex;
+	
+}
+
+
+.prompt-title{
+	width:100px;
+	padding-right:10px;
+	padding-left: 10px;
+	font-weight:bold;
+	font-family:var(--font-family-noto_sans);
+  	font-size: 14px;
+	
+}
+
+
+.prompt-edit-area {
+  flex: 6; /* 너비 비율 6:4 */
+  overflow-y: auto; /* 세로 스크롤 가능 */
+   border:1px solid black
+}
+
+.prompt-rate-area {
+  flex: 4; /* 너비 비율 6:4 */
+  overflow-y: auto; /* 세로 스크롤 가능 */
+   border:1px solid black
+}
+
+.prompt-area textarea{
+  resize: none;
+  width: 70%; /* 부모 요소의 너비에 맞게 조정 */
+  height:100%;
+  flex-grow: 1; /* 남은 공간을 모두 차지하도록 설정 */
+  border: 1px solid #eaeaea;
+  color: #000000;
+  font-family:var(--font-family-noto_sans);
+  font-size: 14px;
+  border-radius: 6px;
+  background: #ffffff;
+  box-sizing: border-box; /* 테두리와 패딩을 너비와 높이에 포함 */
+  padding: 10px;
+}
+
+.prompt-table-area{
+
+	display:flex;
+	flex-direction:column;	
+}
+
+.prompt-rate-area h5{
+	font-family: var(--font-family-noto_sans);
+	color:#868686;
+}
+
+.rate-table,.response-table{
+	border-collapse:collapse;
+	text-indent:initial;
+	border-spacing:2px;
+	margin-bottom:10px;
+	width:100%;
+	color:#212529;
+	border-bottom:1px solid #e5e5e5;
+	margin-top:
+}
+
+.rate-table th:first-child,.response-table th:first-child{
+	border-left:0;	
+}
+
+.rate-table thead th,.response-table thead th{
+	background-color : #f4f4f4;
+	border-bottom: 1px solid #fff;
+	line-height:16px;
+	text-align:center;
+	vertical-align:middle;
+	padding:12px 0;
+	
+}
+
+.rate-table th, .rate-table td ,.response-table th, .response-table td{
+	border-left:1px solid #fff;
+	border-top:0;
+	font-size:13px;
+	font-weight:400;
+	color:#333;
+	word-break:break-all;
+}
+
+.rate-table td:first-child,.response-table td:first-child{
+	border-left:0;
+}
+
+.rate-table>tbody>tr>td,.response-table>tbody>tr>td{
+	border-top:1px solid #f4f4f4;
+	border-right:1px solid #f4f4f4;
+	border-bottom:none;
+}
+
+.rate-table tbody tr td,.response-table tbody tr td{	
+	padding-left:10px;
+	padding-right:10px;
+}
+
+.rate-table td,.response-table td{
+	line-height:1.5rem;
+	padding:8px 0;
+}
+
+

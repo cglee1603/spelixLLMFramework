@@ -126,7 +126,7 @@
 
 	<select id="getAllPromptModelList"
 		resultMap="ModelMasterResultMap">
-		select model_type, model_name
+		select model_id, model_type, model_name
 		from spx_model_mst
 		where use_yn
 		='Y'

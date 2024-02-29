@@ -1,44 +1,33 @@
+var selectedSystemPrompt;
+var selectedSystemPromptId;
+var systemPromptJsonById = {};
 
 /*
  * 시스템 프롬프트 선택
  */
-var $promptList = $('.promptlist');
+var $promptList = $('#promptlist');
 
 $(document).ready(function () {
-	
-	console.log($promptList);
-	localStorage.removeItem("systemPromptSelectOption");
-	localStorage.removeItem("systemPromptSelectedValue");
-	localStorage.removeItem("systemPromptInputValue");
 
     function loadPromptData() {
         $.ajax({
             type: "POST",
             url: "getPromptSystemInfo.do",
+            async: false,
             success: function (data) {
             	var systemPromptInfoJson = {};
             	
-                // 데이터를 <option> 태그로 변환하고 select 요소에 추가
                 data.forEach(function (item) {
-                	var systemPromptName = item.systemPromptName;
-                	systemPromptInfoJson[systemPromptName] = item;
-                	
-                    var option = new Option(systemPromptName, systemPromptName);
+                    var option = new Option(item.systemPromptName, item.systemPromptId);
                     $promptList.append($(option));
+
+                    systemPromptJsonById[item.systemPromptId] = item;
                 });
-                
-            	localStorage.setItem("systemPromptSelectOption", JSON.stringify(systemPromptInfoJson));
 
                 $promptList.select2({
                     placeholder: '프롬프트를 선택해 주세요',
                     multiple: true
                 });
-                
-                // localStorage에서 selectedSysPromptIds 값을 읽어와 select2에 반영
-                var selectedSysPromptIds = localStorage.getItem("selectedSysPromptIds");
-                if (selectedSysPromptIds) {
-                    updateSelectedPrompts(selectedSysPromptIds);
-                }
  
             },
             error: function (error) {
@@ -48,59 +37,25 @@ $(document).ready(function () {
     }
 
     loadPromptData();
-    
-    function updateSelectedPrompts(ids) {
-        var idsArray = ids.split(',');
-        $promptList.val(idsArray).trigger('change');
-    }
 
 });
 
-
+// 시스템 프롬프트 선택 변동 시 동작
 $promptList.on('change', function (e) {      
-    // 선택된 옵션들의 텍스트 배열을 가져오기
-    var selectedSystemPrompt = $(this).find('option:selected').map(function () {
+	
+    selectedSystemPrompt = $(this).find('option:selected').map(function () {
         return $(this).text();
     }).get();
     
+    selectedSystemPromptId = $(this).find('option:selected').map(function () { return $(this).val(); }).get();
 
-	var selectedSystemPromptStr = "";
-
-    for (var selectedValue of selectedSystemPrompt) {
-    	if (selectedSystemPromptStr.length != 0) {
-			selectedSystemPromptStr += " ";
-		}
-    
-    	selectedSystemPromptStr += JSON.parse(localStorage.getItem("systemPromptSelectOption"))[selectedValue].systemPrompt;
-    	
-    	
-    	if (selectedSystemPromptStr.charAt(selectedSystemPromptStr.length - 1) !== ".") {
-			selectedSystemPromptStr += ".";
-		}
-    	
-    }
-
-    localStorage.setItem("systemPromptSelectedValue", selectedSystemPromptStr);
-    
 });
 
 
 /*
  * 시스템 프롬프트 입력
  */
-var promptArea = document.getElementById('syspromptetcarea');
-
-promptArea.addEventListener('input', function() {
-    var currentPromptValue = promptArea.value;
-    
-    if (currentPromptValue.length !== 0 && currentPromptValue.charAt(currentPromptValue.length - 1) !== ".") {
-    	currentPromptValue += ".";
-    	localStorage.setItem("systemPromptInputValue", currentPromptValue);
-        
-    	console.log('현재 입력한 시스템 프롬프트:', currentPromptValue);
-    }
-
-});
+var promptArea = document.getElementById('sysprompttextarea');
 
 
 
@@ -163,7 +118,6 @@ var sendButton = document.querySelector("#send-btn");
 var chatContainer = document.querySelector(".chat-container");
 var userText = null;
 var chatHistoryText = "";
-var systemPromptConcat = "";
 
 function createChatElement(content, className) {
     var chatDiv = document.createElement("div");
@@ -172,29 +126,46 @@ function createChatElement(content, className) {
     return chatDiv; // Return the created chat div
 }
 
-function getChatResponse(incomingChatDiv, selectedModel, chatHistoryText, userText, currentParamValueJson) {
+function getChatResponse(incomingChatDiv) {
 	var pElement = document.createElement("p");
-	
-	console.log("selectedModel: " + selectedModel);
-	
+
 	// chat history + current chat
 	var promptInputStr = "# History #\n" + chatHistoryText + "\nUSER: " + userText;
+
+	// system prompt
+	var systemPromptConcat = "";
 	
-	// 최종 system prompt
-	var systemPromptConcat = (localStorage.getItem("systemPromptSelectedValue") == null) ? "" : localStorage.getItem("systemPromptSelectedValue") 
-			 + " " + (localStorage.getItem("systemPromptInputValue") == null) ? "" : localStorage.getItem("systemPromptInputValue");
+	if (typeof selectedSystemPromptId !== 'undefined') {
+		for (var key of selectedSystemPromptId) {
+			if (systemPromptConcat.length !== 0 && systemPromptConcat.charAt(systemPromptConcat.length - 1) !== ".") {
+				systemPromptConcat += ".";
+			}
+			systemPromptConcat += systemPromptJsonById[key].systemPrompt;
+		}
+	}
+	
+	if (systemPromptConcat.length !== 0 && systemPromptConcat.charAt(systemPromptConcat.length - 1) !== ".") {
+		systemPromptConcat += ".";
+	}
+	
+	systemPromptConcat += promptArea.value;
 		
-	console.log("systemPromptConcat: ", systemPromptConcat);
+	var tempJson = new Object();
+
+	for (var parm in currentParamValueJson) {
+		tempJson[parm] = currentParamValueJson[parm].defaultValue;
+	}
+
+	var requestParam = new Object();
+	requestParam.prompt_id = "test";
+	requestParam.model = modelMasterJsonById[selectedModelId].modelName;
+	requestParam.prompt = promptInputStr;
+	requestParam.system_prompt = systemPromptConcat;
+	requestParam.properties = tempJson;
+	requestParam.file_path_list = "";
+	requestParam.additional_work = "";
 	
-	var requestParam = {
-			"prompt_id" : "test",
-			"model" : selectedModel,
-			"prompt" : promptInputStr,
-			"system_prompt" : systemPromptConcat,
-			"properties" : currentParamValueJson,
-			"file_path_list" : "",
-			"additional_work" : ""
-	};
+	console.log("채팅 requestParam: ", requestParam);
 
 	if (localStorage.getItem(JSON.stringify(requestParam)) != null) {
 		console.log("local storage is not null");
