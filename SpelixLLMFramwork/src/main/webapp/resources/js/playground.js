@@ -330,77 +330,55 @@ function loadContent(mode, callback) {
 }
 
 
-// 불러오기 팝업 창 열기 및 닫기 스크립트
- var importpopup = document.getElementById("import-prompt-popup");
- var importprompt = document.querySelector(".import-prompt");
- var closeButton = document.getElementsByClassName("import-close-button")[0];
+
+/*
+ * 프롬프트 샘플
+ */
+var promptSamplePopup = document.getElementById("prompt-sample-popup");
+var promptSampleCloseButton = document.getElementsByClassName("close-button")[0];
 
 // 프롬프트 샘플 팝업 열기
- importprompt.onclick = function() {
- importpopup.style.display = "block"; 
+document.querySelector(".prompt-sample").addEventListener("click", function() {
+    if (typeof selectedModelId === 'undefined') {
+        alert("프롬프트 샘플 가져오기 실패. 모델을 선택해 주세요.");
+        return;
+    }
 
- }
-// 프롬프트 샘플 팝업 닫기
- closeButton.onclick = function() {
- importpopup.style.display = "none";
- }
+    promptSamplePopup.style.display = "block";
 
- window.onclick = function(event) {
- if (event.target == importpopup) {
- importpopup.style.display = "none";
- }
- }
-
-
-// 프롬프트 샘플 팝업 창 열기 및 닫기 스크립트
- var popup = document.getElementById("prompt-sample-popup");
- var promptSample = document.querySelector(".prompt-sample");
- var closeButton = document.getElementsByClassName("close-button")[0];
-var promptBaseId;
- 
-// 프롬프트 샘플 팝업 열기
- promptSample.onclick = function() {
-	 
-		if (typeof selectedModel === 'undefined') {
-			alert("프롬프트 샘플 가져오기 실패. 모델을 선택해 주세요.");
-			return;
-		}
-	 
- popup.style.display = "block"; 
- $.ajax({
-	 type: "POST",
-	 url: "selectPromptSample.do",
-	 success: function(data){
-		  $(".base-prompt-all").empty();
-            $.each(data, function(index, value){
+    $.ajax({
+        type: "POST",
+        url: "selectPromptSample.do",
+        success: function(data) {
+            var basePromptAll = $(".base-prompt-all").empty();
+            data.forEach(function(value) {
                 var promptSampleDiv = $('<div class="base-prompt-sample"></div>');
                 promptSampleDiv.append('<div class="base-prompt-title">' + value.basePromptName + '</div>');
                 promptSampleDiv.append('<div class="base-prompt-desc">' + value.basePromptDesc + '</div>');
-
-                $(".base-prompt-all").append(promptSampleDiv);
-                promptSampleDiv.click(function() {
+                promptSampleDiv.on("click", function() {
                     $('#chat-input').val(value.basePromptDesc);
-                    promptBaseId = value.basePromptId;
-                    console.log("promptBaseId: ",promptBaseId);
-                    popup.style.display = "none";
+                    console.log("promptBaseId: ", value.basePromptId);
+                    promptSamplePopup.style.display = "none";
                 });
+                basePromptAll.append(promptSampleDiv);
             });
         },
-	 error: function(error){
-		 alert("프롬프트 샘플을 가져오는 데 실패했습니다.")
- }
- }) 
- }
-// 프롬프트 샘플 팝업 닫기
- closeButton.onclick = function() {
- popup.style.display = "none";
- }
+        error: function(error) {
+            alert("프롬프트 샘플을 가져오는 데 실패했습니다.");
+        }
+    });
+});
 
- window.onclick = function(event) {
- if (event.target == popup) {
- popup.style.display = "none";
- }
- }
+// 프롬프트 샘플 팝업 닫기
+promptSampleCloseButton.addEventListener("click", function() {
+    promptSamplePopup.style.display = "none";
+});
+
+window.addEventListener("click", function(event) {
+    if (event.target == promptSamplePopup) {
+        promptSamplePopup.style.display = "none";
+    }
+});
 
 
  
@@ -491,41 +469,33 @@ function importFromFile() {
 document.getElementById('save-prompt-master').addEventListener('click', savePromptMaster);
 
 function savePromptMaster(){
-	
-	if (typeof selectedModel === 'undefined') {
+
+	if (typeof selectedModelId === 'undefined') {
 		alert("저장하기 실패. 모델을 선택해 주세요.");
 		return;
 	}
 	
 	var promptType = $("#changemode option:selected").text();
-	
-	var selectedSysPromptValue = $(".promptlist option:selected").map(function() {
-	    return $(this).text();
-	}).get();
-	var sysPromptIds = [];
-	for (var selected of selectedSysPromptValue) {
-		sysPromptIds.push(JSON.parse(localStorage.getItem("systemPromptSelectOption"))[selected].systemPromptId);
-		}
-	
+
 	var requestParam = new Object();
 	requestParam.promptVer = "0001";
-	requestParam.model = selectedModel;
+	requestParam.model = modelMasterJsonById[selectedModelId].modelName;
 	requestParam.promptName = "test";
 	requestParam.basePromptId = promptBaseId;
 	requestParam.useYN = "Y";
 	requestParam.parmJson = JSON.stringify(currentParamValueJson);
 	requestParam.promptType = promptType;
-	requestParam.sysPromptIds = sysPromptIds;
+	requestParam.sysPromptIds = selectedSystemPromptId;
 
 	if (promptType === "프롬프트"){
 		requestParam.prompt = inputTxt;
 	}
 	
-	if (localStorage.getItem("systemPromptInputValue") != null){
-		requestParam.sysPromptEtc = localStorage.getItem("systemPromptInputValue");
+	if (promptArea.value){
+		requestParam.sysPromptEtc = promptArea.value;
 	}
 	
-	console.log("requestParam: ",requestParam);
+	console.log("저장하기 requestParam: ", requestParam);
 	
 	$.ajax({
 	    type: "POST",
