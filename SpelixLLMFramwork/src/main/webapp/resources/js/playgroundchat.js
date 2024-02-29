@@ -6,8 +6,6 @@ var $promptList = $('#promptlist');
 
 $(document).ready(function () {
 	localStorage.removeItem("systemPromptSelectOption");
-	localStorage.removeItem("systemPromptSelectedValue");
-	localStorage.removeItem("systemPromptInputValue");
 
     function loadPromptData() {
         $.ajax({
@@ -49,11 +47,15 @@ $(document).ready(function () {
 
 });
 
+var selectedSystemPrompt;
+var selectedSystemPromptId;
 $promptList.on('change', function (e) {      
     // 선택된 옵션들의 텍스트 배열을 가져오기
-    var selectedSystemPrompt = $(this).find('option:selected').map(function () {
+    selectedSystemPrompt = $(this).find('option:selected').map(function () {
         return $(this).text();
     }).get();
+    
+    selectedSystemPromptId = $(this).find('option:selected').map(function () { return $(this).val(); }).get();
     
 
 	var selectedSystemPromptStr = "";
@@ -72,8 +74,6 @@ $promptList.on('change', function (e) {
     	
     }
 
-    localStorage.setItem("systemPromptSelectedValue", selectedSystemPromptStr);
-    
 });
 
 
@@ -87,7 +87,6 @@ promptArea.addEventListener('input', function() {
     
     if (currentPromptValue.length !== 0 && currentPromptValue.charAt(currentPromptValue.length - 1) !== ".") {
     	currentPromptValue += ".";
-    	localStorage.setItem("systemPromptInputValue", currentPromptValue);
         
     	console.log('현재 입력한 시스템 프롬프트:', currentPromptValue);
     }
@@ -173,8 +172,8 @@ function getChatResponse(incomingChatDiv, selectedModel, chatHistoryText, userTe
 	var promptInputStr = "# History #\n" + chatHistoryText + "\nUSER: " + userText;
 	
 	// 최종 system prompt
-	var systemPromptConcat = (localStorage.getItem("systemPromptSelectedValue") == null) ? "" : localStorage.getItem("systemPromptSelectedValue") 
-			 + " " + (localStorage.getItem("systemPromptInputValue") == null) ? "" : localStorage.getItem("systemPromptInputValue");
+	var systemPromptConcat = (selectedSystemPrompt == null) ? "" : selectedSystemPrompt
+			 + " " + (promptArea.value == null) ? "" : promptArea.value;
 		
 	console.log("systemPromptConcat: ", systemPromptConcat);
 	

@@ -1,12 +1,11 @@
 
 var paramJson = null; // 전역 변수로 paramJson을 선언 import 할때만 써야하기 때문
 var selectedModelId;
+var modelMasterJsonById = {};
 
 /*
  * 모델 선택
  */
-var modelMasterJsonById = {};
-
 $(document).ready(function () {
     var $modelSelect = $('#selectmodel');
 
@@ -194,6 +193,7 @@ function updatePromptList(sysPromptIdsValue) {
 		});
 	}
 
+	console.log("selectedValues: ", selectedValues);
 	$promptList.val(selectedValues).trigger('change');
 	$promptList.select2();
 
@@ -387,18 +387,16 @@ document.getElementById('export-file').addEventListener('click', exportToFile);
 
 function exportToFile() {
 	
-	if (typeof selectedModel === 'undefined') {
+	if (typeof selectedModelId === 'undefined') {
 		alert("내보내기 실패. 모델을 선택해 주세요.");
 		return;
 	}
 	
     var fileContent = {};
-    fileContent.model = selectedModel;
+    fileContent.model = selectedModelId;
 	fileContent.parameters = currentParamValueJson;
-
-	var systemPromtSelectedValue =(localStorage.getItem("systemPromptSelectedValue") == null || localStorage.getItem("systemPromptSelectedValue").length == 0)?"":localStorage.getItem("systemPromptSelectedValue");
-	var systemPromptInputValue = (localStorage.getItem("systemPromptInputValue") == null || localStorage.getItem("systemPromptInputValue").length == 0)?"":localStorage.getItem("systemPromptInputValue");			
-	fileContent.systemPrompt = systemPromtSelectedValue + " " + systemPromptInputValue;
+	fileContent.selectedSystemPromptId = selectedSystemPromptId;
+	fileContent.inputSystemPrompt = promptArea.value;
 // fileContent.variables = ;
 
     var blob = new Blob([JSON.stringify(fileContent)], { type: 'text/plain' });
@@ -433,8 +431,8 @@ function importFromFile() {
 	                var jsonData = JSON.parse(fileContent);
 
 	                // model 설정
-	                selectedModel = jsonData.model;
-	                $("#selectmodel").val(selectedModel);
+	                selectedModelId = jsonData.model;
+	                $("#selectmodel").val(selectedModelId);
 
 	                // param 설정
 	                var paramContainer = document.querySelector('.paramall');
@@ -444,14 +442,10 @@ function importFromFile() {
 	                for (var tmp in jsonData.parameters) {
 	                	createParam(paramContainer, jsonData.parameters[tmp]);
 	                }
-	                
+
 	                // system prompt 설정
-	            	localStorage.removeItem("systemPromptSelectedValue");
-	            	localStorage.removeItem("systemPromptInputValue");
-	            	
-	            	var systemPromptTxt = jsonData.systemPrompt;
-	            	localStorage.setItem("systemPromptInputValue", systemPromptTxt);
-	            	promptArea.value = systemPromptTxt;
+	                updatePromptList(jsonData.selectedSystemPromptId.join(','));
+	                promptArea.value = jsonData.inputSystemPrompt;
 
 	            } catch (error) {
 	                console.error('JSON 파싱 오류:', error);
