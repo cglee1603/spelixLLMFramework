@@ -2,6 +2,9 @@
 var paramJson = null; // 전역 변수로 paramJson을 선언 import 할때만 써야하기 때문
 var selectedModelId;
 var modelMasterJsonById = {};
+var currentParamValueJson = {};
+var promptBaseId;
+
 
 /*
  * 모델 선택
@@ -158,7 +161,6 @@ $(".import-button button").click(function() {
         var sysPromptEtcValue = selectedRow.find("td.sysPromptEtc").text();
         var importparamJson = selectedRow.find("td.parmJson").text().trim();
         
-        $("#selectmodel").val(modelValue);
         if (promptTypeValue === '프롬프트') {
             $("#changemode").val("playgroundprompt");
         } else if (promptTypeValue === '채팅') {

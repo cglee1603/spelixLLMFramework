@@ -1,3 +1,6 @@
+var selectedSystemPrompt;
+var selectedSystemPromptId;
+var systemPromptJsonById = {};
 
 /*
  * 시스템 프롬프트 선택
@@ -5,7 +8,6 @@
 var $promptList = $('#promptlist');
 
 $(document).ready(function () {
-	localStorage.removeItem("systemPromptSelectOption");
 
     function loadPromptData() {
         $.ajax({
@@ -16,20 +18,11 @@ $(document).ready(function () {
             	var systemPromptInfoJson = {};
             	
                 data.forEach(function (item) {
-                	var systemPromptName = item.systemPromptName;
-                	systemPromptInfoJson[systemPromptName] = item;
-
-                    var option = new Option(systemPromptName, item.systemPromptId);
-
+                    var option = new Option(item.systemPromptName, item.systemPromptId);
                     $promptList.append($(option));
 
+                    systemPromptJsonById[item.systemPromptId] = item;
                 });
-                
-                console.log("$promptList: ", $promptList.html());
-            	console.log("systemPromptInfoJson: ", systemPromptInfoJson);
-
-            	
-            	localStorage.setItem("systemPromptSelectOption", JSON.stringify(systemPromptInfoJson));
 
                 $promptList.select2({
                     placeholder: '프롬프트를 선택해 주세요',
@@ -47,32 +40,14 @@ $(document).ready(function () {
 
 });
 
-var selectedSystemPrompt;
-var selectedSystemPromptId;
+// 시스템 프롬프트 선택 변동 시 동작
 $promptList.on('change', function (e) {      
-    // 선택된 옵션들의 텍스트 배열을 가져오기
+	
     selectedSystemPrompt = $(this).find('option:selected').map(function () {
         return $(this).text();
     }).get();
     
     selectedSystemPromptId = $(this).find('option:selected').map(function () { return $(this).val(); }).get();
-    
-
-	var selectedSystemPromptStr = "";
-
-    for (var selectedValue of selectedSystemPrompt) {
-    	if (selectedSystemPromptStr.length != 0) {
-			selectedSystemPromptStr += " ";
-		}
-    
-    	selectedSystemPromptStr += JSON.parse(localStorage.getItem("systemPromptSelectOption"))[selectedValue].systemPrompt;
-    	
-    	
-    	if (selectedSystemPromptStr.charAt(selectedSystemPromptStr.length - 1) !== ".") {
-			selectedSystemPromptStr += ".";
-		}
-    	
-    }
 
 });
 
@@ -81,17 +56,6 @@ $promptList.on('change', function (e) {
  * 시스템 프롬프트 입력
  */
 var promptArea = document.getElementById('sysprompttextarea');
-
-promptArea.addEventListener('input', function() {
-    var currentPromptValue = promptArea.value;
-    
-    if (currentPromptValue.length !== 0 && currentPromptValue.charAt(currentPromptValue.length - 1) !== ".") {
-    	currentPromptValue += ".";
-        
-    	console.log('현재 입력한 시스템 프롬프트:', currentPromptValue);
-    }
-
-});
 
 
 
@@ -154,7 +118,6 @@ var sendButton = document.querySelector("#send-btn");
 var chatContainer = document.querySelector(".chat-container");
 var userText = null;
 var chatHistoryText = "";
-var systemPromptConcat = "";
 
 function createChatElement(content, className) {
     var chatDiv = document.createElement("div");
@@ -163,29 +126,46 @@ function createChatElement(content, className) {
     return chatDiv; // Return the created chat div
 }
 
-function getChatResponse(incomingChatDiv, selectedModel, chatHistoryText, userText, currentParamValueJson) {
+function getChatResponse(incomingChatDiv) {
 	var pElement = document.createElement("p");
-	
-	console.log("selectedModel: " + selectedModel);
-	
+
 	// chat history + current chat
 	var promptInputStr = "# History #\n" + chatHistoryText + "\nUSER: " + userText;
+
+	// system prompt
+	var systemPromptConcat = "";
 	
-	// 최종 system prompt
-	var systemPromptConcat = (selectedSystemPrompt == null) ? "" : selectedSystemPrompt
-			 + " " + (promptArea.value == null) ? "" : promptArea.value;
+	if (typeof selectedSystemPromptId !== 'undefined') {
+		for (var key of selectedSystemPromptId) {
+			if (systemPromptConcat.length !== 0 && systemPromptConcat.charAt(systemPromptConcat.length - 1) !== ".") {
+				systemPromptConcat += ".";
+			}
+			systemPromptConcat += systemPromptJsonById[key].systemPrompt;
+		}
+	}
+	
+	if (systemPromptConcat.length !== 0 && systemPromptConcat.charAt(systemPromptConcat.length - 1) !== ".") {
+		systemPromptConcat += ".";
+	}
+	
+	systemPromptConcat += promptArea.value;
 		
-	console.log("systemPromptConcat: ", systemPromptConcat);
+	var tempJson = new Object();
+
+	for (var parm in currentParamValueJson) {
+		tempJson[parm] = currentParamValueJson[parm].defaultValue;
+	}
+
+	var requestParam = new Object();
+	requestParam.prompt_id = "test";
+	requestParam.model = modelMasterJsonById[selectedModelId].modelName;
+	requestParam.prompt = promptInputStr;
+	requestParam.system_prompt = systemPromptConcat;
+	requestParam.properties = tempJson;
+	requestParam.file_path_list = "";
+	requestParam.additional_work = "";
 	
-	var requestParam = {
-			"prompt_id" : "test",
-			"model" : selectedModel,
-			"prompt" : promptInputStr,
-			"system_prompt" : systemPromptConcat,
-			"properties" : currentParamValueJson,
-			"file_path_list" : "",
-			"additional_work" : ""
-	};
+	console.log("채팅 requestParam: ", requestParam);
 
 	if (localStorage.getItem(JSON.stringify(requestParam)) != null) {
 		console.log("local storage is not null");
