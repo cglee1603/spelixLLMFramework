@@ -80,7 +80,7 @@ $promptList.on('change', function (e) {
 /*
  * 시스템 프롬프트 입력
  */
-var promptArea = document.getElementById('syspromptetcarea');
+var promptArea = document.getElementById('sysprompttextarea');
 
 promptArea.addEventListener('input', function() {
     var currentPromptValue = promptArea.value;

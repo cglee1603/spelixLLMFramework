@@ -180,7 +180,7 @@ $(".import-button button").click(function() {
 
         	// 지정되지 않은 시스템 프롬프트 textarea에 반영
             if (sysPromptEtcValue) {
-                $("#syspromptetcarea").val(sysPromptEtcValue);
+                $("#sysprompttextarea").val(sysPromptEtcValue);
             }
             
             findModelIdByName(modelValue);
