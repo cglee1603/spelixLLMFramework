@@ -30,7 +30,33 @@ $(document).ready(function () {
     loadPromptModelList();
 });
 
+$('#selectmodel').on('change', function() {
+	selectedModelId = $("#selectmodel").val();
+    loadModelParameters();
+});
 
+
+
+/*
+ * 모드 선택
+ */
+$(document).ready(function() {
+    loadContent('playgroundchat');
+    // 모드 변경 시 콘텐츠 로드
+    $('#changemode').on('change', function() {
+        var selectedMode = $(this).val();
+        
+        loadContent(selectedMode);
+    });
+
+});
+
+
+
+
+/*
+ * 불러오기 팝업
+ */
 /* 불러오기 테이블 */
 
 $(document).ready(function() {
@@ -117,25 +143,11 @@ $(document).ready(function() {
     });
 });
 
-/* 불러오기 화면 parsing */
 
 
-$(document).ready(function() {
-    loadContent('playgroundchat');
-    // 모드 변경 시 콘텐츠 로드
-    $('#changemode').on('change', function() {
-        var selectedMode = $(this).val();
-        loadContent(selectedMode);
-    });
-
-    // 모델 변경 시 파라미터 로드
-    $('#selectmodel').on('change', loadModelParameters);
-    
-    
-});
-
-
-
+/*
+ * 불러오기 - 적용 대상 선택 시 동작
+ */
 $(".import-button button").click(function() {
     var selectedRow = $('input[type="radio"][name="selection"]:checked').closest('tr');
 
@@ -170,7 +182,10 @@ $(".import-button button").click(function() {
             if (sysPromptEtcValue) {
                 $("#syspromptetcarea").val(sysPromptEtcValue);
             }
-
+            
+            findModelIdByName(modelValue);
+            $("#selectmodel").val(selectedModelId);
+            
             // loadContent의 AJAX 요청이 완료된 후 loadModelParameters 호출
             paramJson = JSON.parse(importparamJson);// 전역변수에 할당
         	loadModelParameters();
@@ -180,13 +195,24 @@ $(".import-button button").click(function() {
     }
 });
 
+
+function findModelIdByName(name) {
+    var modelKey = Object.keys(modelMasterJsonById).find(key => {
+        var model = modelMasterJsonById[key];
+        return model.modelName === name;
+    });
+
+    selectedModelId = modelKey;
+}
+
+
 //sysPromptIds 문자열을 파싱하여 #promptlist에 옵션으로 추가하는 함수
 function updatePromptList(sysPromptIdsValue) {
 
 	var selectedValues = [];
 	
 	if (sysPromptIdsValue) {
-		var sysPromptIdsArray = sysPromptIdsValue.split(',');
+		var sysPromptIdsArray = sysPromptIdsValue.replace(/"/g, '').split(',');
 		
 		sysPromptIdsArray.forEach(function(id) {
 			selectedValues.push(id);
@@ -207,7 +233,6 @@ function loadModelParameters() {
     	paramJson = {}; // globalParamJson이 없으면 빈 객체로 초기화합니다.
     }
     
-    selectedModelId = this.value;
     var paramContainer = $('.paramall').get(0); // jQuery 객체에서 순수 DOM 객체로 변환
 
     if (paramContainer) {
