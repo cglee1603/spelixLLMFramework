@@ -69,14 +69,20 @@ document.getElementById('prompt-input-button').addEventListener('click', getLlmR
 function getLlmResponse () {
 	const pElement = document.createElement("p");
 
-	// FIXME
-	var requestParam = {
-			"prompt_id" : "test",
-			"model" : selectedModel,
-			"prompt" : inputTxt,
-			"properties" : currentParamValueJson,
-	};
-	
+	var tempJson = new Object();
+
+	for (var parm in currentParamValueJson) {
+		tempJson[parm] = currentParamValueJson[parm].defaultValue;
+	}
+
+	var requestParam = new Object();
+	requestParam.prompt_id = "test";
+	requestParam.model = modelMasterJsonById[selectedModelId].modelName;
+	requestParam.prompt = inputTxt;
+	requestParam.properties = tempJson;
+
+	console.log("프롬프트 requestParam: ", requestParam);
+
 	$.ajax({
 		type: "POST",
 		url: "getChatbotResponse.do",
