@@ -69,7 +69,21 @@ function setupEventHandlers() {
             }
         });
     });
+    
+    // 검증 버튼 클릭 이벤트 핸들러
+    $(document).on('click', '.prompt-verification-button', function() {
+    	 $('#prompt-verification-modal').show();
+    });
+
+    // 모달 닫기 버튼 이벤트 핸들러
+    $(document).on('click', '.prompt-close-button', function() {
+        $('#prompt-verification-modal').hide();
+    });
+    
+    // 여기에 다른 이벤트 핸들러들을 추가할 수 있습니다.
 }
+
+
 
 
 
@@ -248,4 +262,9 @@ function removeDeletedPromptsFromTable(promptIds) {
 		$('input[value="' + id + '"]').closest('tr').remove();
 	});
 }
+
+
+
+
+
 

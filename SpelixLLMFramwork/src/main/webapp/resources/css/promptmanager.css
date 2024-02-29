@@ -16,210 +16,202 @@
 }
 
 .headtitle {
-  display: flex;
-  flex-wrap: wrap;
-  height: 50px;
-  width: 100%;
-  border-bottom: 1px solid #e9e9e9;
-  padding-left: 20px;
-  align-content:center;
-  
+	display: flex;
+	flex-wrap: wrap;
+	height: 50px;
+	width: 100%;
+	border-bottom: 1px solid #e9e9e9;
+	padding-left: 20px;
+	align-content: center;
 }
 
-.promptmanagetitle{
+.promptmanagetitle {
 	font-size: 19px; /* 글씨 크기 조정 */
 	font-family: var(--font-family-noto_sans);
 	font-weight: 500;
-	
 }
 
-.maincontents{
-	padding:30px;
-	overflow:auto;
+.maincontents {
+	padding: 30px;
+	overflow: auto;
 }
 
 .searchprompt {
-
-  height: 60px;
-  width: 80%;
+	height: 60px;
+	width: 80%;
 }
 
-.search-model{
-	display:block;
-	margin-bottom:0;
-	cursor:pointer;	
+.search-model {
+	display: block;
+	margin-bottom: 0;
+	cursor: pointer;
 }
 
-.search-model-title{
-	display:block;
+.search-model-title {
+	display: block;
 	font-size: 15px; /* 글씨 크기 조정 */
 	font-family: var(--font-family-noto_sans);
-	color:#868686;
+	color: #868686;
 }
 
-.search-model-list{
-	background-color:#fff;
+.search-model-list {
+	background-color: #fff;
 	border: 1px solid #ddd;
-	color:#333;
-	padding:0 5px;
-	height:32px;
-	border-radius:2px;
-	font-size:15px;
+	color: #333;
+	padding: 0 5px;
+	height: 32px;
+	border-radius: 2px;
+	font-size: 15px;
 	font-family: var(--font-family-noto_sans);
-	width:200px;
+	width: 200px;
 }
 
 .prompt-area {
-  display:flex;
-  height: 750px;
-  width: 100%;
-  flex-direction:column;
+	display: flex;
+	height: 750px;
+	width: 100%;
+	flex-direction: column;
 }
 
-.prompt-table-area{
-
-	display:flex;
-	flex-direction:column;	
+.prompt-table-area {
+	display: flex;
+	flex-direction: column;
 }
 
-.prompt-table-area h5{
+.prompt-table-area h5 {
 	font-family: var(--font-family-noto_sans);
-	color:#868686;
+	color: #868686;
 }
 
-.prompt-title-button{
-	display:flex;
-justify-content: space-between; /* 양 끝에 요소를 배치합니다 */
+.prompt-title-button {
+	display: flex;
+	justify-content: space-between; /* 양 끝에 요소를 배치합니다 */
 }
 
-.prompt-list-title{
- height: 50px;
- padding: 10px;
+.prompt-list-title {
+	height: 50px;
+	padding: 10px;
 }
 
-.prompt-delete-area{
- height: 50px;
-    padding: 10px;
+.prompt-delete-area {
+	height: 50px;
+	padding: 10px;
 }
 
-
-.prompt-delete-button{
+.prompt-delete-button {
 	border: 1px solid #ddd;
-    height: 30px;
-    width: 100px;
-    font-size: 15px;
-    font-family: var(--font-family-noto_sans);
-    text-align: center;
+	height: 30px;
+	width: 100px;
+	font-size: 15px;
+	font-family: var(--font-family-noto_sans);
+	text-align: center;
 }
 
-.prompt-table{
-	border-collapse:collapse;
-	text-indent:initial;
-	border-spacing:2px;
-	margin-bottom:10px;
-	width:100%;
-	color:#212529;
-	border-bottom:1px solid #e5e5e5;
+.prompt-table {
+	border-collapse: collapse;
+	text-indent: initial;
+	border-spacing: 2px;
+	margin-bottom: 10px;
+	width: 100%;
+	color: #212529;
+	border-bottom: 1px solid #e5e5e5;
 }
 
-.prompt-table th:first-child{
-	border-left:0;	
+.prompt-table th:first-child {
+	border-left: 0;
 }
 
-.prompt-table thead th{
-	background-color : #f4f4f4;
+.prompt-table thead th {
+	background-color: #f4f4f4;
 	border-bottom: 1px solid #fff;
-	line-height:16px;
-	text-align:center;
-	vertical-align:middle;
-	padding:12px 0;
-	
+	line-height: 16px;
+	text-align: center;
+	vertical-align: middle;
+	padding: 12px 0;
 }
 
-.prompt-table th, .prompt-table td{
-	border-left:1px solid #fff;
-	border-top:0;
-	font-size:13px;
-	font-weight:400;
-	color:#333;
-	word-break:break-all;
+.prompt-table th, .prompt-table td {
+	border-left: 1px solid #fff;
+	border-top: 0;
+	font-size: 13px;
+	font-weight: 400;
+	color: #333;
+	word-break: break-all;
 }
 
-
-.prompt-checkbox-area{
-	line-height:16px;
-	top:0;
-	vertical-align:center;
-	height:1.5rem;
+.prompt-checkbox-area {
+	line-height: 16px;
+	top: 0;
+	vertical-align: center;
+	height: 1.5rem;
 }
 
-.prompt-checkbox{
-	display : inline-block;
-	width:15px;
-	padding:0;
+.prompt-checkbox {
+	display: inline-block;
+	width: 15px;
+	padding: 0;
 }
 
-.prompt-table td:first-child{
-	border-left:0;
+.prompt-table td:first-child {
+	border-left: 0;
 }
 
-.prompt-table>tbody>tr>td{
-	border-top:1px solid #f4f4f4;
-	border-right:1px solid #f4f4f4;
-	border-bottom:none;
+.prompt-table>tbody>tr>td {
+	border-top: 1px solid #f4f4f4;
+	border-right: 1px solid #f4f4f4;
+	border-bottom: none;
 }
 
-.prompt-table tbody tr td{	
-	padding-left:10px;
-	padding-right:10px;
+.prompt-table tbody tr td {
+	padding-left: 10px;
+	padding-right: 10px;
 }
 
-.prompt-table td{
-	line-height:1.5rem;
-	padding:8px 0;
+.prompt-table td {
+	line-height: 1.5rem;
+	padding: 8px 0;
 }
 
-.sysPromptEtc,.prompt,.promptDesc{
-	width:200px;
+.sysPromptEtc, .prompt, .promptDesc {
+	width: 200px;
 }
 
-.prompt-verification-button{
-	margin-bottom:1px;
-	border-radius:2px;
-	font-size:13px;
-	text-align:center;
-	padding:0.25rem 0.5rem;
+.prompt-verification-button ,  {
+	margin-bottom: 1px;
+	border-radius: 2px;
+	font-size: 13px;
+	text-align: center;
+	padding: 0.25rem 0.5rem;
 }
 
-.prompt-useyn-button{
-	margin-bottom:1px;
-	border-radius:2px;
-	font-size:13px;
-	text-align:center;
-	padding:0.25rem 0.5rem;
-	 color: black; /* 하얀 글씨 */
+.prompt-useyn-button {
+	margin-bottom: 1px;
+	border-radius: 2px;
+	font-size: 13px;
+	text-align: center;
+	padding: 0.25rem 0.5rem;
+	color: black; /* 하얀 글씨 */
 }
 
 /* 사용 중 버튼 스타일 */
 .btn-success {
-    background-color: lightgreen;
-    color: black;
-    border: none; /* 테두리 제거 */
+	background-color: lightgreen;
+	color: black;
+	border: none; /* 테두리 제거 */
 }
 
 /* 미사용 버튼 스타일 */
 .btn-secondary {
-    background-color: grey;
-    color: black;
-    border: none; /* 테두리 제거 */
+	background-color: grey;
+	color: black;
+	border: none; /* 테두리 제거 */
 }
-
 
 .pagination-wrapper {
 	text-align: center; /* 중앙 정렬 */
-	 display: flex;
-    justify-content: center; /* 가로축 중앙 정렬 */
-    align-items: center; /* 세로축 중앙 정렬 */
+	display: flex;
+	justify-content: center; /* 가로축 중앙 정렬 */
+	align-items: center; /* 세로축 중앙 정렬 */
 }
 
 .pagination {
@@ -227,5 +219,187 @@ justify-content: space-between; /* 양 끝에 요소를 배치합니다 */
 	margin: 0 auto; /* 좌우 마진 자동 설정으로 중앙 정렬 */
 }
 
+.prompt-verification {
+	display: none;
+	position: fixed; /* 고정 위치 */
+	z-index: 1; /* 다른 요소 위에 표시되도록 z-index 설정 */
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+	background-color: rgba(0, 0, 0, 0.4);
+}
+
+.verification-content {
+	background-color: #fefefe;
+	margin: 5% auto; /* 모달이 상단으로부터 떨어진 거리 조정 */
+	padding: 20px;
+	border: 1px solid #888;
+	width: 80%;
+	max-width: 1000px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 그림자 효과 추가 */
+}
+
+.prompt-verification-all {
+	padding: 10px;
+	display: flex
+}
+
+.prompt-close-button {
+	color: #aaa;
+	float: right;
+	font-size: 28px;
+	font-weight: bold;
+}
+
+.prompt-close-button:hover, .prompt-close-button:focus {
+	color: black;
+	text-decoration: none;
+	cursor: pointer;
+}
+
+.prompt-test-area, .prompt-response-area {
+	width: 50%; /* 두 영역이 같은 크기로 나란히 배치되도록 설정 */
+	display: flex;
+	flex-direction: column; /* 수직 정렬 */
+	height: 700px;
+	padding: 10px;
+}
+
+.prompt-edit-area {
+	display: flex;
+	flex-direction: column;
+	overflow-y: auto;
+}
+
+.prompt-test-button-area{
+	display:flex;
+}
+.prompt-test-button{
+	margin-left: auto;
+	margin-right:10px;
+	border-radius:2px;
+	border:none;
+	font-size:13px;
+	font-weight:bold;
+	color:black;
+	background-color:#69f169;
+}
+
+.prompt-Id-area, .prompt-Ver-area, .model-area {
+	height: 40px;
+}
+
+.prompt-Id-area, .prompt-Ver-area, .model-area, .test-prompt-area,
+	.parmJson-area {
+	display: flex;
+}
+
+ .test-prompt-area,
+	.parmJson-area {
+	height: 200px;
+	flex-direction:column;
+}
 
 
+.parmJson-area{
+	margin-top:10px;
+}
+
+.prompt-title {
+	width: 100px;
+	padding-right: 10px;
+	padding-left: 10px;
+	font-weight: bold;
+	font-family: var(--font-family-noto_sans);
+	font-size: 14px;
+}
+
+.prompt-edit-area {
+	flex: 6; /* 너비 비율 6:4 */
+	overflow-y: auto; /* 세로 스크롤 가능 */
+}
+
+.prompt-rate-area {
+	flex: 4; /* 너비 비율 6:4 */
+	overflow-y: auto; /* 세로 스크롤 가능 */
+
+}
+
+.test-prompt-area textarea {
+	resize: none;
+	width: 90%; /* 부모 요소의 너비에 맞게 조정 */
+	height: 100%;
+	border: 1px solid #eaeaea;
+	color: #000000;
+	font-family: var(--font-family-noto_sans);
+	font-size: 14px;
+	border-radius: 6px;
+	background: #ffffff;
+	box-sizing: border-box; /* 테두리와 패딩을 너비와 높이에 포함 */
+	padding: 10px;
+}
+
+.prompt-table-area {
+	display: flex;
+	flex-direction: column;
+}
+
+.prompt-rate-area h5 {
+	font-family: var(--font-family-noto_sans);
+	color: #868686;
+}
+
+.rate-table, .response-table {
+	border-collapse: collapse;
+	text-indent: initial;
+	border-spacing: 2px;
+	margin-bottom: 10px;
+	width: 100%;
+	color: #212529;
+	border-bottom: 1px solid #e5e5e5;
+	margin-top:
+}
+
+.rate-table th:first-child, .response-table th:first-child {
+	border-left: 0;
+}
+
+.rate-table thead th, .response-table thead th {
+	background-color: #f4f4f4;
+	border-bottom: 1px solid #fff;
+	line-height: 16px;
+	text-align: center;
+	vertical-align: middle;
+	padding: 12px 0;
+}
+
+.rate-table th, .rate-table td, .response-table th, .response-table td {
+	border-left: 1px solid #fff;
+	border-top: 0;
+	font-size: 13px;
+	font-weight: 400;
+	color: #333;
+	word-break: break-all;
+}
+
+.rate-table td:first-child, .response-table td:first-child {
+	border-left: 0;
+}
+
+.rate-table>tbody>tr>td, .response-table>tbody>tr>td {
+	border-top: 1px solid #f4f4f4;
+	border-right: 1px solid #f4f4f4;
+	border-bottom: none;
+}
+
+.rate-table tbody tr td, .response-table tbody tr td {
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
+.rate-table td, .response-table td {
+	line-height: 1.5rem;
+	padding: 8px 0;
+}
