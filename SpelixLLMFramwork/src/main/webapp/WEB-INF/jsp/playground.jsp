@@ -109,27 +109,26 @@
 													class="tablelabel">수정일</label></th>
 											</tr>
 											<tr>
-											<th></th>
-											<th></th>
-											<th></th>
-											<th></th>
-											<th></th>
-											<th></th>
-											<th></th>
-											<th></th>
-											<th></th>
-											<th></th>
-											<th></th>
-											<th></th>
-											<th></th>
-											<th></th>
-											<th></th>
-											<th></th>
-											<th></th>
-											<th></th>
-											<th></th>
-											<th></th>
-
+												<th></th>
+												<th></th>
+												<th></th>
+												<th></th>
+												<th></th>
+												<th></th>
+												<th></th>
+												<th></th>
+												<th></th>
+												<th></th>
+												<th></th>
+												<th></th>
+												<th></th>
+												<th></th>
+												<th></th>
+												<th></th>
+												<th></th>
+												<th></th>
+												<th></th>
+												<th></th>
 											</tr>
 										</thead>
 										<tbody>
