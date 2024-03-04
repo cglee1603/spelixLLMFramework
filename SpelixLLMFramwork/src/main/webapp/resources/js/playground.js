@@ -215,7 +215,7 @@ $(".import-button button").click(function() {
                 $("#sysprompttextarea").val(sysPromptEtcValue);
             }
             
-         // 지정되지 않은 시스템 프롬프트 textarea에 반영
+         // 프롬프트 textarea에 반영
             if (promptValue) {
                 $("#promptarea").val(promptValue);
             }
@@ -283,11 +283,14 @@ function loadModelParameters() {
             success: function (data) {
                 // DOM이 완전히 업데이트되었는지 확인
                 setTimeout(function() {
-                    $.each(data, function(index, value) {
-                    	// 여기에서 globalParamJson 값을 확인하고 조건에 따라 처리
-                    	 if (paramJson && paramJson.hasOwnProperty(value.parameterName)) {
-                             value = paramJson[value.parameterName];
-                         }
+                	$.each(data, function(index, value) {
+                        // json 객체 복사
+                        var paramValue = Object.assign({}, value);
+
+                        // globalParamJson 값을 확인하고 조건에 따라 처리
+                        if (paramJson && paramJson.hasOwnProperty(value.parameterName)) {
+                            paramValue.defaultValue = paramJson[value.parameterName];
+                        }
                     	
                         createParam(paramContainer, value);
                     });
