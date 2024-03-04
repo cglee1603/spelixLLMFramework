@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.spelix.dao.PromptManagerDAO;
 import com.spelix.domain.ModelMasterDTO;
 import com.spelix.domain.PromptMasterDTO;
+import com.spelix.domain.PromptTestDataDTO;
 import com.spelix.service.PromptManagerService;
 
 @Service
@@ -34,5 +35,9 @@ public class PromptManagerServiceImpl implements PromptManagerService {
 
 	public int updateUseYNPromptMaster(String promptId) {
 		return promptManagerDAO.updateUseYNPromptMaster(promptId);
+	}
+
+	public List<PromptTestDataDTO> getPromptTestDataById(String promptTestId) {
+		return promptManagerDAO.getPromptTestDataById(promptTestId);
 	}
 }

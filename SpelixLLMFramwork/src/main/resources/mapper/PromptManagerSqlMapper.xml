@@ -72,4 +72,29 @@
 		from spx_model_mst
 	</select>
 
+
+
+	<!-- 프롬프트 테스트 데이터 -->
+	<resultMap id="PromptTestDataResultMap"
+		type="com.spelix.domain.PromptTestDataDTO">
+		<id property="promptTestId" column="prmt_test_id" />
+		<id property="num" column="num" />
+		<result property="promptTestName" column="prmt_test_name" />
+		<result property="body" column="body" />
+		<result property="answer" column="answer" />
+		<result property="insertUser" column="insert_user" />
+		<result property="insertDate" column="insert_date" />
+		<result property="updateUser" column="update_user" />
+		<result property="updateDate" column="update_date" />
+	</resultMap>
+
+	<select id="getPromptTestDataById"
+		resultMap="PromptTestDataResultMap">
+		select *
+		from spx_prmt_test_data
+		where prmt_test_id =
+		#{promptTestId}
+	</select>
+
+
 </mapper>
