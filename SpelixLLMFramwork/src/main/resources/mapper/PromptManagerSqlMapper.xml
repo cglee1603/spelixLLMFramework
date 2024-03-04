@@ -15,6 +15,7 @@
 		<result property="llmCustomIds" column="llm_cust_ids"
 			typeHandler="com.spelix.typeHandler.PostgreSQLArrayToStringTypeHandler" />
 		<result property="prompt" column="prmt" />
+		<result property="promptTestId" column="prmt_test_id" />
 		<result property="promptRate" column="prmt_rate" />
 		<result property="basePromptId" column="base_prmt_id" />
 		<result property="sysPromptIds" column="sys_prmt_ids"
