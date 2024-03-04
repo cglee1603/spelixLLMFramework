@@ -60,6 +60,10 @@ $(document).ready(function() {
 /*
  * 불러오기 팝업
  */
+
+var importPopup = document.getElementById("import-prompt-popup");
+var importCloseButton = document.getElementsByClassName("import-close-button")[0];
+
 /* 불러오기 테이블 */
 
 $(document).ready(function() {
@@ -116,24 +120,38 @@ $(document).ready(function() {
 
                     $("#inputtable tbody").empty();
 
-                    // 첫 번째 헤더를 제외한 나머지 헤더에서 class와 data-field 속성을 가져와서 headers
-					// 배열을 생성합니다.
-                    var headers = $("#inputtable thead th").map(function(index) {
-                        if (index > 0) { // 첫 번째 헤더는 라디오 버튼이므로 제외
-                            return { field: $(this).data('field'), class: $(this).attr('class') };
-                        }
+                    // 모든 헤더 요소를 포함하는 headers 배열
+                    var headers = $("#inputtable thead th").map(function() {
+                        return { field: $(this).data('field'), class: $(this).attr('class') };
                     }).get();
 
                     for (var i = start; i < end && i < data.length; i++) {
                         var row = $('<tr/>');
 
-                        // 첫 번째 셀에 라디오 버튼 추가
-                        $('<td/>').html('<input type="radio" name="selection" value="' + i + '" />').appendTo(row);
-
-                        $.each(headers, function(index, header) {
-                            var cellValue = data[i][header.field] || '';
-                            $('<td/>').addClass(header.class).text(cellValue).appendTo(row);
+                        // 모든 headers에 대한 td 생성
+                        headers.forEach(function(header, index) {
+                            var cell;
+                            if (index === 0) {
+                                // 첫 번째 td (라디오 버튼) 추가
+                                cell = $('<td/>').html('<input type="radio" name="selection" value="' + i + '" />');
+                            } else if (header.field === 'parmJson') {
+                                var formattedData = '';
+                                try {
+                                    var jsonData = JSON.parse(data[i][header.field]);
+                                    Object.keys(jsonData).forEach(function(key) {
+                                        var param = jsonData[key];
+                                        formattedData += param.parameterName + ': ' + param.defaultValue + '<br>';
+                                    });
+                                } catch (e) {
+                                    formattedData = 'Invalid JSON';
+                                }
+                                cell = $('<td/>').addClass(header.class).html(formattedData);
+                            } else {
+                                cell = $('<td/>').addClass(header.class).text(data[i][header.field] || '');
+                            }
+                            row.append(cell);
                         });
+
                         $("#inputtable tbody").append(row);
                     }
                 }
@@ -143,6 +161,17 @@ $(document).ready(function() {
             	console.log(xhr.responseText); 
             	}
         });
+    });
+    
+ // 프롬프트 샘플 팝업 닫기
+    importCloseButton.addEventListener("click", function() {
+    	importPopup.style.display = "none";
+    });
+
+    window.addEventListener("click", function(event) {
+        if (event.target == importPopup) {
+        	importPopup.style.display = "none";
+        }
     });
 });
 
@@ -160,6 +189,7 @@ $(".import-button button").click(function() {
         var sysPromptIdsValue = selectedRow.find("td.sysPromptIds").text().trim();
         var sysPromptEtcValue = selectedRow.find("td.sysPromptEtc").text();
         var importparamJson = selectedRow.find("td.parmJson").text().trim();
+        var promptValue = selectedRow.find("td.prompt").text();
         
         if (promptTypeValue === '프롬프트') {
             $("#changemode").val("playgroundprompt");
@@ -183,6 +213,11 @@ $(".import-button button").click(function() {
         	// 지정되지 않은 시스템 프롬프트 textarea에 반영
             if (sysPromptEtcValue) {
                 $("#sysprompttextarea").val(sysPromptEtcValue);
+            }
+            
+         // 지정되지 않은 시스템 프롬프트 textarea에 반영
+            if (promptValue) {
+                $("#promptarea").val(promptValue);
             }
             
             findModelIdByName(modelValue);
