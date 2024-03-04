@@ -83,8 +83,12 @@ public class PlaygroundController {
 
 		JSONObject requestParamJson = new JSONObject(requestParam);
 		JSONObject sp_route = new JSONObject();
-
-		sp_route.put("sp_route", requestParamJson);
+		JSONArray jsonArray = new JSONArray();
+		
+		jsonArray.put(requestParamJson);
+		sp_route.put("sp_route", jsonArray.toString());
+		
+		log.debug("sp_route: " + sp_route);
 
 		String result = getApiResultJsonStr(apiUrl.toString(), sp_route.toString());
 
