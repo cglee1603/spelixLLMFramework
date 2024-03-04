@@ -34,8 +34,23 @@
 		<!--　프롬프트 사용자 입력　-->
 		<div class="setting">
 			<div class="maintitle">프롬프트</div>
-			<div class="customprompt">
+				<div class="systemprompt">
+				<div class="subtitle">시스템 프롬프트 선택</div>
+				<div class="promptlist">
+					<select class="form-control" id="promptlist" multiple="multiple">
+					</select>
+				</div>
+
 				<div class="prompttext">
+					<div class="subtitle">시스템 프롬프트 입력</div>
+					<textarea
+						placeholder="You are an AI assistant that helps people find information."
+						id="sysprompttextarea"></textarea>
+				</div>
+			</div>
+			<div class="customprompt">
+			<div class="subtitle">프롬프트 입력</div>
+				<div class="customprompttext">
 					<textarea
 						placeholder="You are an AI assistant that helps people find information."
 						id="promptarea"></textarea>

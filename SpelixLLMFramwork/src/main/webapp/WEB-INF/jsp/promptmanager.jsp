@@ -167,7 +167,7 @@
           <tr>
           <th>Q</th>
           <th>A(llm결과)</th>
-          <th>결과</th>
+          <th>정답</th>
           <th>정답여부</th>
           </tr>
           </thead>
