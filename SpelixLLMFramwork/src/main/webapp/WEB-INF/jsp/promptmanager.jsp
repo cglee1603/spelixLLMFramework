@@ -96,91 +96,91 @@
 
 		</div>
 	</div>
-			<div id="prompt-verification-modal" class="prompt-verification" style="display: none;">
-    <div class="verification-content">
-        <span class="prompt-close-button">&times;</span>
-        <div class="prompt-verification-all">      
-		<div class="prompt-test-area">
-		<div class="prompt-edit-area">
-		<div class="prompt-edit-title">
-		<h4>프롬프트 테스트</h4>
-		</div>
-		<div class="prompt-test-button-area">
-		<button type="button" class="btn prompt-test-button">테스트</button>
-		</div>
-		<div class="prompt-edit-content">
-		<div class="prompt-Id-area">
-		
-		<p class="prompt-title">ID</p>
-		<div class="promptId"></div>
-		
-		</div>
-		<div class="prompt-Ver-area">
-	
-		<p class="prompt-title">버전</p>
-		<div class="promptVer"></div>
-	
-		</div>
-		<div class="model-area">
-		
-		<p class="prompt-title">모델</p>
-		<div class="model"></div>
-		
-		</div>
-		<div class="test-prompt-area">
-					
-		<p class="prompt-title">프롬프트</p>
+	<div id="prompt-verification-modal" class="prompt-verification"
+		style="display: none;">
+		<div class="verification-content">
+			<span class="prompt-close-button">&times;</span>
+			<div class="prompt-verification-all">
+				<div class="prompt-test-area">
+					<div class="prompt-edit-area">
+						<div class="prompt-edit-title">
+							<h4>프롬프트 테스트</h4>
+						</div>
+						<div class="prompt-test-button-area">
+							<button type="button" class="btn prompt-test-button">테스트</button>
+						</div>
+						<div class="prompt-edit-content">
+							<div class="prompt-Id-area">
 
-		<textarea class="prompt-edit-text" id="prompt-edit-text">
+								<p class="prompt-title">ID</p>
+								<div class="promptId"></div>
+
+							</div>
+							<div class="prompt-Ver-area">
+
+								<p class="prompt-title">버전</p>
+								<div class="promptVer"></div>
+
+							</div>
+							<div class="model-area">
+
+								<p class="prompt-title">모델</p>
+								<div class="model"></div>
+
+							</div>
+							<div class="test-prompt-area">
+
+								<p class="prompt-title">프롬프트</p>
+
+								<textarea class="prompt-edit-text" id="prompt-edit-text">
 		</textarea>
 
-		
-		</div>
-		<div class="parmJson-area">
-						
-		<p class="prompt-title">파라미터</p>
-		<div class="paramJson">
 
+							</div>
+							<div class="parmJson-area">
+
+								<p class="prompt-title">파라미터</p>
+								<div class="paramJson"></div>
+
+							</div>
+						</div>
+					</div>
+					<div class="prompt-rate-area">
+						<table class="rate-table">
+							<thead>
+								<tr>
+									<th>Test ID</th>
+									<th>변경사항</th>
+									<th>정답률</th>
+								</tr>
+							</thead>
+							<tbody>
+
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<div class="prompt-response-area">
+					<table class="response-table">
+						<thead>
+							<tr>
+								<th>Q</th>
+								<th>A(llm결과)</th>
+								<th>정답</th>
+								<th>정답여부</th>
+							</tr>
+						</thead>
+						<tbody>
+
+						</tbody>
+					</table>
+
+				</div>
+
+			</div>
+			<!-- 내용을 로드할 컨테이너 -->
 		</div>
-		
-		</div>
-		</div>
-		</div>
-          <div class="prompt-rate-area">
-          <table class="rate-table">
-          <thead>
-          <tr>
-          <th>Test ID</th>
-          <th>변경사항</th>
-          <th>정답률</th>
-          </tr>
-          </thead>
-          <tbody>
-          
-          </tbody>
-          </table>
-          </div>
-		</div>
-		<div class="prompt-response-area">
-		<table class="response-table">
-          <thead>
-          <tr>
-          <th>Q</th>
-          <th>A(llm결과)</th>
-          <th>정답</th>
-          <th>정답여부</th>
-          </tr>
-          </thead>
-          <tbody>
-          
-          </tbody>
-          </table>
-		
-		</div>
-        
-        </div> <!-- 내용을 로드할 컨테이너 -->
-    </div>
-</div>
+	</div>
 
 	<!-- jQuery -->
 	<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
