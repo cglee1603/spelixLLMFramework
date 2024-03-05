@@ -189,7 +189,7 @@ function getChatResponse(incomingChatDiv) {
 				localStorage.setItem(JSON.stringify(requestParam), JSON.stringify(data));
 				chatTypeingEnd(incomingChatDiv, pElement);
 				chatHistoryText += chatHistoryText.length ? "\n" : "";
-				chatHistoryText += "USER: " + userText + "\nBOT: " + pElement.textContent;
+				chatHistoryText += "USER: " + userText + "\Assistant: " + pElement.textContent;
 				console.log(chatHistoryText);
 			},
 			error: function() {
