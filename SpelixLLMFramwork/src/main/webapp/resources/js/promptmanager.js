@@ -274,15 +274,21 @@ $('.prompt-test-button').on('click', function() {
 
     var requestParam = new Object();
     requestParam.model = $('.model-area .model').text();
-    // requestParam.prompt = promptInputStr;
-    // requestParam.system_prompt = systemPromptConcat;
+    requestParam.prompt = $('.test-prompt-area .prompt-edit-text').val();
+    
+    //TODO 
+    requestParam.system_prompt = '반말';
     requestParam.properties = { max_token: '500' };
+    
+    
     requestParam.file_path_list = "";
     requestParam.additional_work = "";
     
     data = {
         requestParam: JSON.stringify(requestParam),
-        promptTestId: $('.prompt-test-id-area .promptTestId').text()
+        promptTestId: $('.prompt-test-id-area .promptTestId').text(),
+        promptId: $('.prompt-Id-area .promptId').text(),
+        promptVer: $('.prompt-Ver-area .promptVer').text(),
     };
 
     ajaxCall("POST", 'promptmanager/getPromptTestDataResultById.do', data,
@@ -327,6 +333,7 @@ $('.prompt-test-button').on('click', function() {
 });
 
 
+// 검증 시 오른쪽에 상세 화면 띄우기
 $('.rate-table tbody').on('click', 'tr', function() {
     // 클릭한 행에서 데이터 가져오기
     var item = $(this).data('item');
@@ -335,8 +342,8 @@ $('.rate-table tbody').on('click', 'tr', function() {
     // 가져온 데이터를 response-table에 추가
     var newRow = $('<tr>');
     newRow.append($('<td>').text(item.question));
-    newRow.append($('<td>').text(item.prompt_result));
     newRow.append($('<td>').text(item.answer));
+    newRow.append($('<td>').text(item.prompt_result));
     newRow.append($('<td>').text((item.answer_cosine_similarity > 0.2) ? 'O' : 'X'));
 
     // response-table의 tbody에 새로운 행 추가
@@ -367,11 +374,54 @@ $(document).on('click', '.prompt-verification-button', function() {
 	$('.prompt-Ver-area .promptVer').text(rowData.promptVer);
 	$('.model-area .model').text(rowData.model);
 	$('.test-prompt-area .prompt-edit-text').text(rowData.prompt);
+	$('.sys-prompt-etc-area .sysPromptEtc').text(rowData.sysPromptEtc);
+
+	
+
+	// TODO 파라미터, 시스템 프롬프트 선택
+//	$('.parmJson-area .paramJson').text(rowData.model);
 	
 	
 
-	// TODO
-//	$('.parmJson-area .paramJson').text(rowData.model);
+	
+	
+	// test history 가져오기
+	console.log($('.prompt-Id-area .promptId').text())
+	ajaxCall("POST", 'promptmanager/getPromptRateHistoryByPromptId.do', {promptId: $('.prompt-Id-area .promptId').text()},
+	        function(data) {
+
+	            var tbody = document.querySelector('.rate-table tbody');
+
+	            data.forEach(function(item) {
+
+	            	var row = document.createElement('tr');
+	                // 클로저를 사용하여 item 변수를 접근할 수 있도록 함
+	                $(row).data('item', item);
+
+	                // 각 열(td)에 데이터 추가
+	                var testIdCell = document.createElement('td');
+	                testIdCell.textContent = item.promptRateHistId;
+	                row.appendChild(testIdCell);
+
+	                // FIXME
+	                var changesCell = document.createElement('td');
+	                changesCell.textContent = '';
+	                row.appendChild(changesCell);
+
+	                var accuracyCell = document.createElement('td');
+	                accuracyCell.textContent = item.promptRate;
+	                row.appendChild(accuracyCell);
+
+	                // tbody에 행 추가
+	                tbody.appendChild(row);
+	            });
+
+
+
+	        },
+	        function() {
+	            alert("프롬프트 테스트 히스토리 가져오기 실패.");
+	        });
 	
 
 });

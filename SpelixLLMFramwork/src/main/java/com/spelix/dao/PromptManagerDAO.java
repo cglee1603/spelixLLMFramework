@@ -1,9 +1,11 @@
 package com.spelix.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import com.spelix.domain.ModelMasterDTO;
 import com.spelix.domain.PromptMasterDTO;
+import com.spelix.domain.PromptRateHistoryDTO;
 import com.spelix.domain.PromptTestDataDTO;
 
 public interface PromptManagerDAO {
@@ -19,5 +21,13 @@ public interface PromptManagerDAO {
 	int updateUseYNPromptMaster(String promptId);
 
 	List<PromptTestDataDTO> getPromptTestDataById(String promptTestId);
+
+	List<PromptRateHistoryDTO> getPromptRateHistoryByPromptId(String promptId);
+
+	int savePromptRateHistory(PromptRateHistoryDTO promptRateHistoryDTO);
+
+	String getPromptRateHistoryNextHistoryId();
+
+	int updatePromptRateHistoryRate(Map<String, Object> params);
 
 }

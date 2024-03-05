@@ -15,6 +15,9 @@
 <link
 	href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css"
 	rel="stylesheet">
+<link
+	href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css"
+	rel="stylesheet" />
 <link rel="stylesheet" type="text/css"
 	href="<%=application.getContextPath()%>/resources/css/global.css">
 <link rel="stylesheet" type="text/css"
@@ -109,45 +112,39 @@
 						<div class="prompt-test-button-area">
 							<button type="button" class="btn prompt-test-button">테스트</button>
 						</div>
+
 						<div class="prompt-edit-content">
 							<div class="prompt-Id-area">
-
 								<p class="prompt-title">ID</p>
 								<div class="promptId"></div>
-
 							</div>
 							<div class="prompt-test-id-area">
-
 								<p class="prompt-title">TEST_ID</p>
 								<div class="promptTestId"></div>
-
 							</div>
 							<div class="prompt-Ver-area">
-
 								<p class="prompt-title">버전</p>
 								<div class="promptVer"></div>
-
 							</div>
 							<div class="model-area">
-
 								<p class="prompt-title">모델</p>
 								<div class="model"></div>
-
 							</div>
 							<div class="test-prompt-area">
-
 								<p class="prompt-title">프롬프트</p>
-
-								<textarea class="prompt-edit-text" id="prompt-edit-text">
-		</textarea>
-
-
+								<textarea class="prompt-edit-text" id="prompt-edit-text"></textarea>
 							</div>
 							<div class="parmJson-area">
-
 								<p class="prompt-title">파라미터</p>
 								<div class="paramJson"></div>
-
+							</div>
+							<div class="sys-prompt-id-area">
+								<p class="prompt-title">시스템 프롬프트 선택</p>
+								<div class="sysPromptId"></div>
+							</div>
+							<div class="sys-prompt-etc-area">
+								<p class="prompt-title">시스템 프롬프트 입력</p>
+								<textarea class="sysPromptEtc" id="sysPromptEtc"></textarea>
 							</div>
 						</div>
 					</div>
@@ -155,7 +152,7 @@
 						<table class="rate-table">
 							<thead>
 								<tr>
-									<th>Test ID</th>
+									<th>History ID</th>
 									<th>변경사항</th>
 									<th>정답률</th>
 								</tr>
@@ -171,8 +168,8 @@
 						<thead>
 							<tr>
 								<th>Q</th>
-								<th>A(llm결과)</th>
-								<th>정답</th>
+								<th>A</th>
+								<th>모델 리턴 결과</th>
 								<th>정답여부</th>
 							</tr>
 						</thead>
@@ -191,7 +188,8 @@
 	<!-- jQuery -->
 	<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 	<!-- select2 javascript cdn -->
-
+	<script
+		src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 	<script
 		src="<%=application.getContextPath()%>/resources/js/promptmanager.js"></script>
 
