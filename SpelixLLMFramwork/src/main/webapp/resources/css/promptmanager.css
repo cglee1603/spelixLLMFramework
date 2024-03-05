@@ -297,17 +297,137 @@
 }
 
  .test-prompt-area,
-	.parmJson-area,.test-syspromptetc-area,.test-syspromt-area {
+	.parmJson-area,.sys-prompt-etc-area,.sys-prompt-id-area {
 	flex-direction:column;
 }
 
-.selectsysprompt{
-	width:90%;
+.sysPromptId {
+ margin-top:10px;
+width:100%;
+  height:15%;
 }
 
+.sysPromptId select{
+	border: 1px solid #eaeaea;
+  border-radius:6px;
+  width:200%;
+  height: 100%
+}
+
+.select2-dropdown {
+  background-color: #f2f2f2; /* 배경색 변경 */
+  font-family: var(--font-family-noto_sans);
+  font-size:13px;
+}
+
+.select2-dropdown {
+  background-color: #f2f2f2; /* 배경색 변경 */
+  font-family: var(--font-family-noto_sans);
+  font-size:13px;
+}
+
+.select2-container--default .select2-results__option--highlighted[aria-selected] {
+  background-color: #eaeaea; /* 하이라이트 배경색 변경 */
+  color: #000; /* 글꼴 색상 변경 */
+}
+
+.select2-container--default.select2-container--focus .select2-selection--multiple{
+	border: 1px solid #eaeaea;
+}
+
+.select2-selection__choice {
+ background-color: #eaeaea;
+  color: #333; /* 글꼴 색상 변경 */
+}
+
+/* Select2 드롭다운 내부의 스크롤 바 스타일 */
+.select2-results__options::-webkit-scrollbar {
+    width: 8px; /* 스크롤 바의 너비 */
+}
+
+/* 스크롤 트랙 (바탕) 스타일 */
+.select2-results__options::-webkit-scrollbar-track {
+    background: #f1f1f1; /* 스크롤 트랙의 배경색 */
+	 border-radius: 10px; /* 둥근 모서리 만들기 */
+}
+
+/* 스크롤 핸들 (움직이는 부분) 스타일 */
+.select2-results__options::-webkit-scrollbar-thumb {
+    background: #888; /* 스크롤 핸들의 색상 */
+	 border-radius: 10px; /* 둥근 모서리 만들기 */
+}
+
+/* 스크롤 핸들에 마우스 호버 시 스타일 */
+.select2-results__options::-webkit-scrollbar-thumb:hover {
+    background: #555; /* 스크롤 핸들의 색상 변경 */
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__choice{
+	  background: #c4edd4;
+	  border:1px solid #c4edd4;
+	  font-family:var(--font-family-noto_sans);
+	  text-align:center;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__choice__remove{
+    color:#000;
+}
 
 .parmJson-area{
 	margin-top:10px;
+}
+
+.param-1 {
+	display: flex;
+	flex-direction: column; /* 세로 방향 정렬 */
+	align-items: flex-start; /* 왼쪽 정렬 */
+}
+
+.paramtitle {
+	font-size: 14px; /* 글씨 크기 조정 */
+	font-family: var(--font-family-noto_sans);
+	font-weight: 500;
+	margin-bottom: 5px; /* 프로그래스 바와의 간격 조정 */
+}
+
+.prograss {
+	display: flex; /* Flexbox 레이아웃 사용 */
+	align-items: center; /* 세로 방향 가운데 정렬 */
+	justify-content: space-between;
+}
+
+.parambar {
+	-webkit-appearance: none;
+	appearance: none;
+	width: 90%; /* 너비를 내용에 맞게 조정 */
+	flex-grow: 1; /* 남은 공간을 채우도록 설정 */
+	height: 5px;
+	background: #eaeaea;
+	outline: none;
+	border-radius: 5px;
+	margin-right: 10px; /* 텍스트 입력창과의 간격 조정 */
+}
+
+.parambar:hover {
+	background: #87acf1; /* 호버 상태일 때 파란색으로 변경 */
+}
+
+.parambar::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	appearance: none;
+	width: 15px;
+	height: 15px;
+	border: 2px solid #000000; /* 검은색 테두리 */
+	background: #ffffff; /* 흰색 바탕 */
+	border-radius: 50%;
+	cursor: pointer;
+}
+
+.paramInput {
+	margin-left: 20px;
+	border: 1px solid #555;
+	padding: 5px;
+	width: 20%; /* 텍스트 입력창 너비 줄임 */
 }
 
 .prompt-title {
@@ -339,7 +459,7 @@
 
 }
 
-.sysprompt-edit-text {
+.sysPromptEtc-edit-text {
 	resize: none;
 	width: 90%; /* 부모 요소의 너비에 맞게 조정 */
 	height: 50%;

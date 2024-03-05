@@ -2,11 +2,17 @@ var pageSize = 10;
 var currentPage = 1; 
 //var modelNameTypeJson = {};
 //window.promptData = []; // 전역 변수로 프롬프트 데이터 저장
+var selectedSystemPrompt;
+var selectedSystemPromptId;
+var systemPromptJsonById = {};
+
+var $promptList = $('#selectsysPromptId');
 
 $(document).ready(function() {
 	loadPromptModelList();
 	loadPromptData();
 	setupEventHandlers();
+	loadSystemPrompts(); // 새로운 함수 호출
 });
 
 function loadPromptModelList() {
@@ -73,6 +79,16 @@ function setupEventHandlers() {
     // 검증 버튼 클릭 이벤트 핸들러
     $(document).on('click', '.prompt-verification-button', function() {
     	 $('#prompt-verification-modal').show();
+    });
+    
+    // 시스템 프롬프트 선택 이벤트 핸들러 추가
+    $('#promptlist').on('change', function() {
+        selectedSystemPrompt = $(this).find('option:selected').map(function() {
+            return $(this).text();
+        }).get();
+        selectedSystemPromptId = $(this).find('option:selected').map(function() {
+            return $(this).val();
+        }).get();
     });
 
     // 모달 닫기 버튼 이벤트 핸들러
@@ -200,25 +216,30 @@ function getTableCell(item, header) {
         return cell.html('<button type="button" class="' + buttonClass + '">' + buttonText + '</button>');
     }  else if (header.field === "parmJson") {
         // JSON 데이터를 파싱하여 'parameterName: defaultValue' 형식으로 변환
-        var formattedData = '';
-        try {
-            var jsonData = JSON.parse(cellValue);
-            var formattedParts = [];
+    	   var formattedData = '';
+    	    var originalJson = '';
+    	    try {
+    	        var jsonData = JSON.parse(cellValue);
+    	        var formattedParts = [];
+    	        originalJson = cellValue; // 원본 JSON 데이터를 저장
 
-            Object.keys(jsonData).forEach(function(key) {
-                var param = jsonData[key];
-                formattedParts.push(param.parameterName + ': ' + param.defaultValue);
-            });
+    	        Object.keys(jsonData).forEach(function(key) {
+    	            var param = jsonData[key];
+    	            formattedParts.push(param.parameterName + ': ' + param.defaultValue);
+    	        });
 
-            formattedData = formattedParts.join(', ');
+    	        formattedData = formattedParts.join(', ');
 
-        } catch (e) {
-            formattedData = 'Invalid JSON';
-        }
-        return cell.html(formattedData);
-    } else {
-        return cell.text(cellValue);
-    }
+    	    } catch (e) {
+    	        formattedData = 'Invalid JSON';
+    	    }
+    	    // 숨겨진 필드에 원본 JSON 데이터 저장
+    	    var hiddenInput = '<input type="hidden" class="original-parmJson" value=\'' + originalJson + '\'>';
+    	    // cell에 숨겨진 필드와 파싱된 데이터를 모두 추가
+    	    return cell.html(hiddenInput + formattedData);
+    	} else {
+    	    return cell.text(cellValue);
+    	}
 }
 
 
@@ -270,6 +291,30 @@ function removeDeletedPromptsFromTable(promptIds) {
 	});
 }
 
+//검증화면에 프롬프트 선택 데이터 가져오기
+
+function loadSystemPrompts() {
+    $.ajax({
+        type: "POST",
+        url: "getPromptSystemInfo.do",
+        async: false,
+        success: function(data) {
+            data.forEach(function(item) {
+                var option = new Option(item.systemPromptName, item.systemPromptId);
+                $promptList.append($(option));
+                systemPromptJsonById[item.systemPromptId] = item;
+            });
+
+            $promptList.select2({
+                placeholder: '프롬프트를 선택해 주세요',
+                multiple: true
+            });
+        },
+        error: function() {
+            alert("시스템 프롬프트를 가져오는 데 실패했습니다.");
+        }
+    });
+}
 
 /*
  * 검증 팝업에서 테스트 버튼 클릭 시 발생하는 이벤트
@@ -350,6 +395,16 @@ $('.rate-table tbody').on('click', 'tr', function() {
     newRow.append($('<td>').text(item.answer));
     newRow.append($('<td>').text(item.prompt_result));
     newRow.append($('<td>').text((item.answer_cosine_similarity > 0.2) ? 'O' : 'X'));
+    
+    var checkboxTd = $('<td>');
+    var checkbox = $('<input>', { type: 'checkbox', disabled: item.answer_cosine_similarity > 0.2 });
+    
+    if (item.answer_cosine_similarity <= 0.2 && item.answer_cosine_similarity !== null) {
+        checkbox.prop('checked', true);
+    }
+    
+    checkboxTd.append(checkbox);
+    newRow.append(checkboxTd);
 
     // response-table의 tbody에 새로운 행 추가
     $('.response-table tbody').html(newRow);
@@ -386,50 +441,43 @@ $(document).on('click', '.prompt-verification-button', function() {
 	// TODO 파라미터, 시스템 프롬프트 선택
 //	$('.parmJson-area .paramJson').text(rowData.model);
 	
-	// JSON 파싱 및 프로그레스 바 생성 - FIX_DS
-    if(rowData.paramJson) {
-        var parmJson = JSON.parse(rowData.parmJson);
+	// 프로그레스 바 생성
+    var parmJson = JSON.parse($(this).closest('tr').find('.original-parmJson').val()); // 숨겨진 필드의 값을 읽어옵니다.
+    if (parmJson) {
         var paramContainer = document.querySelector('.parmJson-area .paramJson');
-        parmJson.forEach(function(json, index) {
-            createParam(paramContainer, json, index);
+        paramContainer.innerHTML = ''; // 기존 내용을 비웁니다.
+
+        Object.keys(parmJson).forEach(function(key, index) {
+            createParam(paramContainer, parmJson[key], key, index);
         });
     }
-    
-    function createParam(paramContainer, json, index) {
-        // 프로그레스 바 생성 로직
-        var newParamDiv = document.createElement('div');
-        newParamDiv.classList.add('param');
-        newParamDiv.innerHTML = `
-            <div class="param-1">
-                <div class="paramtitle">${json.parameterName}</div>
-                <div class="prograss">
-                    <input type="range" class="parambar" id="parambar-${index}" value="${json.defaultValue}"
-                        min="${json.minValue}" max="${json.maxValue}">
-                    <input type="text" class="paramInput" id="paramInput-${index}" value="${json.defaultValue}">
-                </div>
-            </div>`;
-        paramContainer.appendChild(newParamDiv);
+});
 
-        // 프로그레스 바 이벤트 리스너 추가
-        var progressBar = newParamDiv.querySelector('.parambar');
-        let textInput = newParamDiv.querySelector('.paramInput');
+function createParam(paramContainer, json, key, index) {
+    var defaultValue = json.defaultValue || 0;
+    var minValue = json.minValue || 0;
+    var maxValue = json.maxValue || 100;
 
-        var tempJson = {};
-        tempJson.minValue = json.minValue;
-        tempJson.maxValue = json.maxValue;
-        tempJson.defaultValue = textInput.value;
-        tempJson.parameterName = json.parameterName;
-        
-        currentParamValueJson[json.parameterName] = tempJson;
+    var newParamDiv = document.createElement('div');
+    newParamDiv.classList.add('param');
+    newParamDiv.innerHTML = `
+        <div class="param-1">
+            <div class="paramtitle">${key}</div>
+            <div class="prograss">
+                <input type="range" class="parambar" id="parambar-${index}" value="${defaultValue}"
+                    min="${minValue}" max="${maxValue}">
+                <input type="text" class="paramInput" id="paramInput-${index}" value="${defaultValue}">
+            </div>
+        </div>`;
+    paramContainer.appendChild(newParamDiv);
 
-        progressBar.addEventListener('input', function() {
-            textInput.value = this.value;
-            tempJson.defaultValue = textInput.value;
-            currentParamValueJson[json.parameterName] = tempJson;
-        });
-    }
-	
-	
+    var progressBar = newParamDiv.querySelector('.parambar');
+    var textInput = newParamDiv.querySelector('.paramInput');
+
+    progressBar.addEventListener('input', function() {
+        textInput.value = this.value;
+    });
+}
 
 	
 	
@@ -472,5 +520,5 @@ $(document).on('click', '.prompt-verification-button', function() {
 	        });
 	
 
-});
+
 
