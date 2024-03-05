@@ -128,17 +128,38 @@ document.getElementById('prompt-input-button').addEventListener('click', getLlmR
 function getLlmResponse () {
 	const pElement = document.createElement("p");
 
+	// parameters
 	var tempJson = new Object();
 
 	for (var parm in currentParamValueJson) {
 		tempJson[parm] = currentParamValueJson[parm].defaultValue;
 	}
+	
+	// system prompt
+	var systemPromptConcat = "";
+	
+	if (typeof selectedSystemPromptId !== 'undefined') {
+		for (var key of selectedSystemPromptId) {
+			if (systemPromptConcat.length !== 0 && systemPromptConcat.charAt(systemPromptConcat.length - 1) !== ".") {
+				systemPromptConcat += ".";
+			}
+			systemPromptConcat += systemPromptJsonById[key].systemPrompt;
+		}
+	}
+
+	if (systemPromptConcat.length !== 0 && systemPromptConcat.charAt(systemPromptConcat.length - 1) !== ".") {
+		systemPromptConcat += ".";
+	}
+	
+	systemPromptConcat += document.getElementById('sysprompttextarea').value;
+	
 
 	var requestParam = new Object();
 	requestParam.prompt_id = "test";
 	requestParam.model = modelMasterJsonById[selectedModelId].modelName;
 	requestParam.prompt = inputTxt;
 	requestParam.properties = tempJson;
+	requestParam.system_prompt = systemPromptConcat;
 
 	console.log("프롬프트 requestParam: ", requestParam);
 
