@@ -121,15 +121,19 @@ $(document).ready(function() {
                     $("#inputtable tbody").empty();
 
                     // 모든 헤더 요소를 포함하는 headers 배열
-                    var headers = $("#inputtable thead th").map(function() {
+                    var headers = $("#inputtable thead th.thheader").map(function() {
                         return { field: $(this).data('field'), class: $(this).attr('class') };
                     }).get();
+                    
+                    console.log("length: " +data.length)
 
                     for (var i = start; i < end && i < data.length; i++) {
                         var row = $('<tr/>');
-
+                        
+                        console.log("headers length: " +headers.length)
                         // 모든 headers에 대한 td 생성
                         headers.forEach(function(header, index) {
+                        	
                             var cell;
                             if (index === 0) {
                                 // 첫 번째 td (라디오 버튼) 추가
