@@ -222,7 +222,7 @@
 .prompt-verification {
 	display: none;
 	position: fixed; /* 고정 위치 */
-	z-index: 1; /* 다른 요소 위에 표시되도록 z-index 설정 */
+	z-index: 1000; /* 다른 요소 위에 표시되도록 z-index 설정 */
 	left: 0;
 	top: 0;
 	width: 100%;
@@ -297,9 +297,12 @@
 }
 
  .test-prompt-area,
-	.parmJson-area {
-	height: 200px;
+	.parmJson-area,.test-syspromptetc-area,.test-syspromt-area {
 	flex-direction:column;
+}
+
+.selectsysprompt{
+	width:90%;
 }
 
 
@@ -309,6 +312,15 @@
 
 .prompt-title {
 	width: 100px;
+	padding-right: 10px;
+	padding-left: 10px;
+	font-weight: bold;
+	font-family: var(--font-family-noto_sans);
+	font-size: 14px;
+}
+
+.prompt-title-long {
+	width: 220px;
 	padding-right: 10px;
 	padding-left: 10px;
 	font-weight: bold;
@@ -327,10 +339,24 @@
 
 }
 
-.test-prompt-area textarea {
+.sysprompt-edit-text {
 	resize: none;
 	width: 90%; /* 부모 요소의 너비에 맞게 조정 */
-	height: 100%;
+	height: 50%;
+	border: 1px solid #eaeaea;
+	color: #000000;
+	font-family: var(--font-family-noto_sans);
+	font-size: 14px;
+	border-radius: 6px;
+	background: #ffffff;
+	box-sizing: border-box; /* 테두리와 패딩을 너비와 높이에 포함 */
+	padding: 10px;
+}
+
+.prompt-edit-text {
+	resize: none;
+	width: 90%; /* 부모 요소의 너비에 맞게 조정 */
+	height: 50%;
 	border: 1px solid #eaeaea;
 	color: #000000;
 	font-family: var(--font-family-noto_sans);

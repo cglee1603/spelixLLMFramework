@@ -368,6 +368,49 @@ $(document).on('click', '.prompt-verification-button', function() {
 	$('.model-area .model').text(rowData.model);
 	$('.test-prompt-area .prompt-edit-text').text(rowData.prompt);
 	
+	// JSON 파싱 및 프로그레스 바 생성 - FIX_DS
+    if(rowData.paramJson) {
+        var parmJson = JSON.parse(rowData.parmJson);
+        var paramContainer = document.querySelector('.parmJson-area .paramJson');
+        parmJson.forEach(function(json, index) {
+            createParam(paramContainer, json, index);
+        });
+    }
+    
+    function createParam(paramContainer, json, index) {
+        // 프로그레스 바 생성 로직
+        var newParamDiv = document.createElement('div');
+        newParamDiv.classList.add('param');
+        newParamDiv.innerHTML = `
+            <div class="param-1">
+                <div class="paramtitle">${json.parameterName}</div>
+                <div class="prograss">
+                    <input type="range" class="parambar" id="parambar-${index}" value="${json.defaultValue}"
+                        min="${json.minValue}" max="${json.maxValue}">
+                    <input type="text" class="paramInput" id="paramInput-${index}" value="${json.defaultValue}">
+                </div>
+            </div>`;
+        paramContainer.appendChild(newParamDiv);
+
+        // 프로그레스 바 이벤트 리스너 추가
+        var progressBar = newParamDiv.querySelector('.parambar');
+        let textInput = newParamDiv.querySelector('.paramInput');
+
+        var tempJson = {};
+        tempJson.minValue = json.minValue;
+        tempJson.maxValue = json.maxValue;
+        tempJson.defaultValue = textInput.value;
+        tempJson.parameterName = json.parameterName;
+        
+        currentParamValueJson[json.parameterName] = tempJson;
+
+        progressBar.addEventListener('input', function() {
+            textInput.value = this.value;
+            tempJson.defaultValue = textInput.value;
+            currentParamValueJson[json.parameterName] = tempJson;
+        });
+    }
+	
 	
 
 	// TODO

@@ -15,6 +15,9 @@
 <link
 	href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css"
 	rel="stylesheet">
+<link
+	href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css"
+	rel="stylesheet" />
 <link rel="stylesheet" type="text/css"
 	href="<%=application.getContextPath()%>/resources/css/global.css">
 <link rel="stylesheet" type="text/css"
@@ -134,6 +137,25 @@
 								<div class="model"></div>
 
 							</div>
+							<div class="test-syspromt-area">
+
+								<p class="prompt-title-long">시스템 프롬프트</p>
+								<div class="testsysprompt">
+									<select class="form-control selectsysprompt" id="promptlist"
+										multiple="multiple">
+									</select>
+								</div>
+
+							</div>
+							<div class="test-syspromptetc-area">
+
+								<p class="prompt-title-long">지정되지 않은 시스템 프롬프트</p>
+								<div class="testsyspromptetc">
+									<textarea class="sysprompt-edit-text" id="sysprompt-edit-text">
+		</textarea>
+								</div>
+
+							</div>
 							<div class="test-prompt-area">
 
 								<p class="prompt-title">프롬프트</p>
@@ -191,7 +213,8 @@
 	<!-- jQuery -->
 	<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 	<!-- select2 javascript cdn -->
-
+<script
+		src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 	<script
 		src="<%=application.getContextPath()%>/resources/js/promptmanager.js"></script>
 
