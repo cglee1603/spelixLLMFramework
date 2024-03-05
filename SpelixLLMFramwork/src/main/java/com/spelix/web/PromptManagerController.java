@@ -5,6 +5,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -93,11 +94,13 @@ public class PromptManagerController {
 
 	@RequestMapping(value = "/promptmanager/getPromptTestDataResultById.do", method = RequestMethod.POST)
 	@ResponseBody
-	public Map<String, Object> getPromptTestDataResultById(@RequestParam("requestParam") String requestParam,
+	public List<Map<String, Object>> getPromptTestDataResultById(@RequestParam("requestParam") String requestParam,
 			@RequestParam("promptTestId") String promptTestId) {
 		List<PromptTestDataDTO> promptTestDataResultList = getPromptTestDataById(promptTestId);
 
 		JSONArray jsonArray = new JSONArray();
+
+		Map<Integer, PromptTestDataDTO> tempDtoMap = new HashMap<Integer, PromptTestDataDTO>();
 
 		for (PromptTestDataDTO promptTestDataDTO : promptTestDataResultList) {
 			log.debug(
@@ -108,14 +111,28 @@ public class PromptManagerController {
 
 			// 새로운 키와 값을 추가
 			requestParamJson.put("prompt", promptTestDataDTO.getBody());
+			requestParamJson.put("answer", promptTestDataDTO.getAnswer());
+			requestParamJson.put("prompt_id", promptTestDataDTO.getNum());
 
 			// JSON 배열에 추가
 			jsonArray.put(requestParamJson);
+
+			// 검증화면 아이디, 프롬프트, 정답 입력 위해서
+			tempDtoMap.put(promptTestDataDTO.getNum(), promptTestDataDTO);
 		}
 
 		log.debug("getPromptTestDataResultById jsonArray: " + jsonArray);
 
-		return getModelResponse(jsonArray);
+		List<Map<String, Object>> modelResponseList = getModelResponse(jsonArray);
+
+		for (Map<String, Object> map : modelResponseList) {
+			map.put("question", tempDtoMap.get(map.get("prompt_id")).getBody());
+			map.put("answer", tempDtoMap.get(map.get("prompt_id")).getAnswer());
+
+		}
+		log.debug("modelResponseList: " + modelResponseList);
+
+		return modelResponseList;
 
 	}
 
@@ -127,7 +144,7 @@ public class PromptManagerController {
 		return promptTestDataList;
 	}
 
-	private Map<String, Object> getModelResponse(JSONArray jsonArray) {
+	private List<Map<String, Object>> getModelResponse(JSONArray jsonArray) {
 
 		StringBuilder apiUrl = new StringBuilder();
 		apiUrl.append("http://").append(applicationConfig.getHost());
@@ -137,7 +154,9 @@ public class PromptManagerController {
 		log.debug("apiUrl: " + apiUrl);
 
 		JSONObject sp_route = new JSONObject();
-		sp_route.put("sp_route", jsonArray);
+		sp_route.put("sp_route", jsonArray.toString());
+
+		log.debug("sp_route: " + sp_route);
 
 		String result = getApiResultJsonStr(apiUrl.toString(), sp_route.toString());
 
@@ -147,11 +166,11 @@ public class PromptManagerController {
 		JSONArray list = resultJson.getJSONArray("sp_wex_output");
 
 		log.debug("list: " + list);
-		log.debug("list.getJSONObject(0): " + list.getJSONObject(0));
 
-		Map<String, Object> responseMap = new HashMap<String, Object>();
+		List<Map<String, Object>> responseMap = new ArrayList<Map<String, Object>>();
 		try {
-			responseMap = new ObjectMapper().readValue(list.getJSONObject(0).toString(), Map.class);
+			ObjectMapper objectMapper = new ObjectMapper();
+			responseMap = objectMapper.readValue(list.toString(), List.class);
 		} catch (JsonMappingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -162,6 +181,8 @@ public class PromptManagerController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
+		log.debug("responseMap: " + responseMap);
 
 		return responseMap;
 	}

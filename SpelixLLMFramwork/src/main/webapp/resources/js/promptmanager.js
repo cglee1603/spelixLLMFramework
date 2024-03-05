@@ -264,7 +264,115 @@ function removeDeletedPromptsFromTable(promptIds) {
 }
 
 
+/*
+ * 검증 팝업에서 테스트 버튼 클릭 시 발생하는 이벤트
+ */
+$('.prompt-test-button').on('click', function() {
+//	alert('검증을 시작합니다.');
+
+    var requestParam = new Object();
+    requestParam.model = $('.model-area .model').text();
+    // requestParam.prompt = promptInputStr;
+    // requestParam.system_prompt = systemPromptConcat;
+    requestParam.properties = { max_token: '500' };
+    requestParam.file_path_list = "";
+    requestParam.additional_work = "";
+
+    data = {
+        requestParam: JSON.stringify(requestParam),
+        promptTestId: $('.prompt-Id-area .promptId').text()
+    };
+
+    ajaxCall("POST", 'promptmanager/getPromptTestDataResultById.do', data,
+        function(data) {
+
+            var tbody = document.querySelector('.rate-table tbody');
+
+            data.forEach(function(item) {
+            	
+            	console.log("item: ",item)
+            	
+                var row = document.createElement('tr');
+
+                // 클로저를 사용하여 item 변수를 접근할 수 있도록 함
+                $(row).data('item', item);
+
+                // 각 열(td)에 데이터 추가
+                var testIdCell = document.createElement('td');
+                testIdCell.textContent = item.prompt_id;
+                row.appendChild(testIdCell);
+
+                //FIXME
+                var changesCell = document.createElement('td');
+                changesCell.textContent = '';
+                row.appendChild(changesCell);
+
+                var accuracyCell = document.createElement('td');
+                accuracyCell.textContent = item.answer_cosine_similarity;
+                row.appendChild(accuracyCell);
+
+                // tbody에 행 추가
+                tbody.appendChild(row);
+            });
 
 
 
+        },
+        function() {
+            alert("테스트 데이터 검증 실패.");
+        }
+    );
+});
+
+
+$('.rate-table tbody').on('click', 'tr', function() {
+    // 클릭한 행에서 데이터 가져오기
+    var item = $(this).data('item');
+    console.log("clicked item: ", item);
+
+    // 가져온 데이터를 response-table에 추가
+    var newRow = $('<tr>');
+    newRow.append($('<td>').text(item.question));
+    newRow.append($('<td>').text(item.prompt_result));
+    newRow.append($('<td>').text(item.answer));
+    
+//    var similarityText = item.answer_cosine_similarity > 0.2 ? 'O' : 'X';
+    newRow.append($('<td>').text((item.answer_cosine_similarity > 0.2) ? 'O' : 'X'));
+
+    // response-table의 tbody에 새로운 행 추가
+    $('.response-table tbody').html(newRow); // 기존의 데이터를 모두 대체합니다. 기존 데이터를 유지하려면 append()를 사용하세요.
+});
+
+
+
+
+/*
+ * 검증 팝업에서 프롬프트 마스터 데이터 띄우기
+ */
+$(document).on('click', '.prompt-verification-button', function() {
+
+    // 클릭된 버튼에 해당하는 데이터를 가져오는 로직을 여기에 추가합니다.
+    var rowData = {};
+    $(this).closest('tr').find('td').each(function() {
+        var columnClass = $(this).attr('class');
+        var columnData = $(this).text();
+        rowData[columnClass] = columnData;
+    });
+    
+	console.log('rowData: ',rowData);
+
+    
+	$('.prompt-Id-area .promptId').text(rowData.promptId);
+	$('.prompt-Ver-area .promptVer').text(rowData.promptVer);
+	$('.model-area .model').text(rowData.model);
+	$('.test-prompt-area .prompt-edit-text').text(rowData.prompt);
+	
+	
+	console.log('parmJson: ',parmJson);
+
+	//TODO
+	$('.parmJson-area .paramJson').text(rowData.model);
+	
+
+});
 
