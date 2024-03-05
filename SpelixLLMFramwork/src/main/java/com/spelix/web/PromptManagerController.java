@@ -31,6 +31,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spelix.config.ApplicationConfig;
 import com.spelix.domain.ModelMasterDTO;
 import com.spelix.domain.PromptMasterDTO;
+import com.spelix.domain.PromptRateHistoryDTO;
 import com.spelix.domain.PromptTestDataDTO;
 import com.spelix.service.PromptManagerService;
 
@@ -94,31 +95,47 @@ public class PromptManagerController {
 
 	@RequestMapping(value = "/promptmanager/getPromptTestDataResultById.do", method = RequestMethod.POST)
 	@ResponseBody
-	public List<Map<String, Object>> getPromptTestDataResultById(@RequestParam("requestParam") String requestParam,
-			@RequestParam("promptTestId") String promptTestId) {
-		List<PromptTestDataDTO> promptTestDataResultList = getPromptTestDataById(promptTestId);
+	public List<Map<String, Object>> getPromptTestDataResultById( //
+			@RequestParam("requestParam") String requestParam, //
+			@RequestParam("promptTestId") String promptTestId, //
+			@RequestParam("promptId") String promptId, //
+			@RequestParam("promptVer") String promptVer) {
 
+		List<PromptTestDataDTO> promptTestDataResultList = getPromptTestDataById(promptTestId);
 		JSONArray jsonArray = new JSONArray();
 
-		Map<Integer, PromptTestDataDTO> tempDtoMap = new HashMap<Integer, PromptTestDataDTO>();
+		Map<String, PromptTestDataDTO> tempDtoMap = new HashMap<String, PromptTestDataDTO>();
 
 		for (PromptTestDataDTO promptTestDataDTO : promptTestDataResultList) {
-			log.debug(
-					"prompt test id: " + promptTestDataDTO.getPromptTestId() + ", num: " + promptTestDataDTO.getNum());
 
-			// JSON 문자열을 JSONObject로 변환
+			PromptRateHistoryDTO promptRateHistoryDTO = new PromptRateHistoryDTO();
 			JSONObject requestParamJson = new JSONObject(requestParam);
 
-			// 새로운 키와 값을 추가
-			requestParamJson.put("prompt", promptTestDataDTO.getBody());
-			requestParamJson.put("answer", promptTestDataDTO.getAnswer());
-			requestParamJson.put("prompt_id", promptTestDataDTO.getNum());
+			String prompt = requestParamJson.getString("prompt");
 
-			// JSON 배열에 추가
+			// 새로운 키와 값을 추가
+			requestParamJson.put("prompt", prompt + "\n" + promptTestDataDTO.getBody());
+			requestParamJson.put("answer", promptTestDataDTO.getAnswer());
+
+			String nextHistoryId = getPromptRateHistoryNextHistoryId();
+			log.debug("nextHistoryId: " + nextHistoryId);
+			requestParamJson.put("prompt_id", nextHistoryId);
+
 			jsonArray.put(requestParamJson);
 
 			// 검증화면 아이디, 프롬프트, 정답 입력 위해서
-			tempDtoMap.put(promptTestDataDTO.getNum(), promptTestDataDTO);
+			tempDtoMap.put(nextHistoryId, promptTestDataDTO);
+
+			// TODO save history
+			promptRateHistoryDTO.setPromptRateHistId(nextHistoryId);
+			promptRateHistoryDTO.setPromptId(promptId);
+			promptRateHistoryDTO.setPromptVer(promptVer);
+			promptRateHistoryDTO.setPrompt(prompt);
+//			promptRateHistoryDTO.getSysPromptIds()
+//			promptRateHistoryDTO.setSysPromptEtc(requestParamJson.getString(""));
+//			promptRateHistoryDTO.setParmJson();
+
+			int success = savePromptRateHistory(promptRateHistoryDTO);
 		}
 
 		log.debug("getPromptTestDataResultById jsonArray: " + jsonArray);
@@ -129,6 +146,9 @@ public class PromptManagerController {
 			map.put("question", tempDtoMap.get(map.get("prompt_id")).getBody());
 			map.put("answer", tempDtoMap.get(map.get("prompt_id")).getAnswer());
 
+			// update history
+			updatePromptRateHistoryRate((String) map.get("prompt_id"),
+					((Number) map.get("answer_cosine_similarity")).doubleValue());
 		}
 		log.debug("modelResponseList: " + modelResponseList);
 
@@ -217,4 +237,33 @@ public class PromptManagerController {
 		return response.toString();
 	}
 
+	@RequestMapping(value = "/promptmanager/getPromptRateHistoryByPromptId.do", method = RequestMethod.POST)
+	@ResponseBody
+	public List<PromptRateHistoryDTO> getPromptRateHistoryByPromptId(@RequestParam("promptId") String promptId) {
+		List<PromptRateHistoryDTO> history = promptManagerService.getPromptRateHistoryByPromptId(promptId);
+
+		log.debug("getPromptRateHistoryByPromptId: " + history);
+
+		return history;
+	}
+
+	public int savePromptRateHistory(PromptRateHistoryDTO promptRateHistoryDTO) {
+		log.debug("savePromptRateHistory");
+
+		return promptManagerService.savePromptRateHistory(promptRateHistoryDTO);
+	}
+
+	public String getPromptRateHistoryNextHistoryId() {
+		String historyId = promptManagerService.getPromptRateHistoryNextHistoryId();
+
+		log.debug("next historyId: " + historyId);
+
+		return historyId;
+	}
+
+	public int updatePromptRateHistoryRate(String promptRateHistId, double promptRate) {
+		log.debug("updatePromptRateHistoryRate");
+
+		return promptManagerService.updatePromptRateHistoryRate(promptRateHistId, promptRate);
+	}
 }

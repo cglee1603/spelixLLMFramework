@@ -19,7 +19,7 @@ public class PromptRateHistoryDTO {
 	private String[] sysPromptIds;
 	private String sysPromptEtc;
 	private String parmJson;
-	private float promptRate;
+	private double promptRate;
 	private String insertUser;
 	private Timestamp insertDate;
 	private String updateUser;

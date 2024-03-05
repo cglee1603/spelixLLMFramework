@@ -97,4 +97,73 @@
 	</select>
 
 
+
+	<!-- 프롬프트 테스트 히스토리 -->
+	<resultMap id="PromptRateHistoryResultMap"
+		type="com.spelix.domain.PromptRateHistoryDTO">
+		<id property="promptRateHistId" column="prmt_rate_hist_id" />
+		<result property="promptId" column="prmt_id" />
+		<result property="promptVer" column="prmt_ver" />
+		<result property="llmCustomIds" column="llm_cust_ids"
+			typeHandler="com.spelix.typeHandler.PostgreSQLArrayToStringTypeHandler" />
+		<result property="prompt" column="prmt" />
+		<result property="sysPromptIds" column="sys_prmt_ids"
+			typeHandler="com.spelix.typeHandler.PostgreSQLArrayToStringTypeHandler" />
+		<result property="sysPromptEtc" column="sys_prmt_etc" />
+		<result property="parmJson" column="parm_json" />
+		<result property="promptRate" column="prmt_rate" />
+		<result property="insertUser" column="insert_user" />
+		<result property="insertDate" column="insert_date" />
+		<result property="updateUser" column="update_user" />
+		<result property="updateDate" column="update_date" />
+	</resultMap>
+
+	<select id="getPromptRateHistoryByPromptId"
+		resultMap="PromptRateHistoryResultMap">
+		SELECT *
+		FROM spx_prmt_rate_hist
+		WHERE prmt_id =
+		#{promptId}
+	</select>
+
+	<insert id="savePromptRateHistory"
+		parameterType="com.spelix.domain.PromptRateHistoryDTO">
+		INSERT INTO spx_prmt_rate_hist (
+		prmt_rate_hist_id,
+		prmt_id,
+		prmt_ver,
+		prmt,
+		sys_prmt_ids,
+		sys_prmt_etc,
+		parm_json,
+		prmt_rate
+		)
+		VALUES (
+		'PRH_' || LPAD(nextval('seq_prmt_mst_id')::TEXT, 6, '0'),
+		#{promptId},
+		#{promptVer},
+		#{prompt},
+		#{sysPromptIds,
+		typeHandler =
+		com.spelix.typeHandler.PostgreSQLArrayToStringTypeHandler},
+		#{sysPromptEtc},
+		cast(#{parmJson} as json),
+		#{promptRate}
+		)
+	</insert>
+
+	<select id="getPromptRateHistoryNextHistoryId"
+		resultType="String">
+		SELECT 'PRH_' ||
+		LPAD(NEXTVAL('seq_spx_prmt_rate_hist')::TEXT, 6, '0')
+	</select>
+
+	<update id="updatePromptRateHistoryRate">
+		UPDATE spx_prmt_rate_hist
+		SET
+		prmt_rate =
+		#{promptRate}
+		WHERE prmt_rate_hist_id = #{promptRateHistId}
+	</update>
+
 </mapper>
