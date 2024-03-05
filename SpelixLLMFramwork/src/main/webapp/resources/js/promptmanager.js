@@ -38,7 +38,7 @@ function loadPromptData() {
 );
 }
 
-//기존 setupEventHandlers 함수에 이벤트 핸들러 추가
+// 기존 setupEventHandlers 함수에 이벤트 핸들러 추가
 function setupEventHandlers() {
 	$('#select-all-checkbox').change(function() {
 		$('.prompt-checkbox').prop('checked', $(this).is(':checked'));
@@ -218,7 +218,9 @@ function getTableCell(item, header) {
 
 
 
-//프롬프트 삭제 이벤트
+/*
+ * 프롬프트 삭제 이벤트
+ */
 function deleteSelectedPrompts() {
 	var selectedPromptIds = getSelectedPromptIds();
 
@@ -268,7 +270,7 @@ function removeDeletedPromptsFromTable(promptIds) {
  * 검증 팝업에서 테스트 버튼 클릭 시 발생하는 이벤트
  */
 $('.prompt-test-button').on('click', function() {
-//	alert('검증을 시작합니다.');
+// alert('검증을 시작합니다.');
 
     var requestParam = new Object();
     requestParam.model = $('.model-area .model').text();
@@ -302,7 +304,7 @@ $('.prompt-test-button').on('click', function() {
                 testIdCell.textContent = item.prompt_id;
                 row.appendChild(testIdCell);
 
-                //FIXME
+                // FIXME
                 var changesCell = document.createElement('td');
                 changesCell.textContent = '';
                 row.appendChild(changesCell);
@@ -335,12 +337,10 @@ $('.rate-table tbody').on('click', 'tr', function() {
     newRow.append($('<td>').text(item.question));
     newRow.append($('<td>').text(item.prompt_result));
     newRow.append($('<td>').text(item.answer));
-    
-//    var similarityText = item.answer_cosine_similarity > 0.2 ? 'O' : 'X';
     newRow.append($('<td>').text((item.answer_cosine_similarity > 0.2) ? 'O' : 'X'));
 
     // response-table의 tbody에 새로운 행 추가
-    $('.response-table tbody').html(newRow); // 기존의 데이터를 모두 대체합니다. 기존 데이터를 유지하려면 append()를 사용하세요.
+    $('.response-table tbody').html(newRow);
 });
 
 
@@ -370,9 +370,10 @@ $(document).on('click', '.prompt-verification-button', function() {
 	
 	console.log('parmJson: ',parmJson);
 
-	//TODO
+	// TODO
 	$('.parmJson-area .paramJson').text(rowData.model);
 	
 
 });
+
 
