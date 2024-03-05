@@ -203,10 +203,15 @@ function getTableCell(item, header) {
         var formattedData = '';
         try {
             var jsonData = JSON.parse(cellValue);
+            var formattedParts = [];
+
             Object.keys(jsonData).forEach(function(key) {
                 var param = jsonData[key];
-                formattedData += param.parameterName + ': ' + param.defaultValue + '<br>';
+                formattedParts.push(param.parameterName + ': ' + param.defaultValue);
             });
+
+            formattedData = formattedParts.join(', ');
+
         } catch (e) {
             formattedData = 'Invalid JSON';
         }
