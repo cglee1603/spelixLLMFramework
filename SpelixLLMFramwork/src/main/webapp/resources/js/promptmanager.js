@@ -1,7 +1,7 @@
 var pageSize = 10;
 var currentPage = 1; 
-var modelNameTypeJson = {};
-window.promptData = []; // 전역 변수로 프롬프트 데이터 저장
+//var modelNameTypeJson = {};
+//window.promptData = []; // 전역 변수로 프롬프트 데이터 저장
 
 $(document).ready(function() {
 	loadPromptModelList();
@@ -14,9 +14,9 @@ function loadPromptModelList() {
 	ajaxCall("POST", "promptmanager/getAllPromptModelList.do", {}, 
 			function(data) {
 		data.forEach(function(value) {
-			var option = new Option(value.modelName, value.modelName);
+			var option = new Option(value.modelName, value.modelId);
 			$modelSelect.append(option);
-			modelNameTypeJson[value.modelName] = value.modelType;
+//			modelNameTypeJson[value.modelName] = value.modelType;
 		});
 	},
 	function() {
@@ -279,10 +279,10 @@ $('.prompt-test-button').on('click', function() {
     requestParam.properties = { max_token: '500' };
     requestParam.file_path_list = "";
     requestParam.additional_work = "";
-
+    
     data = {
         requestParam: JSON.stringify(requestParam),
-        promptTestId: $('.prompt-Id-area .promptId').text()
+        promptTestId: $('.prompt-test-id-area .promptTestId').text()
     };
 
     ajaxCall("POST", 'promptmanager/getPromptTestDataResultById.do', data,
@@ -363,17 +363,16 @@ $(document).on('click', '.prompt-verification-button', function() {
 
     
 	$('.prompt-Id-area .promptId').text(rowData.promptId);
+	$('.prompt-test-id-area .promptTestId').text(rowData.promptTestId);
 	$('.prompt-Ver-area .promptVer').text(rowData.promptVer);
 	$('.model-area .model').text(rowData.model);
 	$('.test-prompt-area .prompt-edit-text').text(rowData.prompt);
 	
 	
-	console.log('parmJson: ',parmJson);
 
 	// TODO
-	$('.parmJson-area .paramJson').text(rowData.model);
+//	$('.parmJson-area .paramJson').text(rowData.model);
 	
 
 });
-
 

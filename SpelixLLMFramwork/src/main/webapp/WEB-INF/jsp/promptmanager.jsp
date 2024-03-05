@@ -116,6 +116,12 @@
 								<div class="promptId"></div>
 
 							</div>
+							<div class="prompt-test-id-area">
+
+								<p class="prompt-title">TEST_ID</p>
+								<div class="promptTestId"></div>
+
+							</div>
 							<div class="prompt-Ver-area">
 
 								<p class="prompt-title">버전</p>

@@ -287,12 +287,12 @@
 	background-color:#69f169;
 }
 
-.prompt-Id-area, .prompt-Ver-area, .model-area {
+.prompt-Id-area, .prompt-Ver-area, .model-area,.prompt-test-id-area {
 	height: 40px;
 }
 
 .prompt-Id-area, .prompt-Ver-area, .model-area, .test-prompt-area,
-	.parmJson-area {
+	.parmJson-area,.prompt-test-id-area {
 	display: flex;
 }
 
