@@ -322,8 +322,6 @@ function removeDeletedPromptsFromTable(promptIds) {
 	});
 }
 
-//검증화면에 프롬프트 선택 데이터 가져오기
-
 function loadSystemPrompts() {
     $.ajax({
         type: "POST",
@@ -379,22 +377,13 @@ $('.prompt-test-button').on('click', function() {
 	for (var parm in currentParamValueJson) {
 		tempJson[parm] = currentParamValueJson[parm].defaultValue;
 	}
-    
-	
-    console.log("tempJson: ",tempJson)
 
 	
     var requestParam = new Object();
     requestParam.model = $('.model-area .model').text();
     requestParam.prompt = $('.test-prompt-area .prompt-edit-text').val();
-    
-    //TODO 
     requestParam.system_prompt = systemPromptConcat;
     requestParam.properties = tempJson;
-    
-    
-    requestParam.file_path_list = "";
-    requestParam.additional_work = "";
     
     console.log("requestParam: ",requestParam)
 
@@ -404,7 +393,10 @@ $('.prompt-test-button').on('click', function() {
         promptTestId: $('.prompt-test-id-area .promptTestId').text(),
         promptId: $('.prompt-Id-area .promptId').text(),
         promptVer: $('.prompt-Ver-area .promptVer').text(),
+        sysPromptIds: selectedSystemPromptId.join(','),
+        sysPromptEtc: $('.sys-prompt-etc-area .sysPromptEtc-edit-text').text()
     };
+    console.log("data: ",data)
 
     ajaxCall("POST", 'promptmanager/getPromptTestDataResultById.do', data,
         function(data) {
@@ -422,7 +414,7 @@ $('.prompt-test-button').on('click', function() {
 
                 // 각 열(td)에 데이터 추가
                 var testIdCell = document.createElement('td');
-                testIdCell.textContent = item.prompt_id;
+                testIdCell.textContent = item.promptId;
                 row.appendChild(testIdCell);
 
                 // FIXME
@@ -431,7 +423,7 @@ $('.prompt-test-button').on('click', function() {
                 row.appendChild(changesCell);
 
                 var accuracyCell = document.createElement('td');
-                accuracyCell.textContent = item.answer_cosine_similarity;
+                accuracyCell.textContent = item.promptRate;
                 row.appendChild(accuracyCell);
 
                 // tbody에 행 추가
@@ -447,7 +439,7 @@ $('.prompt-test-button').on('click', function() {
     );
 });
 
-
+//FIXME
 // 검증 시 오른쪽에 상세 화면 띄우기
 $('.rate-table tbody').on('click', 'tr', function() {
     // 클릭한 행에서 데이터 가져오기
@@ -491,8 +483,6 @@ $(document).on('click', '.prompt-verification-button', function() {
         rowData[columnClass] = columnData;
     });
     
-	console.log('rowData: ',rowData);
-
 	var sysPromptIdsValue=rowData.sysPromptIds;
 		
 	updatePromptList(sysPromptIdsValue)
@@ -521,7 +511,6 @@ $(document).on('click', '.prompt-verification-button', function() {
     }
     
  // test history 가져오기
-	console.log($('.prompt-Id-area .promptId').text())
 	ajaxCall("POST", 'promptmanager/getPromptRateHistoryByPromptId.do', {promptId: $('.prompt-Id-area .promptId').text()},
 	        function(data) {
 
@@ -529,6 +518,7 @@ $(document).on('click', '.prompt-verification-button', function() {
 
 	            data.forEach(function(item) {
 
+	            	console.log(item)
 	            	var row = document.createElement('tr');
 	                // 클로저를 사용하여 item 변수를 접근할 수 있도록 함
 	                $(row).data('item', item);
@@ -564,7 +554,7 @@ function createParam(paramContainer, json, key, index) {
     var minValue = json.minValue || 0;
     var maxValue = json.maxValue || 100;
     var offset = json.valueOffset || 0;
-	console.log(json)
+
     var newParamDiv = document.createElement('div');
     newParamDiv.classList.add('testparam');
     newParamDiv.innerHTML = `
