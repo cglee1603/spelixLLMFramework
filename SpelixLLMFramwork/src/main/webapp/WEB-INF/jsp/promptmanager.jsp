@@ -15,6 +15,9 @@
 <link
 	href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css"
 	rel="stylesheet">
+<link
+	href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css"
+	rel="stylesheet" />
 <link rel="stylesheet" type="text/css"
 	href="<%=application.getContextPath()%>/resources/css/global.css">
 <link rel="stylesheet" type="text/css"
@@ -96,96 +99,102 @@
 
 		</div>
 	</div>
-			<div id="prompt-verification-modal" class="prompt-verification" style="display: none;">
-    <div class="verification-content">
-        <span class="prompt-close-button">&times;</span>
-        <div class="prompt-verification-all">      
-		<div class="prompt-test-area">
-		<div class="prompt-edit-area">
-		<div class="prompt-edit-title">
-		<h4>프롬프트 테스트</h4>
-		</div>
-		<div class="prompt-test-button-area">
-		<button type="button" class="btn prompt-test-button">테스트</button>
-		</div>
-		<div class="prompt-edit-content">
-		<div class="prompt-Id-area">
-		
-		<p class="prompt-title">ID</p>
-		<div class="promptId"></div>
-		
-		</div>
-		<div class="prompt-Ver-area">
-	
-		<p class="prompt-title">버전</p>
-		<div class="promptVer"></div>
-	
-		</div>
-		<div class="model-area">
-		
-		<p class="prompt-title">모델</p>
-		<div class="model"></div>
-		
-		</div>
-		<div class="test-prompt-area">
-					
-		<p class="prompt-title">프롬프트</p>
+	<div id="prompt-verification-modal" class="prompt-verification"
+		style="display: none;">
+		<div class="verification-content">
+			<span class="prompt-close-button">&times;</span>
+			<div class="prompt-verification-all">
+				<div class="prompt-test-area">
+					<div class="prompt-edit-area">
+						<div class="prompt-edit-title">
+							<h4>프롬프트 테스트</h4>
+						</div>
+						<div class="prompt-test-button-area">
+							<button type="button" class="btn prompt-test-button">테스트</button>
+						</div>
 
-		<textarea class="prompt-edit-text" id="prompt-edit-text">
-		</textarea>
-
-		
-		</div>
-		<div class="parmJson-area">
+						<div class="prompt-edit-content">
+							<div class="prompt-Id-area">
+								<p class="prompt-title">ID</p>
+								<div class="promptId"></div>
+							</div>
+							<div class="prompt-test-id-area">
+								<p class="prompt-title">TEST_ID</p>
+								<div class="promptTestId"></div>
+							</div>
+							<div class="prompt-Ver-area">
+								<p class="prompt-title">버전</p>
+								<div class="promptVer"></div>
+							</div>
+							<div class="model-area">
+								<p class="prompt-title">모델</p>
+								<div class="model"></div>
+							</div>
+								<div class="sys-prompt-id-area">
+								<p class="prompt-title-long">시스템 프롬프트 선택</p>
+								<div class="sysPromptId">
+								<select class="form-control selectsysPromptId" id="selectsysPromptId" multiple="multiple">
+					</select>
+								</div>
+							</div>
+							<div class="sys-prompt-etc-area">
+								<p class="prompt-title-long">시스템 프롬프트 입력</p>
+								<textarea class="sysPromptEtc-edit-text" id="sysPromptEtc-edit-text"></textarea>
+							</div>
+							<div class="test-prompt-area">
+								<p class="prompt-title">프롬프트</p>
+								<textarea class="prompt-edit-text" id="prompt-edit-text"></textarea>
+							</div>
+							<div class="parmJson-area">
+								<p class="prompt-title">파라미터</p>
+								<div class="paramJson"></div>
+							</div>
 						
-		<p class="prompt-title">파라미터</p>
-		<div class="paramJson">
+						</div>
+					</div>
+					<div class="prompt-rate-area">
+						<table class="rate-table">
+							<thead>
+								<tr>
+									<th>History ID</th>
+									<th>변경사항</th>
+									<th>정답률</th>
+								</tr>
+							</thead>
+							<tbody>
 
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<div class="prompt-response-area">
+					<table class="response-table">
+						<thead>
+							<tr>
+								<th>Q</th>
+								<th>A</th>
+								<th>모델 리턴 결과</th>
+								<th>정답</th>
+								<th>재수행여부</th>
+							</tr>
+						</thead>
+						<tbody>
+
+						</tbody>
+					</table>
+
+				</div>
+
+			</div>
+			<!-- 내용을 로드할 컨테이너 -->
 		</div>
-		
-		</div>
-		</div>
-		</div>
-          <div class="prompt-rate-area">
-          <table class="rate-table">
-          <thead>
-          <tr>
-          <th>Test ID</th>
-          <th>변경사항</th>
-          <th>정답률</th>
-          </tr>
-          </thead>
-          <tbody>
-          
-          </tbody>
-          </table>
-          </div>
-		</div>
-		<div class="prompt-response-area">
-		<table class="response-table">
-          <thead>
-          <tr>
-          <th>Q</th>
-          <th>A(llm결과)</th>
-          <th>결과</th>
-          <th>정답여부</th>
-          </tr>
-          </thead>
-          <tbody>
-          
-          </tbody>
-          </table>
-		
-		</div>
-        
-        </div> <!-- 내용을 로드할 컨테이너 -->
-    </div>
-</div>
+	</div>
 
 	<!-- jQuery -->
 	<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 	<!-- select2 javascript cdn -->
-
+	<script
+		src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 	<script
 		src="<%=application.getContextPath()%>/resources/js/promptmanager.js"></script>
 

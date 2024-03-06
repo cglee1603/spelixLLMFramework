@@ -1,6 +1,8 @@
 package com.spelix.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +12,8 @@ import org.springframework.stereotype.Service;
 import com.spelix.dao.PromptManagerDAO;
 import com.spelix.domain.ModelMasterDTO;
 import com.spelix.domain.PromptMasterDTO;
+import com.spelix.domain.PromptRateHistoryDTO;
+import com.spelix.domain.PromptTestDataDTO;
 import com.spelix.service.PromptManagerService;
 
 @Service
@@ -32,7 +36,36 @@ public class PromptManagerServiceImpl implements PromptManagerService {
 		return promptManagerDAO.getAllPromptModelList();
 	};
 
-	public int updateUseYNPromptMaster(String promptId) {
-		return promptManagerDAO.updateUseYNPromptMaster(promptId);
+	public int updateUseYNPromptMaster(String promptId,String useYN) {
+		 Map<String, Object> params = new HashMap<>();
+		    params.put("promptId", promptId);
+		    params.put("useYN", useYN);
+
+		    return promptManagerDAO.updateUseYNPromptMaster(params);
+	}
+
+	public List<PromptTestDataDTO> getPromptTestDataById(String promptTestId) {
+		return promptManagerDAO.getPromptTestDataById(promptTestId);
+	}
+
+	public List<PromptRateHistoryDTO> getPromptRateHistoryByPromptId(String promptId) {
+		return promptManagerDAO.getPromptRateHistoryByPromptId(promptId);
+	}
+
+	public int savePromptRateHistory(PromptRateHistoryDTO promptRateHistoryDTO) {
+		return promptManagerDAO.savePromptRateHistory(promptRateHistoryDTO);
+	}
+
+	public String getPromptRateHistoryNextHistoryId() {
+		return promptManagerDAO.getPromptRateHistoryNextHistoryId();
+	}
+
+	public int updatePromptRateHistoryRate(String promptRateHistId, double promptRate) {
+		Map<String, Object> params = new HashMap<>();
+		params.put("promptRateHistId", promptRateHistId);
+		params.put("promptRate", promptRate);
+		
+		return promptManagerDAO.updatePromptRateHistoryRate(params);
+
 	}
 }

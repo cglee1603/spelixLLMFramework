@@ -4,6 +4,7 @@ var selectedModelId;
 var modelMasterJsonById = {};
 var currentParamValueJson = {};
 var promptBaseId;
+var promptType;
 
 
 /*
@@ -60,6 +61,10 @@ $(document).ready(function() {
 /*
  * 불러오기 팝업
  */
+
+var importPopup = document.getElementById("import-prompt-popup");
+var importCloseButton = document.getElementsByClassName("import-close-button")[0];
+
 /* 불러오기 테이블 */
 
 $(document).ready(function() {
@@ -116,24 +121,44 @@ $(document).ready(function() {
 
                     $("#inputtable tbody").empty();
 
-                    // 첫 번째 헤더를 제외한 나머지 헤더에서 class와 data-field 속성을 가져와서 headers
-					// 배열을 생성합니다.
-                    var headers = $("#inputtable thead th").map(function(index) {
-                        if (index > 0) { // 첫 번째 헤더는 라디오 버튼이므로 제외
-                            return { field: $(this).data('field'), class: $(this).attr('class') };
-                        }
+                    // 모든 헤더 요소를 포함하는 headers 배열
+                    var headers = $("#inputtable thead th.thheader").map(function() {
+                        return { field: $(this).data('field'), class: $(this).attr('class') };
                     }).get();
+                    
+                    console.log("length: " +data.length)
 
                     for (var i = start; i < end && i < data.length; i++) {
                         var row = $('<tr/>');
+                        
+                        console.log("headers length: " +headers.length)
+                        // 모든 headers에 대한 td 생성
+                        headers.forEach(function(header, index) {
+                        	
+                            var cell;
+                            if (index === 0) {
+                                // 첫 번째 td (라디오 버튼) 추가
+                                cell = $('<td/>').html('<input type="radio" name="selection" value="' + i + '" />');
+                            } else if (header.field === 'parmJson') {
+                                var formattedData = '';
+                                try {
+                                    var jsonData = JSON.parse(data[i][header.field]);
+                                    $("input[name='hidden_parmJson']").val(JSON.stringify(jsonData));
 
-                        // 첫 번째 셀에 라디오 버튼 추가
-                        $('<td/>').html('<input type="radio" name="selection" value="' + i + '" />').appendTo(row);
-
-                        $.each(headers, function(index, header) {
-                            var cellValue = data[i][header.field] || '';
-                            $('<td/>').addClass(header.class).text(cellValue).appendTo(row);
+                                    Object.keys(jsonData).forEach(function(key) {
+                                        var param = jsonData[key];
+                                        formattedData += param.parameterName + ': ' + param.defaultValue + '<br>';
+                                    });
+                                } catch (e) {
+                                    formattedData = 'Invalid JSON';
+                                }
+                                cell = $('<td/>').addClass(header.class).html(formattedData);
+                            } else {
+                                cell = $('<td/>').addClass(header.class).text(data[i][header.field] || '');
+                            }
+                            row.append(cell);
                         });
+
                         $("#inputtable tbody").append(row);
                     }
                 }
@@ -143,6 +168,17 @@ $(document).ready(function() {
             	console.log(xhr.responseText); 
             	}
         });
+    });
+    
+ // 프롬프트 샘플 팝업 닫기
+    importCloseButton.addEventListener("click", function() {
+    	importPopup.style.display = "none";
+    });
+
+    window.addEventListener("click", function(event) {
+        if (event.target == importPopup) {
+        	importPopup.style.display = "none";
+        }
     });
 });
 
@@ -160,6 +196,7 @@ $(".import-button button").click(function() {
         var sysPromptIdsValue = selectedRow.find("td.sysPromptIds").text().trim();
         var sysPromptEtcValue = selectedRow.find("td.sysPromptEtc").text();
         var importparamJson = selectedRow.find("td.parmJson").text().trim();
+        var promptValue = selectedRow.find("td.prompt").text();
         
         if (promptTypeValue === '프롬프트') {
             $("#changemode").val("playgroundprompt");
@@ -185,11 +222,16 @@ $(".import-button button").click(function() {
                 $("#sysprompttextarea").val(sysPromptEtcValue);
             }
             
+         // 프롬프트 textarea에 반영
+            if (promptValue) {
+                $("#promptarea").val(promptValue);
+            }
+            
             findModelIdByName(modelValue);
             $("#selectmodel").val(selectedModelId);
             
             // loadContent의 AJAX 요청이 완료된 후 loadModelParameters 호출
-            paramJson = JSON.parse(importparamJson);// 전역변수에 할당
+            paramJson = JSON.parse($('input[name="hidden_parmJson"]').val());// 전역변수에 할당
         	loadModelParameters();
         });
     } else {
@@ -248,11 +290,14 @@ function loadModelParameters() {
             success: function (data) {
                 // DOM이 완전히 업데이트되었는지 확인
                 setTimeout(function() {
-                    $.each(data, function(index, value) {
-                    	// 여기에서 globalParamJson 값을 확인하고 조건에 따라 처리
-                    	 if (paramJson && paramJson.hasOwnProperty(value.parameterName)) {
-                             value = paramJson[value.parameterName];
-                         }
+                	$.each(data, function(index, value) {
+                        // json 객체 복사
+                        var paramValue = Object.assign({}, value);
+
+                        // globalParamJson 값을 확인하고 조건에 따라 처리
+                        if (paramJson && paramJson.hasOwnProperty(value.parameterName)) {
+                            paramValue.defaultValue = paramJson[value.parameterName];
+                        }
                     	
                         createParam(paramContainer, value);
                     });
@@ -303,7 +348,7 @@ function createParam(paramContainer, json,index) {
 
 // TODO 변수들 초기화
 function loadContent(mode, callback) {
-	
+	promptType = $("#changemode option:selected").text();
 	var noCache = new Date().getTime(); // 현재 시간을 타임스탬프로 사용
     var url = '/SpelixLLMFramework/' + mode + '?t=' + noCache; // URL에 타임스탬프 추가
 	
@@ -401,8 +446,16 @@ function exportToFile() {
     fileContent.model = selectedModelId;
 	fileContent.parameters = currentParamValueJson;
 	fileContent.selectedSystemPromptId = selectedSystemPromptId;
-	fileContent.inputSystemPrompt = promptArea.value;
-// fileContent.variables = ;
+	// fileContent.variables = ;
+	
+	if (promptType === "프롬프트") {
+		fileContent.inputSystemPrompt = document.getElementById('sysprompttextarea').value;
+		fileContent.prompt = inputTxt;
+	}
+	if (promptType === "채팅") {
+		fileContent.inputSystemPrompt = promptArea.value;
+	}
+	
 
     var blob = new Blob([JSON.stringify(fileContent)], { type: 'text/plain' });
     var downloadLink = document.createElement('a');
@@ -451,6 +504,13 @@ function importFromFile() {
 	                // system prompt 설정
 	                updatePromptList(jsonData.selectedSystemPromptId.join(','));
 	                promptArea.value = jsonData.inputSystemPrompt;
+	                
+	                // prompt 설정
+	                if (promptType === "프롬프트"){
+		                promptArea.value = jsonData.prompt;
+	                	document.getElementById('sysprompttextarea').value = jsonData.inputSystemPrompt;
+	                }
+	                
 
 	            } catch (error) {
 	                console.error('JSON 파싱 오류:', error);
@@ -488,13 +548,11 @@ function savePromptMaster(){
 	requestParam.parmJson = JSON.stringify(currentParamValueJson);
 	requestParam.promptType = promptType;
 	requestParam.sysPromptIds = selectedSystemPromptId;
-
+	requestParam.sysPromptEtc = promptArea.value;
+	
 	if (promptType === "프롬프트"){
 		requestParam.prompt = inputTxt;
-	}
-	
-	if (promptArea.value){
-		requestParam.sysPromptEtc = promptArea.value;
+		requestParam.sysPromptEtc = document.getElementById('sysprompttextarea').value;
 	}
 	
 	console.log("저장하기 requestParam: ", requestParam);

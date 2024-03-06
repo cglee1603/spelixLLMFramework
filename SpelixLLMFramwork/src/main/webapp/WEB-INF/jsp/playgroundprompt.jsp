@@ -34,10 +34,32 @@
 		<!--　프롬프트 사용자 입력　-->
 		<div class="setting">
 			<div class="maintitle">프롬프트</div>
-			<div class="customprompt">
+			<div class="systemprompt">
+				<div class="subtitle">시스템 프롬프트 선택</div>
+				<div class="promptlist">
+					<select class="form-control" id="promptlist" multiple="multiple">
+					</select>
+				</div>
+
 				<div class="prompttext">
+					<div class="subtitle">시스템 프롬프트 입력</div>
 					<textarea
 						placeholder="You are an AI assistant that helps people find information."
+						id="sysprompttextarea"></textarea>
+				</div>
+			</div>
+			<div class="customprompt">
+				<div class="subtitle">프롬프트 입력</div>
+				<div class="customprompttext">
+					<textarea
+						placeholder="GPT는 {역할}로서, 다음과 같은 역할을 합니다:
+
+1. 조건 입력
+2. 조건 입력
+3. 조건 입력
+
+답변 시에는 다른 고려 요소들에 대한 설명은 생략하세요.
+각 역할을 수행할 때는, 반드시 사용자의 관련 요청이 있을 때만 수행하세요."
 						id="promptarea"></textarea>
 					<div class="import-button-container">
 						<button type="button" id="prompt-input-button"

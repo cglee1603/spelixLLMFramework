@@ -19,6 +19,7 @@ public class PromptMasterDTO {
 	private String promptType;
 	private String[] llmCustomIds;
 	private String prompt;
+	private String promptTestId;
 	private float promptRate;
 	private String basePromptId;
 	private String[] sysPromptIds;
