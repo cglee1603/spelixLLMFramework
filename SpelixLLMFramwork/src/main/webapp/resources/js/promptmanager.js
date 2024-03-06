@@ -5,7 +5,7 @@ var currentPage = 1;
 var selectedSystemPrompt;
 var selectedSystemPromptId;
 var systemPromptJsonById = {};
-
+var currentParamValueJson = {};
 var $promptList = $('#selectsysPromptId');
 
 $(document).ready(function() {
@@ -268,6 +268,8 @@ function updatePromptList(sysPromptIdsValue) {
 	console.log("selectedValues: ", selectedValues);
 	$promptList.val(selectedValues).trigger('change');
 	$promptList.select2();
+	
+	selectedSystemPromptId = selectedValues;
 
 }
 
@@ -351,18 +353,52 @@ function loadSystemPrompts() {
 $('.prompt-test-button').on('click', function() {
 // alert('검증을 시작합니다.');
 
+	// system prompt
+	var systemPromptConcat = "";
+
+	if (typeof selectedSystemPromptId !== 'undefined') {
+		for (var key of selectedSystemPromptId) {
+			if (systemPromptConcat.length !== 0 && systemPromptConcat.charAt(systemPromptConcat.length - 1) !== ".") {
+				systemPromptConcat += ".";
+			}
+			systemPromptConcat += systemPromptJsonById[key].systemPrompt;
+		}
+	}
+
+	if (systemPromptConcat.length !== 0 && systemPromptConcat.charAt(systemPromptConcat.length - 1) !== ".") {
+		systemPromptConcat += ".";
+	}
+	
+	systemPromptConcat += $('.sys-prompt-etc-area .sysPromptEtc-edit-text').text();
+	
+    console.log("systemPromptConcat: ",systemPromptConcat)
+    
+    // parameters
+	var tempJson = new Object();
+
+	for (var parm in currentParamValueJson) {
+		tempJson[parm] = currentParamValueJson[parm].defaultValue;
+	}
+    
+	
+    console.log("tempJson: ",tempJson)
+
+	
     var requestParam = new Object();
     requestParam.model = $('.model-area .model').text();
     requestParam.prompt = $('.test-prompt-area .prompt-edit-text').val();
     
     //TODO 
-    requestParam.system_prompt = '반말';
-    requestParam.properties = { max_token: '500' };
+    requestParam.system_prompt = systemPromptConcat;
+    requestParam.properties = tempJson;
     
     
     requestParam.file_path_list = "";
     requestParam.additional_work = "";
     
+    console.log("requestParam: ",requestParam)
+
+	
     data = {
         requestParam: JSON.stringify(requestParam),
         promptTestId: $('.prompt-test-id-area .promptTestId').text(),
@@ -459,7 +495,7 @@ $(document).on('click', '.prompt-verification-button', function() {
 
 	var sysPromptIdsValue=rowData.sysPromptIds;
 		
-		updatePromptList(sysPromptIdsValue)
+	updatePromptList(sysPromptIdsValue)
     
 	$('.prompt-Id-area .promptId').text(rowData.promptId);
 	$('.prompt-test-id-area .promptTestId').text(rowData.promptTestId);
@@ -483,37 +519,8 @@ $(document).on('click', '.prompt-verification-button', function() {
             createParam(paramContainer, parmJson[key], key, index);
         });
     }
-});
-
-function createParam(paramContainer, json, key, index) {
-    var defaultValue = json.defaultValue || 0;
-    var minValue = json.minValue || 0;
-    var maxValue = json.maxValue || 100;
-
-    var newParamDiv = document.createElement('div');
-    newParamDiv.classList.add('testparam');
-    newParamDiv.innerHTML = `
-        <div class="testparam-1">
-            <div class="testparamtitle">${key}</div>
-            <div class="testprograss">
-                <input type="range" class="testparambar" id="testparambar-${index}" value="${defaultValue}"
-                    min="${minValue}" max="${maxValue}">
-                <input type="text" class="testparamInput" id="testparamInput-${index}" value="${defaultValue}">
-            </div>
-        </div>`;
-    paramContainer.appendChild(newParamDiv);
-
-    var progressBar = newParamDiv.querySelector('.testparambar');
-    var textInput = newParamDiv.querySelector('.testparamInput');
-
-    progressBar.addEventListener('input', function() {
-        textInput.value = this.value;
-    });
-}
-
-	
-	
-	// test history 가져오기
+    
+ // test history 가져오기
 	console.log($('.prompt-Id-area .promptId').text())
 	ajaxCall("POST", 'promptmanager/getPromptRateHistoryByPromptId.do', {promptId: $('.prompt-Id-area .promptId').text()},
 	        function(data) {
@@ -550,6 +557,48 @@ function createParam(paramContainer, json, key, index) {
 	        function() {
 	            alert("프롬프트 테스트 히스토리 가져오기 실패.");
 	        });
+});
+
+function createParam(paramContainer, json, key, index) {
+    var defaultValue = json.defaultValue || 0;
+    var minValue = json.minValue || 0;
+    var maxValue = json.maxValue || 100;
+
+    var newParamDiv = document.createElement('div');
+    newParamDiv.classList.add('testparam');
+    newParamDiv.innerHTML = `
+        <div class="testparam-1">
+            <div class="testparamtitle">${key}</div>
+            <div class="testprograss">
+                <input type="range" class="testparambar" id="testparambar-${index}" value="${defaultValue}"
+                    min="${minValue}" max="${maxValue}">
+                <input type="text" class="testparamInput" id="testparamInput-${index}" value="${defaultValue}">
+            </div>
+        </div>`;
+    paramContainer.appendChild(newParamDiv);
+
+    var progressBar = newParamDiv.querySelector('.testparambar');
+    var textInput = newParamDiv.querySelector('.testparamInput');
+    
+    var tempJson = {};
+    tempJson.minValue = minValue;
+    tempJson.maxValue = maxValue;
+    tempJson.defaultValue = defaultValue;
+    tempJson.parameterName = key;
+
+    currentParamValueJson[key] = tempJson;
+    
+    progressBar.addEventListener('input', function() {
+        textInput.value = this.value;
+        
+        tempJson.defaultValue = textInput.value;
+        currentParamValueJson[key] = tempJson;
+    });
+}
+
+	
+	
+	
 	
 
 
