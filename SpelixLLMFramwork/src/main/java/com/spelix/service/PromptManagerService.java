@@ -15,15 +15,15 @@ public interface PromptManagerService {
 
 	List<ModelMasterDTO> getAllPromptModelList();
 
-	int updateUseYNPromptMaster(String promptId,String useYN);
+	int updateUseYNPromptMaster(String promptId, String useYN);
 
 	List<PromptTestDataDTO> getPromptTestDataById(String promptTestId);
-	
-	List<PromptRateHistoryDTO> getPromptRateHistoryByPromptId(String promptId);
+
+	List<PromptRateHistoryDTO> getPromptRateHistoryByPromptId(String promptId, String promptVer);
 
 	int savePromptRateHistory(PromptRateHistoryDTO promptRateHistoryDTO);
-	
+
 	String getPromptRateHistoryNextHistoryId();
-	
+
 	int updatePromptRateHistoryRate(String promptRateHistId, double promptRate);
 }

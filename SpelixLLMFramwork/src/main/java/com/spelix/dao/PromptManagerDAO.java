@@ -22,12 +22,14 @@ public interface PromptManagerDAO {
 
 	List<PromptTestDataDTO> getPromptTestDataById(String promptTestId);
 
-	List<PromptRateHistoryDTO> getPromptRateHistoryByPromptId(String promptId);
+	List<PromptRateHistoryDTO> getPromptRateHistoryByPromptId(String promptId, String promptVer);
 
 	int savePromptRateHistory(PromptRateHistoryDTO promptRateHistoryDTO);
 
 	String getPromptRateHistoryNextHistoryId();
 
 	int updatePromptRateHistoryRate(Map<String, Object> params);
+
+	List<PromptRateHistoryDTO> getPromptRateHistoryByPromptId(Map<String, Object> params);
 
 }

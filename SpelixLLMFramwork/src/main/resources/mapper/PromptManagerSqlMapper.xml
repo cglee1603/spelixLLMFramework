@@ -42,9 +42,9 @@
 		WHERE prmt_id = #{prmtId}
 	</delete>
 
-	<update id="updateUseYNPromptMaster"
-		parameterType="map">
-		UPDATE spx_prmt_mst
+	<update id="updateUseYNPromptMaster" parameterType="map">
+		UPDATE
+		spx_prmt_mst
 		SET
 		use_yn = #{useYN}
 		WHERE
@@ -124,6 +124,8 @@
 		FROM spx_prmt_rate_hist
 		WHERE prmt_id =
 		#{promptId}
+		AND
+		prmt_ver = #{promptVer}
 	</select>
 
 	<insert id="savePromptRateHistory"

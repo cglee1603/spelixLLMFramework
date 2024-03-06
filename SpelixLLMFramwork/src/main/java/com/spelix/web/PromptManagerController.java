@@ -264,8 +264,11 @@ public class PromptManagerController {
 	// TODO parm ver 추가
 	@RequestMapping(value = "/promptmanager/getPromptRateHistoryByPromptId.do", method = RequestMethod.POST)
 	@ResponseBody
-	public List<PromptRateHistoryDTO> getPromptRateHistoryByPromptId(@RequestParam("promptId") String promptId) {
-		List<PromptRateHistoryDTO> history = promptManagerService.getPromptRateHistoryByPromptId(promptId);
+	public List<PromptRateHistoryDTO> getPromptRateHistoryByPromptId( //
+			@RequestParam("promptId") String promptId, //
+			@RequestParam("promptVer") String promptVer) {
+
+		List<PromptRateHistoryDTO> history = promptManagerService.getPromptRateHistoryByPromptId(promptId, promptVer);
 
 		log.debug("getPromptRateHistoryByPromptId: " + history);
 

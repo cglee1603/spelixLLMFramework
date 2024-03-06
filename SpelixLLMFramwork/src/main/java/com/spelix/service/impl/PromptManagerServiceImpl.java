@@ -36,20 +36,24 @@ public class PromptManagerServiceImpl implements PromptManagerService {
 		return promptManagerDAO.getAllPromptModelList();
 	};
 
-	public int updateUseYNPromptMaster(String promptId,String useYN) {
-		 Map<String, Object> params = new HashMap<>();
-		    params.put("promptId", promptId);
-		    params.put("useYN", useYN);
+	public int updateUseYNPromptMaster(String promptId, String useYN) {
+		Map<String, Object> params = new HashMap<>();
+		params.put("promptId", promptId);
+		params.put("useYN", useYN);
 
-		    return promptManagerDAO.updateUseYNPromptMaster(params);
+		return promptManagerDAO.updateUseYNPromptMaster(params);
 	}
 
 	public List<PromptTestDataDTO> getPromptTestDataById(String promptTestId) {
 		return promptManagerDAO.getPromptTestDataById(promptTestId);
 	}
 
-	public List<PromptRateHistoryDTO> getPromptRateHistoryByPromptId(String promptId) {
-		return promptManagerDAO.getPromptRateHistoryByPromptId(promptId);
+	public List<PromptRateHistoryDTO> getPromptRateHistoryByPromptId(String promptId, String promptVer) {
+		Map<String, Object> params = new HashMap<>();
+		params.put("promptId", promptId);
+		params.put("promptVer", promptVer);
+
+		return promptManagerDAO.getPromptRateHistoryByPromptId(params);
 	}
 
 	public int savePromptRateHistory(PromptRateHistoryDTO promptRateHistoryDTO) {
@@ -64,7 +68,7 @@ public class PromptManagerServiceImpl implements PromptManagerService {
 		Map<String, Object> params = new HashMap<>();
 		params.put("promptRateHistId", promptRateHistId);
 		params.put("promptRate", promptRate);
-		
+
 		return promptManagerDAO.updatePromptRateHistoryRate(params);
 
 	}

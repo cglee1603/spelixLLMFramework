@@ -511,7 +511,7 @@ $(document).on('click', '.prompt-verification-button', function() {
     }
     
  // test history 가져오기
-	ajaxCall("POST", 'promptmanager/getPromptRateHistoryByPromptId.do', {promptId: $('.prompt-Id-area .promptId').text()},
+	ajaxCall("POST", 'promptmanager/getPromptRateHistoryByPromptId.do', {promptId: $('.prompt-Id-area .promptId').text(), promptVer: $('.prompt-Ver-area .promptVer').text()},
 	        function(data) {
 
 	            var tbody = document.querySelector('.rate-table tbody');
