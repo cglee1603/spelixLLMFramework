@@ -32,6 +32,7 @@ import com.spelix.config.ApplicationConfig;
 import com.spelix.domain.ModelMasterDTO;
 import com.spelix.domain.PromptMasterDTO;
 import com.spelix.domain.PromptRateHistoryDTO;
+import com.spelix.domain.PromptResultDTO;
 import com.spelix.domain.PromptTestDataDTO;
 import com.spelix.service.PromptManagerService;
 
@@ -99,64 +100,116 @@ public class PromptManagerController {
 
 	@RequestMapping(value = "/promptmanager/getPromptTestDataResultById.do", method = RequestMethod.POST)
 	@ResponseBody
-	public List<Map<String, Object>> getPromptTestDataResultById( //
+	public List<PromptRateHistoryDTO> getPromptTestDataResultById( //
 			@RequestParam("requestParam") String requestParam, //
 			@RequestParam("promptTestId") String promptTestId, //
 			@RequestParam("promptId") String promptId, //
-			@RequestParam("promptVer") String promptVer) {
+			@RequestParam("promptVer") String promptVer, //
+			@RequestParam("sysPromptIds") String sysPromptIds, //
+			@RequestParam("sysPromptEtc") String sysPromptEtc, //
+			@RequestParam("promptType") String promptType) {
 
-		List<PromptTestDataDTO> promptTestDataResultList = getPromptTestDataById(promptTestId);
+		log.debug("sysPromptIds: " + sysPromptIds);
+
+		List<PromptTestDataDTO> promptTestDataList = getPromptTestDataById(promptTestId);
 		JSONArray jsonArray = new JSONArray();
 
-		Map<String, PromptTestDataDTO> tempDtoMap = new HashMap<String, PromptTestDataDTO>();
+		PromptRateHistoryDTO promptRateHistoryDTO = new PromptRateHistoryDTO();
+		PromptResultDTO promptResultDTO = new PromptResultDTO();
 
-		for (PromptTestDataDTO promptTestDataDTO : promptTestDataResultList) {
+		String nextHistoryId = getPromptRateHistoryNextHistoryId();
+		log.debug("nextHistoryId: " + nextHistoryId);
 
-			PromptRateHistoryDTO promptRateHistoryDTO = new PromptRateHistoryDTO();
+		double cosSum = 0;
+		int cnt = 1;
+
+		log.debug("promptTestDataList: " + promptTestDataList);
+
+		Map<Integer, PromptTestDataDTO> tempDtoMap = new HashMap<Integer, PromptTestDataDTO>();
+
+		JSONObject requestParamJsonOrigin = new JSONObject(requestParam);
+		log.debug("requestParamJsonOrigin: " + requestParamJsonOrigin);
+
+		for (PromptTestDataDTO promptTestDataDTO : promptTestDataList) {
 			JSONObject requestParamJson = new JSONObject(requestParam);
-
 			String prompt = requestParamJson.getString("prompt");
 
-			// 새로운 키와 값을 추가
 			requestParamJson.put("prompt", prompt + "\n" + promptTestDataDTO.getBody());
 			requestParamJson.put("answer", promptTestDataDTO.getAnswer());
-
-			String nextHistoryId = getPromptRateHistoryNextHistoryId();
-			log.debug("nextHistoryId: " + nextHistoryId);
-			requestParamJson.put("prompt_id", nextHistoryId);
-
+			requestParamJson.put("prompt_id", promptTestDataDTO.getNum());
 			jsonArray.put(requestParamJson);
 
-			// 검증화면 아이디, 프롬프트, 정답 입력 위해서
-			tempDtoMap.put(nextHistoryId, promptTestDataDTO);
+			tempDtoMap.put(promptTestDataDTO.getNum(), promptTestDataDTO);
 
-			// TODO save history
-			promptRateHistoryDTO.setPromptRateHistId(nextHistoryId);
-			promptRateHistoryDTO.setPromptId(promptId);
-			promptRateHistoryDTO.setPromptVer(promptVer);
-			promptRateHistoryDTO.setPrompt(prompt);
-//			promptRateHistoryDTO.getSysPromptIds()
-//			promptRateHistoryDTO.setSysPromptEtc(requestParamJson.getString(""));
-//			promptRateHistoryDTO.setParmJson();
+			cnt++;
 
-			int success = savePromptRateHistory(promptRateHistoryDTO);
 		}
 
 		log.debug("getPromptTestDataResultById jsonArray: " + jsonArray);
+		log.debug("tempDtoMap: " + tempDtoMap);
 
 		List<Map<String, Object>> modelResponseList = getModelResponse(jsonArray);
-
-		for (Map<String, Object> map : modelResponseList) {
-			map.put("question", tempDtoMap.get(map.get("prompt_id")).getBody());
-			map.put("answer", tempDtoMap.get(map.get("prompt_id")).getAnswer());
-
-			// update history
-			updatePromptRateHistoryRate((String) map.get("prompt_id"),
-					((Number) map.get("answer_cosine_similarity")).doubleValue());
-		}
 		log.debug("modelResponseList: " + modelResponseList);
 
-		return modelResponseList;
+		for (Map<String, Object> map : modelResponseList) {
+			log.debug("map: " + map);
+
+			double answerCosineSimilarity = ((Number) map.get("answer_cosine_similarity")).doubleValue();
+			cosSum = cosSum + answerCosineSimilarity;
+			log.debug("answerCosineSimilarity: " + answerCosineSimilarity);
+			// map.put("question", tempDtoMap.get(map.get("prompt_id")).getBody());
+//			map.put("answer", tempDtoMap.get(map.get("prompt_id")).getAnswer());
+//
+//			// update history
+//			updatePromptRateHistoryRate((String) map.get("prompt_id"),
+//					((Number) map.get("answer_cosine_similarity")).doubleValue());
+
+			// save prompt result
+			promptResultDTO.setPromptId(promptId);
+			promptResultDTO.setPromptVer(promptVer);
+			promptResultDTO.setPromptRateHistId(nextHistoryId);
+			promptResultDTO.setModel(requestParamJsonOrigin.getString("model"));
+			promptResultDTO.setPromptType(promptType);
+			promptResultDTO.setPrompt(requestParamJsonOrigin.getString("prompt"));
+			promptResultDTO.setBody(tempDtoMap.get(map.get("prompt_id")).getBody());
+			promptResultDTO.setExpectResult(tempDtoMap.get(map.get("prompt_id")).getAnswer());
+			promptResultDTO.setResult((String) map.get("prompt_result"));
+
+			// TODO
+
+			log.debug("@@" + tempDtoMap.get(map.get("prompt_id")).getAnswer());
+			if (tempDtoMap.get(map.get("prompt_id")).getAnswer() !=null) {
+				promptResultDTO.setCortYn("N");
+			}
+
+			promptResultDTO.setParmJson(requestParamJsonOrigin.get("properties").toString());
+			log.debug("promptResultDTO: " + promptResultDTO);
+
+			int success = savePromptResult(promptResultDTO);
+			log.debug("savePromptResult success: " + success);
+
+		}
+		log.debug("cosSum: " + cosSum);
+		log.debug("modelResponseList: " + modelResponseList);
+
+		// save history
+		promptRateHistoryDTO.setPromptRateHistId(nextHistoryId);
+		promptRateHistoryDTO.setPromptId(promptId);
+		promptRateHistoryDTO.setPromptVer(promptVer);
+		promptRateHistoryDTO.setPrompt(requestParamJsonOrigin.getString("prompt"));
+		promptRateHistoryDTO.setSysPromptIds(sysPromptIds.isEmpty() ? null : sysPromptIds.split(","));
+		promptRateHistoryDTO.setSysPromptEtc(sysPromptEtc);
+		promptRateHistoryDTO.setParmJson(requestParamJsonOrigin.get("properties").toString());
+		promptRateHistoryDTO.setPromptRate(cosSum / cnt);
+		log.debug("promptRateHistoryDTO: " + promptRateHistoryDTO);
+
+		int success = savePromptRateHistory(promptRateHistoryDTO);
+		log.debug("savePromptRateHistory success: " + success);
+
+		List<PromptRateHistoryDTO> resultList = new ArrayList<>();
+		resultList.add(promptRateHistoryDTO);
+
+		return resultList;
 
 	}
 
@@ -243,8 +296,11 @@ public class PromptManagerController {
 
 	@RequestMapping(value = "/promptmanager/getPromptRateHistoryByPromptId.do", method = RequestMethod.POST)
 	@ResponseBody
-	public List<PromptRateHistoryDTO> getPromptRateHistoryByPromptId(@RequestParam("promptId") String promptId) {
-		List<PromptRateHistoryDTO> history = promptManagerService.getPromptRateHistoryByPromptId(promptId);
+	public List<PromptRateHistoryDTO> getPromptRateHistoryByPromptId( //
+			@RequestParam("promptId") String promptId, //
+			@RequestParam("promptVer") String promptVer) {
+
+		List<PromptRateHistoryDTO> history = promptManagerService.getPromptRateHistoryByPromptId(promptId, promptVer);
 
 		log.debug("getPromptRateHistoryByPromptId: " + history);
 
@@ -269,5 +325,22 @@ public class PromptManagerController {
 		log.debug("updatePromptRateHistoryRate");
 
 		return promptManagerService.updatePromptRateHistoryRate(promptRateHistId, promptRate);
+	}
+
+	@RequestMapping(value = "/promptmanager/getPromptResultByHistoryId.do", method = RequestMethod.POST)
+	@ResponseBody
+	public List<PromptResultDTO> getPromptResultByHistoryId(@RequestParam("promptRateHistId") String promptRateHistId) {
+
+		List<PromptResultDTO> resultList = promptManagerService.getPromptResultByHistoryId(promptRateHistId);
+
+		log.debug("getPromptResultByHistoryId: " + resultList);
+
+		return resultList;
+	}
+
+	public int savePromptResult(PromptResultDTO promptResultDTO) {
+		log.debug("savePromptResult");
+
+		return promptManagerService.savePromptResult(promptResultDTO);
 	}
 }

@@ -322,8 +322,6 @@ function removeDeletedPromptsFromTable(promptIds) {
 	});
 }
 
-//검증화면에 프롬프트 선택 데이터 가져오기
-
 function loadSystemPrompts() {
     $.ajax({
         type: "POST",
@@ -379,24 +377,16 @@ $('.prompt-test-button').on('click', function() {
 	for (var parm in currentParamValueJson) {
 		tempJson[parm] = currentParamValueJson[parm].defaultValue;
 	}
-    
-	
-    console.log("tempJson: ",tempJson)
 
 	
     var requestParam = new Object();
     requestParam.model = $('.model-area .model').text();
     requestParam.prompt = $('.test-prompt-area .prompt-edit-text').val();
-    
-    //TODO 
     requestParam.system_prompt = systemPromptConcat;
     requestParam.properties = tempJson;
     
-    
-    requestParam.file_path_list = "";
-    requestParam.additional_work = "";
-    
     console.log("requestParam: ",requestParam)
+    console.log("$('.prompt-type-area .promptType').text(): ",$('.prompt-type-area .promptType').text())
 
 	
     data = {
@@ -404,7 +394,11 @@ $('.prompt-test-button').on('click', function() {
         promptTestId: $('.prompt-test-id-area .promptTestId').text(),
         promptId: $('.prompt-Id-area .promptId').text(),
         promptVer: $('.prompt-Ver-area .promptVer').text(),
+        sysPromptIds: selectedSystemPromptId.join(','),
+        sysPromptEtc: $('.sys-prompt-etc-area .sysPromptEtc-edit-text').text(),
+        promptType: $('.prompt-type-area .promptType').text()
     };
+    console.log("data: ",data)
 
     ajaxCall("POST", 'promptmanager/getPromptTestDataResultById.do', data,
         function(data) {
@@ -422,7 +416,7 @@ $('.prompt-test-button').on('click', function() {
 
                 // 각 열(td)에 데이터 추가
                 var testIdCell = document.createElement('td');
-                testIdCell.textContent = item.prompt_id;
+                testIdCell.textContent = item.promptId;
                 row.appendChild(testIdCell);
 
                 // FIXME
@@ -431,7 +425,7 @@ $('.prompt-test-button').on('click', function() {
                 row.appendChild(changesCell);
 
                 var accuracyCell = document.createElement('td');
-                accuracyCell.textContent = item.answer_cosine_similarity;
+                accuracyCell.textContent = item.promptRate;
                 row.appendChild(accuracyCell);
 
                 // tbody에 행 추가
@@ -447,33 +441,54 @@ $('.prompt-test-button').on('click', function() {
     );
 });
 
-
-// 검증 시 오른쪽에 상세 화면 띄우기
+//FIXME
+/*
+ * 검증 팝업에서 프롬프트 결과 상세 가져오기 (오른쪽 구역)
+ */
 $('.rate-table tbody').on('click', 'tr', function() {
-    // 클릭한 행에서 데이터 가져오기
-    var item = $(this).data('item');
-    console.log("clicked item: ", item);
+    var selectedRowItem = $(this).data('item');
+    console.log("clicked history item: ", selectedRowItem.promptRateHistId);
 
-    // 가져온 데이터를 response-table에 추가
-    var newRow = $('<tr>');
-    newRow.append($('<td>').text(item.question));
-    newRow.append($('<td>').text(item.answer));
-    newRow.append($('<td>').text(item.prompt_result));
-    newRow.append($('<td>').text((item.answer_cosine_similarity > 0.2) ? 'O' : 'X'));
-    
-    var checkboxTd = $('<td>');
-    var checkbox = $('<input>', { type: 'checkbox', disabled: item.answer_cosine_similarity > 0.2 });
-    
-    if (item.answer_cosine_similarity <= 0.2 && item.answer_cosine_similarity !== null) {
-        checkbox.prop('checked', true);
-    }
-    
-    checkboxTd.append(checkbox);
-    newRow.append(checkboxTd);
+    ajaxCall("POST", 'promptmanager/getPromptResultByHistoryId.do', { promptRateHistId: selectedRowItem.promptRateHistId },
+        function(data) {
+            var tbody = $('.response-table tbody');
+            tbody.empty(); // 기존에 있던 데이터 삭제
 
-    // response-table의 tbody에 새로운 행 추가
-    $('.response-table tbody').html(newRow);
+            data.forEach(function(item) {
+                // 새로운 행을 생성하여 데이터 추가
+                var newRow = $('<tr>');
+
+                // 데이터를 새로운 행에 추가
+                newRow.append($('<td>').text(item.body));
+                newRow.append($('<td>').text(item.expectResult));
+                newRow.append($('<td>').text(item.result));
+
+                // 체크박스 추가
+                var checkboxCell = $('<td>');
+                var checkbox = $('<input>', { type: 'checkbox', disabled: item.answer_cosine_similarity === null });
+
+                console.log(item)
+                if (item.cortYn !== "") {
+                    if (item.cortYn == "Y") {
+                        checkbox.prop('checked', true);
+                    }
+                } else {
+                    // 코사인 유사도 값이 Null인 경우 반투명 처리
+                    checkbox.css('opacity', '0.5');
+                }
+                newRow.append(checkboxCell.append(checkbox));
+
+                // 새로운 행을 오른쪽 테이블에 추가
+                tbody.append(newRow);
+            });
+
+        },
+        function() {
+            alert("테스트 데이터 검증 실패.");
+        }
+    );
 });
+
 
 
 
@@ -491,8 +506,6 @@ $(document).on('click', '.prompt-verification-button', function() {
         rowData[columnClass] = columnData;
     });
     
-	console.log('rowData: ',rowData);
-
 	var sysPromptIdsValue=rowData.sysPromptIds;
 		
 	updatePromptList(sysPromptIdsValue)
@@ -503,17 +516,13 @@ $(document).on('click', '.prompt-verification-button', function() {
 	$('.model-area .model').text(rowData.model);
 	$('.test-prompt-area .prompt-edit-text').text(rowData.prompt);
 	$('.sys-prompt-etc-area .sysPromptEtc-edit-text').text(rowData.sysPromptEtc);
-
+	$('.prompt-type-area .promptType').text(rowData.promptType);
 	
-
-	// TODO 파라미터, 시스템 프롬프트 선택
-//	$('.parmJson-area .paramJson').text(rowData.model);
-	
-	// 프로그레스 바 생성
+	// 파라미터 프로그레스 바 생성
     var parmJson = JSON.parse($(this).closest('tr').find('.original-parmJson').val()); // 숨겨진 필드의 값을 읽어옵니다.
     if (parmJson) {
         var paramContainer = document.querySelector('.parmJson-area .paramJson');
-        paramContainer.innerHTML = ''; // 기존 내용을 비웁니다.
+        paramContainer.innerHTML = '';
 
         Object.keys(parmJson).forEach(function(key, index) {
             createParam(paramContainer, parmJson[key], key, index);
@@ -521,14 +530,14 @@ $(document).on('click', '.prompt-verification-button', function() {
     }
     
  // test history 가져오기
-	console.log($('.prompt-Id-area .promptId').text())
-	ajaxCall("POST", 'promptmanager/getPromptRateHistoryByPromptId.do', {promptId: $('.prompt-Id-area .promptId').text()},
+	ajaxCall("POST", 'promptmanager/getPromptRateHistoryByPromptId.do', {promptId: $('.prompt-Id-area .promptId').text(), promptVer: $('.prompt-Ver-area .promptVer').text()},
 	        function(data) {
 
 	            var tbody = document.querySelector('.rate-table tbody');
 
 	            data.forEach(function(item) {
 
+	            	console.log(item)
 	            	var row = document.createElement('tr');
 	                // 클로저를 사용하여 item 변수를 접근할 수 있도록 함
 	                $(row).data('item', item);
@@ -564,7 +573,7 @@ function createParam(paramContainer, json, key, index) {
     var minValue = json.minValue || 0;
     var maxValue = json.maxValue || 100;
     var offset = json.valueOffset || 0;
-	console.log(json)
+
     var newParamDiv = document.createElement('div');
     newParamDiv.classList.add('testparam');
     newParamDiv.innerHTML = `

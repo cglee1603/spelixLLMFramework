@@ -6,6 +6,7 @@ import java.util.Map;
 import com.spelix.domain.ModelMasterDTO;
 import com.spelix.domain.PromptMasterDTO;
 import com.spelix.domain.PromptRateHistoryDTO;
+import com.spelix.domain.PromptResultDTO;
 import com.spelix.domain.PromptTestDataDTO;
 
 public interface PromptManagerDAO {
@@ -22,12 +23,18 @@ public interface PromptManagerDAO {
 
 	List<PromptTestDataDTO> getPromptTestDataById(String promptTestId);
 
-	List<PromptRateHistoryDTO> getPromptRateHistoryByPromptId(String promptId);
+	List<PromptRateHistoryDTO> getPromptRateHistoryByPromptId(String promptId, String promptVer);
 
 	int savePromptRateHistory(PromptRateHistoryDTO promptRateHistoryDTO);
 
 	String getPromptRateHistoryNextHistoryId();
 
 	int updatePromptRateHistoryRate(Map<String, Object> params);
+
+	List<PromptRateHistoryDTO> getPromptRateHistoryByPromptId(Map<String, Object> params);
+
+	List<PromptResultDTO> getPromptResultByHistoryId(String promptRateHistId);
+
+	int savePromptResult(PromptResultDTO promptResultDTO);
 
 }

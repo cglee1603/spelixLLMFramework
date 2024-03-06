@@ -167,38 +167,27 @@ function getChatResponse(incomingChatDiv) {
 	
 	console.log("채팅 requestParam: ", requestParam);
 
-	if (localStorage.getItem(JSON.stringify(requestParam)) != null) {
-		console.log("local storage is not null");
-		
-		var tempReturnData = JSON.parse(localStorage.getItem(JSON.stringify(requestParam)));
-
-		setTimeout(function() {
-			pElement.textContent = tempReturnData.prompt_result;
+	$.ajax({
+		type: "POST",
+		url: "getChatbotResponse.do",
+		data: { requestParam : JSON.stringify(requestParam) },
+		dataType: "json",
+		async: true,
+		success: function(data) {				
+			pElement.textContent = data.prompt_result;
+			localStorage.setItem(JSON.stringify(requestParam), JSON.stringify(data));
 			chatTypeingEnd(incomingChatDiv, pElement);
-		}, 1000);
+			chatHistoryText += chatHistoryText.length ? "\n" : "";
+			chatHistoryText += "USER: " + userText + "\nAssistant: " + pElement.textContent;
+			console.log(chatHistoryText);
+		},
+		error: function() {
+			pElement.classList.add("error");
+			pElement.textContent = "죄송합니다. 답변을 드릴 수 없습니다. 잠시후 다시 시도해 주세요.";
+			chatTypeingEnd(incomingChatDiv, pElement);
+		}
+	});
 		
-	} else {
-		$.ajax({
-			type: "POST",
-			url: "getChatbotResponse.do",
-			data: { requestParam : JSON.stringify(requestParam) },
-			dataType: "json",
-			async: true,
-			success: function(data) {				
-				pElement.textContent = data.prompt_result;
-				localStorage.setItem(JSON.stringify(requestParam), JSON.stringify(data));
-				chatTypeingEnd(incomingChatDiv, pElement);
-				chatHistoryText += chatHistoryText.length ? "\n" : "";
-				chatHistoryText += "USER: " + userText + "\Assistant: " + pElement.textContent;
-				console.log(chatHistoryText);
-			},
-			error: function() {
-				pElement.classList.add("error");
-				pElement.textContent = "죄송합니다. 답변을 드릴 수 없습니다. 잠시후 다시 시도해 주세요.";
-				chatTypeingEnd(incomingChatDiv, pElement);
-			}
-		});
-	}
 }
 
 function chatTypeingEnd(incomingChatDiv, pElement) {
