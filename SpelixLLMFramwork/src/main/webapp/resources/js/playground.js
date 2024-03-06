@@ -4,6 +4,7 @@ var selectedModelId;
 var modelMasterJsonById = {};
 var currentParamValueJson = {};
 var promptBaseId;
+var promptType;
 
 
 /*
@@ -345,7 +346,7 @@ function createParam(paramContainer, json,index) {
 
 // TODO 변수들 초기화
 function loadContent(mode, callback) {
-	
+	promptType = $("#changemode option:selected").text();
 	var noCache = new Date().getTime(); // 현재 시간을 타임스탬프로 사용
     var url = '/SpelixLLMFramework/' + mode + '?t=' + noCache; // URL에 타임스탬프 추가
 	
@@ -443,8 +444,16 @@ function exportToFile() {
     fileContent.model = selectedModelId;
 	fileContent.parameters = currentParamValueJson;
 	fileContent.selectedSystemPromptId = selectedSystemPromptId;
-	fileContent.inputSystemPrompt = promptArea.value;
-// fileContent.variables = ;
+	// fileContent.variables = ;
+	
+	if (promptType === "프롬프트") {
+		fileContent.inputSystemPrompt = document.getElementById('sysprompttextarea').value;
+		fileContent.prompt = inputTxt;
+	}
+	if (promptType === "채팅") {
+		fileContent.inputSystemPrompt = promptArea.value;
+	}
+	
 
     var blob = new Blob([JSON.stringify(fileContent)], { type: 'text/plain' });
     var downloadLink = document.createElement('a');
@@ -493,6 +502,13 @@ function importFromFile() {
 	                // system prompt 설정
 	                updatePromptList(jsonData.selectedSystemPromptId.join(','));
 	                promptArea.value = jsonData.inputSystemPrompt;
+	                
+	                // prompt 설정
+	                if (promptType === "프롬프트"){
+		                promptArea.value = jsonData.prompt;
+	                	document.getElementById('sysprompttextarea').value = jsonData.inputSystemPrompt;
+	                }
+	                
 
 	            } catch (error) {
 	                console.error('JSON 파싱 오류:', error);
@@ -530,13 +546,11 @@ function savePromptMaster(){
 	requestParam.parmJson = JSON.stringify(currentParamValueJson);
 	requestParam.promptType = promptType;
 	requestParam.sysPromptIds = selectedSystemPromptId;
-
+	requestParam.sysPromptEtc = promptArea.value;
+	
 	if (promptType === "프롬프트"){
 		requestParam.prompt = inputTxt;
-	}
-	
-	if (promptArea.value){
-		requestParam.sysPromptEtc = promptArea.value;
+		requestParam.sysPromptEtc = document.getElementById('sysprompttextarea').value;
 	}
 	
 	console.log("저장하기 requestParam: ", requestParam);
