@@ -54,21 +54,28 @@ function setupEventHandlers() {
 
     $('#search-model-list').change(filterAndDisplayData);
 
-    // 사용 여부 버튼에 대한 이벤트 핸들러 추가
+
+ // 사용 여부 버튼에 대한 이벤트 핸들러 추가
     $(document).on('click', '#prompt-useyn-button', function() {
         var $button = $(this);
         var promptId = $button.closest('tr').find('.promptId').text();
+        var currentUseYN = $button.siblings('.useYN-value').val(); // Hidden input에서 현재 상태 읽기
+        var newUseYN = currentUseYN === 'Y' ? 'N' : 'Y'; // 새로 업데이트할 상태
         
+        console.log("current: "+currentUseYN);
+        console.log("new: "+newUseYN);
+
         $.ajax({
-            url: 'promptmanager/updateUseYNPromptMaster.do', // 실제 서버의 URL로 변경
+            url: 'promptmanager/updateUseYNPromptMaster.do',
             method: 'POST',
-            data: { promptId: promptId }, // promptId 값을 서버에 전달
+            data: { promptId: promptId, useYN: newUseYN },
             success: function(response) {
-                // 서버 응답에 따라 버튼 상태 변경
                 if(response === 'Y') {
                     $button.text('사용').removeClass('btn-secondary').addClass('btn-success');
+                    $button.siblings('.useYN-value').val('Y'); // Hidden input 업데이트
                 } else if(response === 'N') {
                     $button.text('미사용').removeClass('btn-success').addClass('btn-secondary');
+                    $button.siblings('.useYN-value').val('N'); // Hidden input 업데이트
                 }
             },
             error: function() {
@@ -212,9 +219,11 @@ function getTableCell(item, header) {
     if (header.field === "verification") {
         return cell.html('<button type="button" class="btn prompt-verification-button">검증</button>');
     } else if (header.field === "useYN") {
-        var buttonText = cellValue === 'Y' ? '사용' : '미사용';
+    	var buttonText = cellValue === 'Y' ? '사용' : '미사용';
         var buttonClass = cellValue === 'Y' ? 'btn btn-success' : 'btn btn-secondary';
-        return cell.html('<button type="button" id="prompt-useyn-button" class="' + buttonClass + '">' + buttonText + '</button>');
+        // Hidden input 추가
+        var hiddenInput = '<input type="hidden" class="useYN-value" value="' + cellValue + '">';
+        return cell.html('<button type="button" id="prompt-useyn-button" class="' + buttonClass + '">' + buttonText + '</button>' + hiddenInput);
     }  else if (header.field === "parmJson") {
         // JSON 데이터를 파싱하여 'parameterName: defaultValue' 형식으로 변환
     	   var formattedData = '';
