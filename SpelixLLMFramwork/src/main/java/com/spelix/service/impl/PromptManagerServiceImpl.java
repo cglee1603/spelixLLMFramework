@@ -13,6 +13,7 @@ import com.spelix.dao.PromptManagerDAO;
 import com.spelix.domain.ModelMasterDTO;
 import com.spelix.domain.PromptMasterDTO;
 import com.spelix.domain.PromptRateHistoryDTO;
+import com.spelix.domain.PromptResultDTO;
 import com.spelix.domain.PromptTestDataDTO;
 import com.spelix.service.PromptManagerService;
 
@@ -71,5 +72,13 @@ public class PromptManagerServiceImpl implements PromptManagerService {
 
 		return promptManagerDAO.updatePromptRateHistoryRate(params);
 
+	}
+
+	public List<PromptResultDTO> getPromptResultByHistoryId(String promptRateHistId) {
+		return promptManagerDAO.getPromptResultByHistoryId(promptRateHistId);
+	}
+	
+	public int savePromptResult(PromptResultDTO promptResultDTO) {
+		return promptManagerDAO.savePromptResult(promptResultDTO);
 	}
 }

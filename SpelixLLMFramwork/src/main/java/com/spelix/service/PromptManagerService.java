@@ -5,6 +5,7 @@ import java.util.List;
 import com.spelix.domain.ModelMasterDTO;
 import com.spelix.domain.PromptMasterDTO;
 import com.spelix.domain.PromptRateHistoryDTO;
+import com.spelix.domain.PromptResultDTO;
 import com.spelix.domain.PromptTestDataDTO;
 
 public interface PromptManagerService {
@@ -26,4 +27,9 @@ public interface PromptManagerService {
 	String getPromptRateHistoryNextHistoryId();
 
 	int updatePromptRateHistoryRate(String promptRateHistId, double promptRate);
+
+	List<PromptResultDTO> getPromptResultByHistoryId(String promptRateHistId);
+
+	int savePromptResult(PromptResultDTO promptResultDTO);
+
 }

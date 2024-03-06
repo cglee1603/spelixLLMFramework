@@ -386,6 +386,7 @@ $('.prompt-test-button').on('click', function() {
     requestParam.properties = tempJson;
     
     console.log("requestParam: ",requestParam)
+    console.log("$('.prompt-type-area .promptType').text(): ",$('.prompt-type-area .promptType').text())
 
 	
     data = {
@@ -394,7 +395,8 @@ $('.prompt-test-button').on('click', function() {
         promptId: $('.prompt-Id-area .promptId').text(),
         promptVer: $('.prompt-Ver-area .promptVer').text(),
         sysPromptIds: selectedSystemPromptId.join(','),
-        sysPromptEtc: $('.sys-prompt-etc-area .sysPromptEtc-edit-text').text()
+        sysPromptEtc: $('.sys-prompt-etc-area .sysPromptEtc-edit-text').text(),
+        promptType: $('.prompt-type-area .promptType').text()
     };
     console.log("data: ",data)
 
@@ -440,30 +442,53 @@ $('.prompt-test-button').on('click', function() {
 });
 
 //FIXME
-// 검증 시 오른쪽에 상세 화면 띄우기
+/*
+ * 검증 팝업에서 프롬프트 결과 상세 가져오기 (오른쪽 구역)
+ */
 $('.rate-table tbody').on('click', 'tr', function() {
-    var item = $(this).data('item');
-    console.log("clicked item: ", item);
+    var selectedRowItem = $(this).data('item');
+    console.log("clicked history item: ", selectedRowItem.promptRateHistId);
 
-    var newRow = $('<tr>');
-    newRow.append($('<td>').text(item.question));
-    newRow.append($('<td>').text(item.answer));
-    newRow.append($('<td>').text(item.prompt_result));
-    
-    // 체크박스 추가
-    var checkboxCell = $('<td>');
-    var checkbox = $('<input>', { type: 'checkbox', disabled: item.answer_cosine_similarity === null });
+    ajaxCall("POST", 'promptmanager/getPromptResultByHistoryId.do', { promptRateHistId: selectedRowItem.promptRateHistId },
+        function(data) {
+            var tbody = $('.response-table tbody');
+            tbody.empty(); // 기존에 있던 데이터 삭제
 
-    if (item.cortYn !== "") {
-        if (item.cortYn == "Y") {
-            checkbox.prop('checked', true);
+            data.forEach(function(item) {
+                // 새로운 행을 생성하여 데이터 추가
+                var newRow = $('<tr>');
+
+                // 데이터를 새로운 행에 추가
+                newRow.append($('<td>').text(item.body));
+                newRow.append($('<td>').text(item.expectResult));
+                newRow.append($('<td>').text(item.result));
+
+                // 체크박스 추가
+                var checkboxCell = $('<td>');
+                var checkbox = $('<input>', { type: 'checkbox', disabled: item.answer_cosine_similarity === null });
+
+                console.log(item)
+                if (item.cortYn !== "") {
+                    if (item.cortYn == "Y") {
+                        checkbox.prop('checked', true);
+                    }
+                } else {
+                    // 코사인 유사도 값이 Null인 경우 반투명 처리
+                    checkbox.css('opacity', '0.5');
+                }
+                newRow.append(checkboxCell.append(checkbox));
+
+                // 새로운 행을 오른쪽 테이블에 추가
+                tbody.append(newRow);
+            });
+
+        },
+        function() {
+            alert("테스트 데이터 검증 실패.");
         }
-    } else {
-        // 코사인 유사도 값이 Null인 경우 반투명 처리
-        checkbox.css('opacity', '0.5');
-    }
-    $('.response-table tbody').html(newRow);
+    );
 });
+
 
 
 
@@ -491,17 +516,13 @@ $(document).on('click', '.prompt-verification-button', function() {
 	$('.model-area .model').text(rowData.model);
 	$('.test-prompt-area .prompt-edit-text').text(rowData.prompt);
 	$('.sys-prompt-etc-area .sysPromptEtc-edit-text').text(rowData.sysPromptEtc);
-
+	$('.prompt-type-area .promptType').text(rowData.promptType);
 	
-
-	// TODO 파라미터, 시스템 프롬프트 선택
-//	$('.parmJson-area .paramJson').text(rowData.model);
-	
-	// 프로그레스 바 생성
+	// 파라미터 프로그레스 바 생성
     var parmJson = JSON.parse($(this).closest('tr').find('.original-parmJson').val()); // 숨겨진 필드의 값을 읽어옵니다.
     if (parmJson) {
         var paramContainer = document.querySelector('.parmJson-area .paramJson');
-        paramContainer.innerHTML = ''; // 기존 내용을 비웁니다.
+        paramContainer.innerHTML = '';
 
         Object.keys(parmJson).forEach(function(key, index) {
             createParam(paramContainer, parmJson[key], key, index);

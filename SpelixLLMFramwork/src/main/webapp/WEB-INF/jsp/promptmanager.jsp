@@ -130,6 +130,10 @@
 								<p class="prompt-title">모델</p>
 								<div class="model"></div>
 							</div>
+							<div class="prompt-type-area">
+								<p class="prompt-title">타입</p>
+								<div class="promptType"></div>
+							</div>
 							<div class="sys-prompt-id-area">
 								<p class="prompt-title-long">시스템 프롬프트 선택</p>
 								<div class="sysPromptId">
