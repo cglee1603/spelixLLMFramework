@@ -98,7 +98,8 @@
 												<th class="thheader useYN" data-field="useYN"><label
 													class="tablelabel">사용여부</label></th>
 												<th class="thheader parmJson" data-field="parmJson"><label
-													class="tablelabel">파라미터</label></th>
+													class="tablelabel">파라미터</label> <input type="hidden"
+													name="hidden_parmJson" /></th>
 												<th class="thheader insertUser" data-field="insertUser"><label
 													class="tablelabel">입력자</label></th>
 												<th class="thheader insertDate" data-field="insertDate"><label
@@ -113,24 +114,24 @@
 												<th></th>
 												<th></th>
 												<th><input class="js-filter  form-control" type="text"
-									value=""></th>
+													value=""></th>
 												<th><input class="js-filter  form-control" type="text"
-									value=""></th>
+													value=""></th>
 												<th><input class="js-filter  form-control" type="text"
-									value=""></th>
+													value=""></th>
 												<th><input class="js-filter  form-control" type="text"
-									value=""></th>
+													value=""></th>
 												<th></th>
 												<th><input class="js-filter  form-control" type="text"
-									value=""></th>
+													value=""></th>
 												<th></th>
 												<th></th>
 												<th></th>
 												<th><input class="js-filter  form-control" type="text"
-									value=""></th>
+													value=""></th>
 												<th></th>
 												<th><input class="js-filter  form-control" type="text"
-									value=""></th>
+													value=""></th>
 												<th></th>
 												<th></th>
 												<th></th>

@@ -143,6 +143,8 @@ $(document).ready(function() {
                                 var formattedData = '';
                                 try {
                                     var jsonData = JSON.parse(data[i][header.field]);
+                                    $("input[name='hidden_parmJson']").val(JSON.stringify(jsonData));
+
                                     Object.keys(jsonData).forEach(function(key) {
                                         var param = jsonData[key];
                                         formattedData += param.parameterName + ': ' + param.defaultValue + '<br>';
@@ -229,7 +231,7 @@ $(".import-button button").click(function() {
             $("#selectmodel").val(selectedModelId);
             
             // loadContent의 AJAX 요청이 완료된 후 loadModelParameters 호출
-            paramJson = JSON.parse(importparamJson);// 전역변수에 할당
+            paramJson = JSON.parse($('input[name="hidden_parmJson"]').val());// 전역변수에 할당
         	loadModelParameters();
         });
     } else {
