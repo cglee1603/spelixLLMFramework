@@ -442,28 +442,26 @@ $('.prompt-test-button').on('click', function() {
 //FIXME
 // 검증 시 오른쪽에 상세 화면 띄우기
 $('.rate-table tbody').on('click', 'tr', function() {
-    // 클릭한 행에서 데이터 가져오기
     var item = $(this).data('item');
     console.log("clicked item: ", item);
 
-    // 가져온 데이터를 response-table에 추가
     var newRow = $('<tr>');
     newRow.append($('<td>').text(item.question));
     newRow.append($('<td>').text(item.answer));
     newRow.append($('<td>').text(item.prompt_result));
-    newRow.append($('<td>').text((item.answer_cosine_similarity > 0.2) ? 'O' : 'X'));
     
-    var checkboxTd = $('<td>');
-    var checkbox = $('<input>', { type: 'checkbox', disabled: item.answer_cosine_similarity > 0.2 });
-    
-    if (item.answer_cosine_similarity <= 0.2 && item.answer_cosine_similarity !== null) {
-        checkbox.prop('checked', true);
-    }
-    
-    checkboxTd.append(checkbox);
-    newRow.append(checkboxTd);
+    // 체크박스 추가
+    var checkboxCell = $('<td>');
+    var checkbox = $('<input>', { type: 'checkbox', disabled: item.answer_cosine_similarity === null });
 
-    // response-table의 tbody에 새로운 행 추가
+    if (item.cortYn !== "") {
+        if (item.cortYn == "Y") {
+            checkbox.prop('checked', true);
+        }
+    } else {
+        // 코사인 유사도 값이 Null인 경우 반투명 처리
+        checkbox.css('opacity', '0.5');
+    }
     $('.response-table tbody').html(newRow);
 });
 
