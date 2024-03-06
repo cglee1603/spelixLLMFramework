@@ -87,12 +87,14 @@ public class PromptManagerController {
 
 	@RequestMapping(value = "/promptmanager/updateUseYNPromptMaster.do", method = RequestMethod.POST)
 	@ResponseBody
-	public String updateUseYNPromptMaster(@RequestParam("promptId") String promptId, @RequestParam("useYN") String useYN) {
-	    log.debug("updateUseYNPromptMaster promptId: " + promptId + ", useYN: " + useYN);
+	public String updateUseYNPromptMaster( //
+			@RequestParam("promptId") String promptId, //
+			@RequestParam("useYN") String useYN) {
+		log.debug("updateUseYNPromptMaster promptId: " + promptId + ", useYN: " + useYN);
 
-	    int result = promptManagerService.updateUseYNPromptMaster(promptId, useYN);
+		int result = promptManagerService.updateUseYNPromptMaster(promptId, useYN);
 
-	    return result > 0 ? useYN : "Error"; // 성공하면 새 useYN 값을 반환, 아니면 에러 메시지 반환
+		return result > 0 ? useYN : "Error"; // 성공하면 새 useYN 값을 반환, 아니면 에러 메시지 반환
 	}
 
 	@RequestMapping(value = "/promptmanager/getPromptTestDataResultById.do", method = RequestMethod.POST)
