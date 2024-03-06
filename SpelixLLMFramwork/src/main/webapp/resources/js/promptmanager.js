@@ -252,6 +252,25 @@ function getTableCell(item, header) {
     	}
 }
 
+//sysPromptIds 문자열을 파싱하여 #promptlist에 옵션으로 추가하는 함수
+function updatePromptList(sysPromptIdsValue) {
+
+	var selectedValues = [];
+	
+	if (sysPromptIdsValue) {
+		var sysPromptIdsArray = sysPromptIdsValue.replace(/"/g, '').split(',');
+		
+		sysPromptIdsArray.forEach(function(id) {
+			selectedValues.push(id);
+		});
+	}
+
+	console.log("selectedValues: ", selectedValues);
+	$promptList.val(selectedValues).trigger('change');
+	$promptList.select2();
+
+}
+
 
 
 /*
@@ -438,13 +457,16 @@ $(document).on('click', '.prompt-verification-button', function() {
     
 	console.log('rowData: ',rowData);
 
+	var sysPromptIdsValue=rowData.sysPromptIds;
+		
+		updatePromptList(sysPromptIdsValue)
     
 	$('.prompt-Id-area .promptId').text(rowData.promptId);
 	$('.prompt-test-id-area .promptTestId').text(rowData.promptTestId);
 	$('.prompt-Ver-area .promptVer').text(rowData.promptVer);
 	$('.model-area .model').text(rowData.model);
 	$('.test-prompt-area .prompt-edit-text').text(rowData.prompt);
-	$('.sys-prompt-etc-area .sysPromptEtc').text(rowData.sysPromptEtc);
+	$('.sys-prompt-etc-area .sysPromptEtc-edit-text').text(rowData.sysPromptEtc);
 
 	
 

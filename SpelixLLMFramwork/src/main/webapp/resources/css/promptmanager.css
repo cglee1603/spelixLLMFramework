@@ -308,9 +308,9 @@ width:100%;
 }
 
 .sysPromptId select{
-	border: 1px solid #eaeaea;
+  border: 1px solid #eaeaea;
   border-radius:6px;
-  width:200%;
+  width:300px !important;
   height: 100%
 }
 
