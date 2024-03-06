@@ -15,7 +15,7 @@ public interface PromptManagerService {
 
 	List<ModelMasterDTO> getAllPromptModelList();
 
-	int updateUseYNPromptMaster(String promptId);
+	int updateUseYNPromptMaster(String promptId,String useYN);
 
 	List<PromptTestDataDTO> getPromptTestDataById(String promptTestId);
 	

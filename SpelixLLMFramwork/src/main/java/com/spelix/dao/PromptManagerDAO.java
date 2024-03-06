@@ -18,7 +18,7 @@ public interface PromptManagerDAO {
 
 	List<ModelMasterDTO> getAllPromptModelList();
 
-	int updateUseYNPromptMaster(String promptId);
+	int updateUseYNPromptMaster(Map<String, Object> params);
 
 	List<PromptTestDataDTO> getPromptTestDataById(String promptTestId);
 

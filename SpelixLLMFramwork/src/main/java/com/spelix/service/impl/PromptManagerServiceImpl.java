@@ -36,8 +36,12 @@ public class PromptManagerServiceImpl implements PromptManagerService {
 		return promptManagerDAO.getAllPromptModelList();
 	};
 
-	public int updateUseYNPromptMaster(String promptId) {
-		return promptManagerDAO.updateUseYNPromptMaster(promptId);
+	public int updateUseYNPromptMaster(String promptId,String useYN) {
+		 Map<String, Object> params = new HashMap<>();
+		    params.put("promptId", promptId);
+		    params.put("useYN", useYN);
+
+		    return promptManagerDAO.updateUseYNPromptMaster(params);
 	}
 
 	public List<PromptTestDataDTO> getPromptTestDataById(String promptTestId) {

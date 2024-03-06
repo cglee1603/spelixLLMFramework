@@ -43,7 +43,7 @@
 	</delete>
 
 	<update id="updateUseYNPromptMaster"
-		parameterType="java.lang.String">
+		parameterType="map">
 		UPDATE spx_prmt_mst
 		SET
 		use_yn = #{useYN}
