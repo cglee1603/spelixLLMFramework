@@ -130,16 +130,18 @@
 								<p class="prompt-title">모델</p>
 								<div class="model"></div>
 							</div>
-								<div class="sys-prompt-id-area">
+							<div class="sys-prompt-id-area">
 								<p class="prompt-title-long">시스템 프롬프트 선택</p>
 								<div class="sysPromptId">
-								<select class="form-control selectsysPromptId" id="selectsysPromptId" multiple="multiple">
-					</select>
+									<select class="form-control selectsysPromptId"
+										id="selectsysPromptId" multiple="multiple">
+									</select>
 								</div>
 							</div>
 							<div class="sys-prompt-etc-area">
 								<p class="prompt-title-long">시스템 프롬프트 입력</p>
-								<textarea class="sysPromptEtc-edit-text" id="sysPromptEtc-edit-text"></textarea>
+								<textarea class="sysPromptEtc-edit-text"
+									id="sysPromptEtc-edit-text"></textarea>
 							</div>
 							<div class="test-prompt-area">
 								<p class="prompt-title">프롬프트</p>
@@ -149,7 +151,7 @@
 								<p class="prompt-title">파라미터</p>
 								<div class="paramJson"></div>
 							</div>
-						
+
 						</div>
 					</div>
 					<div class="prompt-rate-area">
@@ -175,7 +177,6 @@
 								<th>A</th>
 								<th>모델 리턴 결과</th>
 								<th>정답</th>
-								<th>재수행여부</th>
 							</tr>
 						</thead>
 						<tbody>
