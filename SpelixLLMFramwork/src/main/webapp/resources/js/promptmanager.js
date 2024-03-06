@@ -55,18 +55,19 @@ function setupEventHandlers() {
     $('#search-model-list').change(filterAndDisplayData);
 
     // 사용 여부 버튼에 대한 이벤트 핸들러 추가
-    $(document).on('click', '.prompt-useyn-button', function() {
+    $(document).on('click', '#prompt-useyn-button', function() {
         var $button = $(this);
         var promptId = $button.closest('tr').find('.promptId').text();
-
+        
         $.ajax({
-            url: '/path/to/update', // 실제 서버의 URL로 변경
+            url: 'promptmanager/updateUseYNPromptMaster.do', // 실제 서버의 URL로 변경
             method: 'POST',
-            data: { id: promptId },
+            data: { promptId: promptId }, // promptId 값을 서버에 전달
             success: function(response) {
+                // 서버 응답에 따라 버튼 상태 변경
                 if(response === 'Y') {
                     $button.text('사용').removeClass('btn-secondary').addClass('btn-success');
-                } else {
+                } else if(response === 'N') {
                     $button.text('미사용').removeClass('btn-success').addClass('btn-secondary');
                 }
             },
@@ -213,7 +214,7 @@ function getTableCell(item, header) {
     } else if (header.field === "useYN") {
         var buttonText = cellValue === 'Y' ? '사용' : '미사용';
         var buttonClass = cellValue === 'Y' ? 'btn btn-success' : 'btn btn-secondary';
-        return cell.html('<button type="button" class="' + buttonClass + '">' + buttonText + '</button>');
+        return cell.html('<button type="button" id="prompt-useyn-button" class="' + buttonClass + '">' + buttonText + '</button>');
     }  else if (header.field === "parmJson") {
         // JSON 데이터를 파싱하여 'parameterName: defaultValue' 형식으로 변환
     	   var formattedData = '';
@@ -459,20 +460,20 @@ function createParam(paramContainer, json, key, index) {
     var maxValue = json.maxValue || 100;
 
     var newParamDiv = document.createElement('div');
-    newParamDiv.classList.add('param');
+    newParamDiv.classList.add('testparam');
     newParamDiv.innerHTML = `
-        <div class="param-1">
-            <div class="paramtitle">${key}</div>
-            <div class="prograss">
-                <input type="range" class="parambar" id="parambar-${index}" value="${defaultValue}"
+        <div class="testparam-1">
+            <div class="testparamtitle">${key}</div>
+            <div class="testprograss">
+                <input type="range" class="testparambar" id="testparambar-${index}" value="${defaultValue}"
                     min="${minValue}" max="${maxValue}">
-                <input type="text" class="paramInput" id="paramInput-${index}" value="${defaultValue}">
+                <input type="text" class="testparamInput" id="testparamInput-${index}" value="${defaultValue}">
             </div>
         </div>`;
     paramContainer.appendChild(newParamDiv);
 
-    var progressBar = newParamDiv.querySelector('.parambar');
-    var textInput = newParamDiv.querySelector('.paramInput');
+    var progressBar = newParamDiv.querySelector('.testparambar');
+    var textInput = newParamDiv.querySelector('.testparamInput');
 
     progressBar.addEventListener('input', function() {
         textInput.value = this.value;
