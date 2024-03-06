@@ -563,7 +563,8 @@ function createParam(paramContainer, json, key, index) {
     var defaultValue = json.defaultValue || 0;
     var minValue = json.minValue || 0;
     var maxValue = json.maxValue || 100;
-
+    var offset = json.valueOffset || 0;
+	console.log(json)
     var newParamDiv = document.createElement('div');
     newParamDiv.classList.add('testparam');
     newParamDiv.innerHTML = `
@@ -571,7 +572,7 @@ function createParam(paramContainer, json, key, index) {
             <div class="testparamtitle">${key}</div>
             <div class="testprograss">
                 <input type="range" class="testparambar" id="testparambar-${index}" value="${defaultValue}"
-                    min="${minValue}" max="${maxValue}">
+                    min="${minValue}" max="${maxValue}" step="${offset}">
                 <input type="text" class="testparamInput" id="testparamInput-${index}" value="${defaultValue}">
             </div>
         </div>`;

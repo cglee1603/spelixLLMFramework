@@ -311,7 +311,6 @@ function loadModelParameters() {
 }
 
 function createParam(paramContainer, json,index) {
-	
     var newParamDiv = document.createElement('div');
     newParamDiv.classList.add('param');
     newParamDiv.innerHTML = `
@@ -319,7 +318,7 @@ function createParam(paramContainer, json,index) {
             <div class="paramtitle">${json.parameterName}</div>
             <div class="prograss">
                 <input type="range" class="parambar" id="parambar" value="${json.defaultValue}"
-                    min="${json.minValue}" max="${json.maxValue}">
+                    min="${json.minValue}" max="${json.maxValue}"  step="${json.valueOffset}">
                 <input type="text" class="paramInput" id="paramInput" value="${json.defaultValue}">
             </div>
         </div>`;

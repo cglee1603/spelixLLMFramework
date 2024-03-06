@@ -175,7 +175,7 @@
 
 	<select id="getParamMasterByParamId"
 		resultMap="ParameterMasterResultMap">
-		select parm_name, val_type, min_val, max_val, default_val
+		select parm_name, val_type, min_val, max_val, default_val, val_offset
 		from
 		spx_parm_mst
 		where parm_id in

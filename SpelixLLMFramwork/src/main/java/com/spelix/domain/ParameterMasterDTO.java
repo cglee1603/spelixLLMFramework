@@ -16,7 +16,7 @@ public class ParameterMasterDTO {
 	private String valueType;
 	private int minValue;
 	private int maxValue;
-	private int valueOffset;
+	private float valueOffset;
 	private String defaultValue;
 	private String insertUser;
 	private Timestamp insertDate;
