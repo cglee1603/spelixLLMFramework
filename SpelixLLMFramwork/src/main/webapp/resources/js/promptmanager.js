@@ -449,11 +449,12 @@ $('.rate-table tbody').on('click', 'tr', function() {
     var selectedRowItem = $(this).data('item');
     console.log("clicked history item: ", selectedRowItem.promptRateHistId);
 
+    // 오른쪽 테이블 초기화
+    var tbody = $('.response-table tbody');
+    tbody.empty(); // tbody 내용을 지웁니다.
+
     ajaxCall("POST", 'promptmanager/getPromptResultByHistoryId.do', { promptRateHistId: selectedRowItem.promptRateHistId },
         function(data) {
-            var tbody = $('.response-table tbody');
-            tbody.empty(); // 기존에 있던 데이터 삭제
-
             data.forEach(function(item) {
                 // 새로운 행을 생성하여 데이터 추가
                 var newRow = $('<tr>');
@@ -467,7 +468,6 @@ $('.rate-table tbody').on('click', 'tr', function() {
                 var checkboxCell = $('<td>');
                 var checkbox = $('<input>', { type: 'checkbox', disabled: item.answer_cosine_similarity === null });
 
-                console.log(item)
                 if (item.cortYn !== "") {
                     if (item.cortYn == "Y") {
                         checkbox.prop('checked', true);
@@ -481,7 +481,6 @@ $('.rate-table tbody').on('click', 'tr', function() {
                 // 새로운 행을 오른쪽 테이블에 추가
                 tbody.append(newRow);
             });
-
         },
         function() {
             alert("테스트 데이터 검증 실패.");
@@ -493,10 +492,12 @@ $('.rate-table tbody').on('click', 'tr', function() {
 
 
 
+
 /*
  * 검증 팝업에서 프롬프트 마스터 데이터 띄우기
  */
 $(document).on('click', '.prompt-verification-button', function() {
+	$('.response-table tbody').empty();
 
     // 클릭된 버튼에 해당하는 데이터를 가져오는 로직을 여기에 추가합니다.
     var rowData = {};
@@ -534,6 +535,7 @@ $(document).on('click', '.prompt-verification-button', function() {
 	        function(data) {
 
 	            var tbody = document.querySelector('.rate-table tbody');
+	            tbody.innerHTML = '';
 
 	            data.forEach(function(item) {
 
