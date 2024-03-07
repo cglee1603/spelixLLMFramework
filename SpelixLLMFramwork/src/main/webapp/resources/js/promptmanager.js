@@ -416,7 +416,7 @@ $('.prompt-test-button').on('click', function() {
 
                 // 각 열(td)에 데이터 추가
                 var testIdCell = document.createElement('td');
-                testIdCell.textContent = item.promptId;
+                testIdCell.textContent = item.promptRateHistId;
                 row.appendChild(testIdCell);
 
                 // FIXME
