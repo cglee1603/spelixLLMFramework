@@ -181,7 +181,7 @@
 								<th class="question">Q</th>
 								<th class="answer">A</th>
 								<th class="result-th">모델 리턴 결과</th>
-								<th>정답</th>
+								<th class="correct">정답</th>
 							</tr>
 						</thead>
 						<tbody>
