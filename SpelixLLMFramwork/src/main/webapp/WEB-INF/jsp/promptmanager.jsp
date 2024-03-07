@@ -31,7 +31,8 @@
 	<div class="wrapper">
 		<div class="content">
 			<div class="headtitle">
-				<span class="promptmanagetitle"><strong>프롬프트 관리</strong></span>
+		<div class="spelix-logo"><img src="<%=application.getContextPath()%>/resources/img/logo.png"></div>
+				<span class="promptmanagetitle">프롬프트 관리</span>
 			</div>
 			<div class="maincontents">
 				<div class="searchprompt">
@@ -54,7 +55,7 @@
 									삭제</button>
 							</div>
 						</div>
-						<div>
+						<div class="prompt-table-srcoll">
 							<table class="prompt-table" id="prompt-table">
 								<thead>
 									<tr>
@@ -177,9 +178,9 @@
 					<table class="response-table">
 						<thead>
 							<tr>
-								<th>Q</th>
-								<th>A</th>
-								<th>모델 리턴 결과</th>
+								<th class="question">Q</th>
+								<th class="answer">A</th>
+								<th class="result-th">모델 리턴 결과</th>
 								<th>정답</th>
 							</tr>
 						</thead>

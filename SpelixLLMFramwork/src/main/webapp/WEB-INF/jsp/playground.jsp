@@ -30,10 +30,10 @@
 <body>
 	<div class="wrapper">
 		<div class="content">
+		<div class="spelix-logo"><img src="<%=application.getContextPath()%>/resources/img/logo.png"></div>
 			<div class="contentstable">
-				<div class="allsetting">
+				<div class="allsetting">			
 					<div class="overlap-group">
-
 						<!--　모델　선택　-->
 						<select class="selectmodel" id="selectmodel">
 							<option value="">모델을 선택해 주세요</option>

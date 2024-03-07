@@ -215,6 +215,18 @@ function getCheckboxCell(value) {
 function getTableCell(item, header) {
     var cellValue = item[header.field] || '';
     var cell = $('<td/>').addClass(header.class);
+    
+    // prompt 클래스를 가진 td에 대한 스타일 설정
+    if (header.class === 'prompt') {
+        var scrollDiv = $('<div/>').css({
+            'overflow-y': 'auto', // 세로 스크롤바 활성화
+            'height': '100%' // div의 높이를 td의 높이에 맞춤
+        }).html(cellValue); // cellValue를 div 안에 넣음
+        cell.html(scrollDiv).css({
+            'height': '100px' // td의 너비 지정 (필요한 경우)
+        });
+        return cell;
+    }
 
     if (header.field === "verification") {
         return cell.html('<button type="button" class="btn prompt-verification-button">검증</button>');
@@ -460,9 +472,17 @@ $('.rate-table tbody').on('click', 'tr', function() {
                 var newRow = $('<tr>');
 
                 // 데이터를 새로운 행에 추가
-                newRow.append($('<td>').text(item.body));
-                newRow.append($('<td>').text(item.expectResult));
-                newRow.append($('<td>').text(item.result));
+    var bodyCell = $('<td>', { class: 'body' });
+    var scrollDiv = $('<div>', {
+        style: 'overflow-y: auto; height: 100px;'
+    }).text(item.body);
+
+    bodyCell.append(scrollDiv);
+    newRow.append(bodyCell);
+
+    // expectResult 및 result에 대한 셀을 추가하고 클래스 이름 적용
+    newRow.append($('<td>', { class: 'expectResult' }).text(item.expectResult));
+    newRow.append($('<td>', { class: 'result' }).text(item.result));
 
                 // 체크박스 추가
                 var checkboxCell = $('<td>');

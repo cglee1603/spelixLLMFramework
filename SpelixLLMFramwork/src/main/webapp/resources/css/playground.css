@@ -12,8 +12,11 @@
 .content {
 	flex-grow: 1;
 	background-color: #fff;
-	padding: 20px;
+	padding: 10px 20px 20px 20px;
 	height: 100%;
+}
+.spelix-logo{
+	margin-bottom:5px;
 }
 
 .contentstable {
@@ -34,10 +37,6 @@
 	flex-wrap: nowrap; /* 줄바꿈 방지 */
 }
 
-.overlap-group, .selectmodel, .settingmenu, .mode {
-	display: flex;
-	align-items: center;
-}
 
 .overlap-group {
 	height: 40px;
