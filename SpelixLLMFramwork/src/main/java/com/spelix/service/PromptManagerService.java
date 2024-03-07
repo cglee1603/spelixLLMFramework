@@ -32,4 +32,6 @@ public interface PromptManagerService {
 
 	int savePromptResult(PromptResultDTO promptResultDTO);
 
+	int updatePromptMasterPromptRateById(String promptId, double promptRate);
+
 }

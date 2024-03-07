@@ -68,6 +68,7 @@ public class PromptManagerController {
 		return allPromptMasterList;
 	}
 
+	// TODO 프롬프트 마스터에서 삭제할 때 테스트데이터랑 히스토리, 결과 테이블 다 지워야하나?
 	@RequestMapping(value = "/promptmanager/deletePromptMasterById.do", method = RequestMethod.POST)
 	@ResponseBody
 	public int deletePromptMasterById(@RequestParam("promptId") String promptId) {
@@ -118,8 +119,6 @@ public class PromptManagerController {
 		PromptResultDTO promptResultDTO = new PromptResultDTO();
 
 		String nextHistoryId = getPromptRateHistoryNextHistoryId();
-		log.debug("nextHistoryId: " + nextHistoryId);
-
 		double cosSum = 0;
 		int cnt = 1;
 
@@ -157,12 +156,6 @@ public class PromptManagerController {
 			double answerCosineSimilarity = ((Number) map.get("answer_cosine_similarity")).doubleValue();
 			cosSum = cosSum + answerCosineSimilarity;
 			log.debug("answerCosineSimilarity: " + answerCosineSimilarity);
-			// map.put("question", tempDtoMap.get(map.get("prompt_id")).getBody());
-//			map.put("answer", tempDtoMap.get(map.get("prompt_id")).getAnswer());
-//
-//			// update history
-//			updatePromptRateHistoryRate((String) map.get("prompt_id"),
-//					((Number) map.get("answer_cosine_similarity")).doubleValue());
 
 			// save prompt result
 			promptResultDTO.setPromptId(promptId);
@@ -175,11 +168,9 @@ public class PromptManagerController {
 			promptResultDTO.setExpectResult(tempDtoMap.get(map.get("prompt_id")).getAnswer());
 			promptResultDTO.setResult((String) map.get("prompt_result"));
 
-			// TODO
-
-			log.debug("@@" + tempDtoMap.get(map.get("prompt_id")).getAnswer());
-			if (tempDtoMap.get(map.get("prompt_id")).getAnswer() !=null) {
-				promptResultDTO.setCortYn("N");
+			// FIXME 정답률 기준
+			if (tempDtoMap.get(map.get("prompt_id")).getAnswer() != null) {
+				promptResultDTO.setCortYn((answerCosineSimilarity >= 0.2) ? "Y" : "N");
 			}
 
 			promptResultDTO.setParmJson(requestParamJsonOrigin.get("properties").toString());
@@ -192,7 +183,10 @@ public class PromptManagerController {
 		log.debug("cosSum: " + cosSum);
 		log.debug("modelResponseList: " + modelResponseList);
 
-		// save history
+		double promptRate = (double) cosSum / cnt;
+		log.debug("promptRate: " + promptRate);
+
+		// save prompt rate history
 		promptRateHistoryDTO.setPromptRateHistId(nextHistoryId);
 		promptRateHistoryDTO.setPromptId(promptId);
 		promptRateHistoryDTO.setPromptVer(promptVer);
@@ -200,11 +194,15 @@ public class PromptManagerController {
 		promptRateHistoryDTO.setSysPromptIds(sysPromptIds.isEmpty() ? null : sysPromptIds.split(","));
 		promptRateHistoryDTO.setSysPromptEtc(sysPromptEtc);
 		promptRateHistoryDTO.setParmJson(requestParamJsonOrigin.get("properties").toString());
-		promptRateHistoryDTO.setPromptRate(cosSum / cnt);
+		promptRateHistoryDTO.setPromptRate(promptRate);
 		log.debug("promptRateHistoryDTO: " + promptRateHistoryDTO);
 
 		int success = savePromptRateHistory(promptRateHistoryDTO);
 		log.debug("savePromptRateHistory success: " + success);
+
+		// TODO update promptRate to prompt master
+		success = updatePromptMasterPromptRateById(promptId, promptRate);
+		log.debug("updatePromptMasterPromptRateById success: " + success);
 
 		List<PromptRateHistoryDTO> resultList = new ArrayList<>();
 		resultList.add(promptRateHistoryDTO);
@@ -342,5 +340,11 @@ public class PromptManagerController {
 		log.debug("savePromptResult");
 
 		return promptManagerService.savePromptResult(promptResultDTO);
+	}
+
+	public int updatePromptMasterPromptRateById(String promptId, double promptRate) {
+		log.debug("savePromptMasterPromptRateById");
+
+		return promptManagerService.updatePromptMasterPromptRateById(promptId, promptRate);
 	}
 }

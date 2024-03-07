@@ -52,6 +52,15 @@
 		#{promptId}
 	</update>
 
+	<update id="updatePromptMasterPromptRateById">
+		UPDATE spx_prmt_mst
+		SET
+		prmt_rate =
+		#{promptRate}
+		WHERE
+		prmt_id = #{promptId}
+	</update>
+
 
 	<!-- 모델 마스터 -->
 	<resultMap id="ModelMasterResultMap"
@@ -227,7 +236,8 @@
 		)
 		VALUES (
 		'PR_' ||
-		LPAD(nextval('seq_spx_prmt_rslt')::TEXT, 7, '0'),
+		LPAD(nextval('seq_spx_prmt_rslt')::TEXT, 7,
+		'0'),
 		#{promptId},
 		#{promptVer},
 		#{promptRateHistId},

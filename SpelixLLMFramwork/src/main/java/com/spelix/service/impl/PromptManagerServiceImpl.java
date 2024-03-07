@@ -77,8 +77,16 @@ public class PromptManagerServiceImpl implements PromptManagerService {
 	public List<PromptResultDTO> getPromptResultByHistoryId(String promptRateHistId) {
 		return promptManagerDAO.getPromptResultByHistoryId(promptRateHistId);
 	}
-	
+
 	public int savePromptResult(PromptResultDTO promptResultDTO) {
 		return promptManagerDAO.savePromptResult(promptResultDTO);
+	}
+
+	public int updatePromptMasterPromptRateById(String promptId, double promptRate) {
+		Map<String, Object> params = new HashMap<>();
+		params.put("promptId", promptId);
+		params.put("promptRate", promptRate);
+
+		return promptManagerDAO.updatePromptMasterPromptRateById(params);
 	}
 }

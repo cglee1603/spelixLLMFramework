@@ -37,4 +37,6 @@ public interface PromptManagerDAO {
 
 	int savePromptResult(PromptResultDTO promptResultDTO);
 
+	int updatePromptMasterPromptRateById(Map<String, Object> params);
+
 }
