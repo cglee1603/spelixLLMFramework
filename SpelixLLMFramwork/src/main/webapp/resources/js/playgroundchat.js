@@ -195,6 +195,7 @@ function chatTypeingEnd(incomingChatDiv, pElement) {
 	incomingChatDiv.querySelector(".chat-details").appendChild(pElement);
 	localStorage.setItem("all-chats", chatContainer.innerHTML);
 	chatContainer.scrollTo(0, chatContainer.scrollHeight);
+	addCopyButton(incomingChatDiv); // 복사 버튼 추가
 }
 
 function showTypingAnimation() {
@@ -202,7 +203,7 @@ function showTypingAnimation() {
     // FIXME 절대 경로 설정
     var html = `<div class="chat-content">
                     <div class="chat-details">
-                        <img src="/SpelixLLMFramework/resources/img/ai_brain.svg" alt="chatbot-img">
+                        <img src="/SpelixLLMFramework/resources/img/ai_brain.svg" class="chatbot-img" alt="chatbot-img">
                         <div class="typing-animation">
                             <div class="typing-dot" style="--delay: 0.2s"></div>
                             <div class="typing-dot" style="--delay: 0.3s"></div>
@@ -224,16 +225,18 @@ function handleOutgoingChat() {
     if (!userText) return;
 
     chatInput.value = "";
-    chatInput.style.height = `${initialInputHeight}px`;
+    chatInput.style.height = `80px`;
 
     var html = `<div class="chat-content">
                     <div class="chat-details">
-                        <img src="/SpelixLLMFramework/resources/img/user3.svg" alt="user-img">
+                        <img src="/SpelixLLMFramework/resources/img/user3.svg" class="user-img" alt="user-img">
                         <p>${userText}</p>
                     </div>
                 </div>`;
 
     var outgoingChatDiv = createChatElement(html, "outgoing");
+    addCopyButton(outgoingChatDiv); // 복사 버튼 추가
+    chatContainer.appendChild(outgoingChatDiv);
     chatContainer.querySelector(".default-text")?.remove();
     chatContainer.appendChild(outgoingChatDiv);
     chatContainer.scrollTo(0, chatContainer.scrollHeight);
@@ -245,7 +248,7 @@ var initialInputHeight = chatInput.scrollHeight;
 
 function adjustInputHeight() {
     // Adjust the height of the input field dynamically based on its content
-    chatInput.style.height = `${initialInputHeight}px`;
+    chatInput.style.height = `80px`;
     chatInput.style.height = `${chatInput.scrollHeight}px`;
 }
 
@@ -263,4 +266,45 @@ function handleKeyDown(e) {
 chatInput.addEventListener("keydown", handleKeyDown);
 
 sendButton.addEventListener("click", handleOutgoingChat);
+
+//토스트 메시지를 표시하는 함수
+function showToast(message) {
+    var toast = document.createElement("div");
+    toast.classList.add("toast-message");
+    toast.textContent = message;
+
+    document.body.appendChild(toast);
+
+    // 토스트 메시지 보여주기
+    setTimeout(function() {
+        toast.classList.add("show");
+    }, 100);
+
+    // 몇 초 후에 토스트 메시지 사라지게 하기
+    setTimeout(function() {
+        toast.classList.remove("show");
+        setTimeout(function() {
+            toast.remove();
+        }, 500);
+    }, 3000);
+}
+
+//복사 버튼을 추가하는 함수
+function addCopyButton(chatDiv) {
+    var copyButton = document.createElement("img");
+    copyButton.src = "resources/img/copy-icon.svg"; // 'copy.svg' 이미지의 경로를 지정해주세요
+    copyButton.classList.add("copy-button"); // 클래스 추가
+    
+    copyButton.classList.add("copy-button");
+    copyButton.onclick = function() {
+        var textToCopy = chatDiv.querySelector("p").textContent;
+        navigator.clipboard.writeText(textToCopy).then(() => {
+        	showToast("복사되었습니다"); // 토스트 메시지 표시
+        }).catch(err => {
+            // 복사 실패 시, 에러 처리
+            console.error('Error in copying text: ', err);
+        });
+    };
+    chatDiv.querySelector(".chat-details").appendChild(copyButton);
+}
 
