@@ -303,7 +303,7 @@
 }
 
 .prompt-Id-area, .prompt-Ver-area, .model-area, .test-prompt-area,
-	.parmJson-area,.prompt-test-id-area {
+	.parmJson-area,.prompt-test-id-area,.prompt-type-area {
 	display: flex;
 }
 
@@ -565,6 +565,11 @@ width:100%;
 .answer,.result-th,.expectResult,.result{
 	width:200px;
 }
+
+.correct,.correctcheck{
+	width:100px;
+}
+
 
 .body,.question{
 	width:300px;

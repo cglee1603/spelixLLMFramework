@@ -370,8 +370,10 @@ span.material-symbols-rounded {
 .chat .chat-details {
   display: flex;
   align-items: center;
+  position: relative; /* 버튼을 위한 상대 위치 지정 */
+  padding-right: 40px; /* 복사 버튼 공간 확보를 위해 오른쪽 패딩 추가 */
 }
-.chat .chat-details img {
+.chat .chat-details .chatbot-img, .chat .chat-details .user-img {
   width: 35px;
   height: 35px;
   align-self: flex-start;
@@ -452,6 +454,16 @@ right: 10px; /* 오른쪽 여백 설정 */
   visibility: visible;
 }
 
+/* 복사 버튼 스타일 */
+.copy-button {
+    width: 15px; /* 버튼의 너비 */
+    height: 15px; /* 버튼의 높이 */
+    cursor: pointer; /* 커서 스타일 변경 */
+    position: absolute; /* 절대 위치 */
+    right: 10px; /* 오른쪽 여백 설정 */
+    bottom: 10px; /* 아래쪽 여백 설정 */
+}
+
 /* Reponsive Media Query */
 @media screen and (max-width: 600px) {
   .default-text h1 {
@@ -488,6 +500,39 @@ right: 10px; /* 오른쪽 여백 설정 */
   span.material-symbols-rounded {
     font-size: 1.25rem!important;
   }
+}
+
+/* 토스트 메시지 스타일 */
+.toast-message {
+    visibility: hidden; /* 초기에는 보이지 않게 설정 */
+    min-width: 150px;
+    background-color: black;
+    color: white;
+    text-align: center;
+    border-radius: 20px;
+    padding: 16px;
+    position: fixed;
+    z-index: 1;
+    left: 50%;
+    bottom: 30px;
+    transform: translateX(-50%);
+    white-space: nowrap;
+}
+
+/* 토스트 메시지 애니메이션 */
+.toast-message.show {
+    visibility: visible;
+    animation: fadein 0.5s, fadeout 0.5s 2.5s;
+}
+
+@keyframes fadein {
+    from {bottom: 0; opacity: 0;} 
+    to {bottom: 30px; opacity: 1;}
+}
+
+@keyframes fadeout {
+    from {bottom: 30px; opacity: 1;}
+    to {bottom: 0; opacity: 0;}
 }
 
 .parameter {
@@ -531,7 +576,7 @@ right: 10px; /* 오른쪽 여백 설정 */
   margin-bottom: 5px; /* 프로그래스 바와의 간격 조정 */
 }
 
-.prograss {
+.prograss-param {
   display: flex; /* Flexbox 레이아웃 사용 */
   align-items: center; /* 세로 방향 가운데 정렬 */
    justify-content: space-between;

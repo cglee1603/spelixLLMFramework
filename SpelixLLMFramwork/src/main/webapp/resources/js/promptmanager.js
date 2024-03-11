@@ -486,7 +486,7 @@ $('.rate-table tbody').on('click', 'tr', function() {
 
                 // 체크박스 추가
                 var checkboxCell = $('<td>');
-                var checkbox = $('<input>', { type: 'checkbox', disabled: item.answer_cosine_similarity === null });
+                var checkbox = $('<input>', { type: 'checkbox', class:'correctcheck' , disabled: item.answer_cosine_similarity === null });
 
                 if (item.cortYn !== "") {
                     if (item.cortYn == "Y") {

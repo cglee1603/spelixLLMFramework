@@ -310,22 +310,22 @@ function loadModelParameters() {
     }
 }
 
-function createParam(paramContainer, json,index) {
+function createParam(paramContainer, json, index) {
     var newParamDiv = document.createElement('div');
     newParamDiv.classList.add('param');
     newParamDiv.innerHTML = `
         <div class="param-1">
             <div class="paramtitle">${json.parameterName}</div>
-            <div class="prograss">
+            <div class="prograss-param">
                 <input type="range" class="parambar" id="parambar" value="${json.defaultValue}"
-                    min="${json.minValue}" max="${json.maxValue}"  step="${json.valueOffset}">
+                    min="${json.minValue}" max="${json.maxValue}" step="${json.valueOffset}">
                 <input type="text" class="paramInput" id="paramInput" value="${json.defaultValue}">
             </div>
         </div>`;
     paramContainer.appendChild(newParamDiv);
-    
+
     var progressBar = newParamDiv.querySelector('.parambar');
-    let textInput = newParamDiv.querySelector('.paramInput');
+    var textInput = newParamDiv.querySelector('.paramInput');
 
     var tempJson = {};
     tempJson.minValue = json.minValue;
@@ -338,10 +338,28 @@ function createParam(paramContainer, json,index) {
     progressBar.addEventListener('input', function() {
         textInput.value = this.value;
         tempJson.defaultValue = textInput.value;
-
         currentParamValueJson[json.parameterName] = tempJson;
     });
-    
+
+    // 텍스트 입력에 대한 이벤트 리스너 추가
+    textInput.addEventListener('input', function() {
+        var inputValue = this.value.trim();
+
+        // 입력값이 빈 문자열인 경우 아무것도 하지 않음
+        if (inputValue === '') {
+            return;
+        }
+
+        inputValue = parseFloat(inputValue);
+        if (!isNaN(inputValue) && inputValue >= json.minValue && inputValue <= json.maxValue) {
+            progressBar.value = inputValue;
+            tempJson.defaultValue = inputValue;
+            currentParamValueJson[json.parameterName] = tempJson;
+        } else {
+            alert(`${json.parameterName}의 값은 ${json.minValue}와 ${json.maxValue} 사이여야 합니다.`);
+            this.value = tempJson.defaultValue;
+        }
+    });
 }
 
 

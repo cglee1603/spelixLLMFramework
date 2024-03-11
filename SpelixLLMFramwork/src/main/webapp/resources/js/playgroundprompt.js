@@ -168,9 +168,22 @@ function getLlmResponse () {
 		url: "getChatbotResponse.do",
 		data: { requestParam : JSON.stringify(requestParam) },
 		dataType: "json",
-		success: function(data, status) {			
-			resultText.innerHTML = data.prompt_result + "<br>";			
-		},
+	    success: function(data, status) {
+	        var resultContainer = document.querySelector(".result-container");
+	        resultContainer.innerHTML = ''; // 기존 내용 제거
+
+	        var resultTextWrapper = document.createElement("div");
+	        resultTextWrapper.classList.add("result-text-wrapper");
+
+	        var pElement = document.createElement("p");
+	        pElement.innerHTML = data.prompt_result;
+	        resultTextWrapper.appendChild(pElement);
+
+	        // 복사 버튼 추가
+	        addCopyButton(resultTextWrapper);
+
+	        resultContainer.appendChild(resultTextWrapper);
+	      },
 		error: function(xhr, status, error) {
 			resultText.innerHTML = "죄송합니다. 답변을 드릴 수 없습니다. 잠시후 다시 시도해 주세요." + "<br>";
 		}
@@ -191,4 +204,20 @@ function typeWriter(element, text, i = 0) {
   }
 }
 
-
+//복사 버튼을 추가하는 함수 
+function addCopyButton(resultTextWrapper) {
+  var copyButton = document.createElement("img");
+  copyButton.src = "resources/img/copy-icon.svg";
+  copyButton.classList.add("copy-button");
+  
+  copyButton.onclick = function() {
+    var textToCopy = resultTextWrapper.querySelector("p").textContent;
+    navigator.clipboard.writeText(textToCopy).then(() => {
+      showToast("복사되었습니다");
+    }).catch(err => {
+      console.error('Error in copying text: ', err);
+    });
+  };
+  
+  resultTextWrapper.appendChild(copyButton);
+}
